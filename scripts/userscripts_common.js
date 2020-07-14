@@ -516,6 +516,8 @@
 		return false;
 	}
 
+	// TODO should have a better way to make a sublist and sublists of sublists
+
 	class TaskList {
 		// everything starts at same time. when completed, run the callback
 		// displays progress to user
@@ -575,7 +577,7 @@
 	}
 
 	// TODO
-	// should be a "factory" to give unique ids
+	// should be a "factory" to give unique ids if there are multiple task lists that aren't part of a sublist
 	class TaskListWithUI {
 		// shows progress
 		constructor(taskList, options) {
