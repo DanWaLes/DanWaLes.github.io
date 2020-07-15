@@ -516,8 +516,6 @@
 		return false;
 	}
 
-	// TODO should have a better way to make a sublist and sublists of sublists
-
 	class TaskList {
 		// everything starts at same time. when completed, run the callback
 		// displays progress to user
@@ -530,10 +528,36 @@
 				@param list Array of AsyncFunction
 				@param onAllDone AsyncFunction or not a Function
 			*/
-			this.tasks = list;
+			this.tasks = {};
+			this.numTasks = list.length;
 			this.numCompleted = 0;
 			this.allDone = onAllDone;
 			this.returnValues = {tasks: {}, callback: undefined};
+
+			for (let task of list) {
+				this.tasks[task.name] = {
+					name: task.name,
+					task: task,
+					list: this.tasks
+				};
+			}
+		}
+
+		markAsSubList(mainList, mainTaskName) {
+			// add bottom to top to get expected results
+			// mainTaskName is the parent task - this would be the sub parts
+			for (let name in this.tasks) {
+				this.tasks[name].isSubListOf = mainList.tasks[mainTaskName];
+			}
+
+			mainList.tasks[mainTaskName].hasSubList = this;
+			const that = this;
+			const oldRun = mainList.run.bind(mainList);// prevents infinite loop, bind means use provided as this keyword, this would otherwise be undefined
+
+			mainList.run = async () => {
+				oldRun();
+				that.run();
+			};
 		}
 
 		setOnTaskCompletion(onTaskCompletion) {
@@ -541,15 +565,16 @@
 		}
 
 		async run() {
+			const that = this;
 			function runTask(task) {
 				task().then((res) => {
-					this.returnValues.tasks[task.name] = res;
-					this.taskComplete(task.name);
+					that.returnValues.tasks[task.name] = res;
+					that.taskComplete(task.name);
 				});
 			}
 
-			for (let task of this.tasks) {
-				runTask(task);
+			for (let taskName in that.tasks) {
+				runTask(that.tasks[taskName].task);
 			}
 		}
 
@@ -565,10 +590,10 @@
 			this.numCompleted++;
 
 			if (typeof this.onTaskCompletion == "function") {
-				this.onTaskCompletion(taskName);
+				this.onTaskCompletion(taskName, this.tasks[taskName]);
 			}
 
-			if (this.numCompleted == this.tasks.length) {
+			if (this.numCompleted == this.numTasks) {
 				if (typeof this.allDone == "function") {
 					this.returnValues.callback = await this.allDone(this.returnValues.tasks);
 				}
@@ -576,37 +601,101 @@
 		}
 	}
 
-	// TODO
-	// should be a "factory" to give unique ids if there are multiple task lists that aren't part of a sublist
+	// still a work in progress, needs to have full sublist implementation
 	class TaskListWithUI {
 		// shows progress
-		constructor(taskList, options) {
-			/*
-				@param options {markCallbackAsTask: Boolean, sublist: String} makes visual difference, nothing else
-			*/
-
-			taskList.setOnTaskCompletion(this.taskComplete);
-
-			this.taskList = taskList;
-			this.options = options;
+		constructor() {
+			// this.taskLists = [];
+			this.id = 0;
 		}
 
-		generateHTML() {
-			let html = `<div id="taskList`;
+		create(taskList, options) {
+			/*
+				@param taskList the overall taskList, with any subLists included (only 1st supported)
+			*/
+			// this.taskLists.push({id: id, taskList: taskList, options: options});
 
-			if (this.options.sublist) {
-				html += `_${this.options.sublist}`;
+			taskList.id = this.id;
+
+			this.generateHtml(taskList, options);
+			this.bindTaskComplete(taskList);
+			this.id++;
+		}
+
+		generateHtml(taskList, options) {
+			// only supporting one subList
+			let html = `<div id="taskList_${taskList.id}">`;
+
+			for (let taskName in taskList.tasks) {
+				const task = taskList.tasks;
+
+				html += `<div id="${subTask.name}">
+				<span class="taskName">${task.name}</span>
+				<span class="taskProgress"><span class="currentProgress">0</span>/${task.numTasks}</span>`;
+
+				if (task.subList) {
+					html += `<div class="subList ${task.name}">`;
+
+					for (let subListTaskName in task.subList) {
+						const subTask = task.subList[subListTaskName];
+
+						html += `<div id="${subTask.name}">
+						<span class="taskName">${subTask.name}</span>
+						<span class="taskProgress"><span class="currentProgress">0</span>/${subTask.numTasks}</span>`;
+					}
+
+					html += `</div>`;
+				}
+
+				html += `</div>`;
+			}
+
+			html += `</div>`;
+		}
+
+		bindTaskComplete(taskList) {
+			function taskComplete(name, theTask) {
+				const html = document.getElementById(`taskList_${taskList.id}`);
+				let taskArea;
+
+				if (theTask.isSubListOf) {
+					taskArea = html.querySelector(`.subList ${theTask.isSubListOf.name} #${name}`);
+				}
+				else {
+					taskArea = html.querySelector(`#${name}`);
+				}
+
+				taskArea.
+			}
+
+			taskList.setOnTaskCompletion(taskComplete);
+		}
+
+		get(id) {
+			return this.taskLists[id];
+		}
+
+		(id) {
+			const taskList = this.get(id);
+
+			let html = `<div id="taskList_${id}`;
+
+			if (taskList.options.sublist) {
+				html += `_${taskList.options.sublist}`;
 			}
 
 			html += `">`;
 
-			for (let task of this.taskList.tasks) {
+			for (let task of taskList.tasks) {
 				html += `<div id="${task.name}">
 					<span class="taskName">${task.name}</span>`;
 			}
 		}
 
-		taskComplete(taskName) {
+		taskComplete(id, taskName) {
+			const taskList = this.get(id);
+			const html = document.getElementById(`taskList_${id}`);
+
 			
 		}
 	}
