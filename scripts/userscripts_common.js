@@ -601,7 +601,6 @@
 		}
 	}
 
-	// still a work in progress, needs to have full sublist implementation
 	class TaskListWithUI {
 		// shows progress
 		constructor() {
@@ -617,42 +616,71 @@
 
 			taskList.id = this.id;
 
-			this.generateHtml(taskList, options);
-			this.bindTaskComplete(taskList);
+			const listMenu = document.createElement("div");
+			document.body.appendChild(listMenu);
+			listMenu.outerHTML = this.generateHtml(taskList, options);
+
+			// this.bindTaskComplete(taskList);
 			this.id++;
 		}
 
 		generateHtml(taskList, options) {
-			// only supporting one subList
-			let html = `<div id="taskList_${taskList.id}">`;
+			let html = `<div id="taskList_${taskList.id}">\n`;
 
-			for (let taskName in taskList.tasks) {
-				const task = taskList.tasks;
+			function indent(indentNo) {
+				let tabs = "";
 
-				html += `<div id="${subTask.name}">
-				<span class="taskName">${task.name}</span>
-				<span class="taskProgress"><span class="currentProgress">0</span>/${task.numTasks}</span>`;
-
-				if (task.subList) {
-					html += `<div class="subList ${task.name}">`;
-
-					for (let subListTaskName in task.subList) {
-						const subTask = task.subList[subListTaskName];
-
-						html += `<div id="${subTask.name}">
-						<span class="taskName">${subTask.name}</span>
-						<span class="taskProgress"><span class="currentProgress">0</span>/${subTask.numTasks}</span>`;
-					}
-
-					html += `</div>`;
+				for (let i = 0; i < indentNo; i++) {
+					tabs += "\t";
 				}
 
-				html += `</div>`;
+				return tabs;
 			}
 
-			html += `</div>`;
-		}
+			function makeMarker(rounds) {
+				let marker = "";
 
+				for (let i = 0; i < rounds; i++) {
+					marker += "-";
+				}
+
+				marker += "> ";
+
+				return marker;
+			}
+
+			function main(currentTaskList, indentNo, roundNo) {
+				const indentLevel = indent(indentNo);
+				const marker = makeMarker(roundNo);
+
+				for (let taskName in currentTaskList.tasks) {
+					const task = currentTaskList.tasks[taskName];
+
+					html += `\t${indentLevel}<div id="${task.name}">
+		${indentLevel}<span class="marker">${marker}</span><span class="taskName">${cammelCaseToTitle(task.name)}</span>
+		${indentLevel}<span class="taskProgress"><span class="currentProgress">`;
+
+					if (task.hasSubList) {
+						html += `0</span>/${task.hasSubList.numTasks}</span>
+		${indentLevel}<div class="subList">\n`;
+
+						main(task.hasSubList, indentNo + 2, roundNo + 1);// start is 1, then add 1
+						html += `\t\t`;
+					}
+					else {
+						html += `Not started</span></span>\n\t`;
+					}
+
+					html += `${indentLevel}</div>\n`;
+				}
+			}
+
+			main(taskList, 0, 0);
+
+			html += `</div>`;
+			return html;
+		}
+/*
 		bindTaskComplete(taskList) {
 			function taskComplete(name, theTask) {
 				const html = document.getElementById(`taskList_${taskList.id}`);
@@ -671,33 +699,13 @@
 			taskList.setOnTaskCompletion(taskComplete);
 		}
 
-		get(id) {
-			return this.taskLists[id];
-		}
-
-		(id) {
-			const taskList = this.get(id);
-
-			let html = `<div id="taskList_${id}`;
-
-			if (taskList.options.sublist) {
-				html += `_${taskList.options.sublist}`;
-			}
-
-			html += `">`;
-
-			for (let task of taskList.tasks) {
-				html += `<div id="${task.name}">
-					<span class="taskName">${task.name}</span>`;
-			}
-		}
-
 		taskComplete(id, taskName) {
 			const taskList = this.get(id);
 			const html = document.getElementById(`taskList_${id}`);
 
 			
 		}
+*/
 	}
 
 	// public - exported to window
