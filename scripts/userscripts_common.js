@@ -516,6 +516,7 @@
 		return false;
 	}
 
+	// TODO change so that tasks names aren't an identifier, use numbers instead
 	class TaskList {
 		// everything starts at same time. when completed, run the callback
 		// displays progress to user
@@ -528,35 +529,47 @@
 				@param list Array of AsyncFunction
 				@param onAllDone AsyncFunction or not a Function
 			*/
-			this.tasks = {};
+			this.tasks = [];
 			this.numTasks = list.length;
 			this.numCompleted = 0;
 			this.allDone = onAllDone;
-			this.returnValues = {tasks: {}, callback: undefined};
+			this.returnValues = {tasks: [], callback: undefined};
 
-			for (let task of list) {
-				this.tasks[task.name] = {
-					name: task.name,
-					task: task,
+			for (let id in list) {
+				id = parseInt(id);
+
+				const task = list[id];
+	
+				this.tasks[id] = {
+					id: id,
+					task: list[id],
 					list: this.tasks
 				};
 			}
 		}
 
-		markAsSubList(mainList, mainTaskName) {
+		markAsSubList(mainList, mainTaskId) {
 			// add bottom to top to get expected results
-			// mainTaskName is the parent task - this would be the sub parts
-			for (let name in this.tasks) {
-				this.tasks[name].isSubListOf = mainList.tasks[mainTaskName];
+			// mainTaskId is the parent task - this would be the sub parts
+			for (let id in this.tasks) {
+				id = parseInt(id);
+
+				this.tasks[id].isSubListOf = mainList.tasks[mainTaskId];
 			}
 
-			mainList.tasks[mainTaskName].hasSubList = this;
+			mainList.tasks[mainTaskId].hasSubList = this;
 			const that = this;
-			const oldRun = mainList.run.bind(mainList);// prevents infinite loop, bind means use provided as this keyword, this would otherwise be undefined
+			// const oldRun = mainList.run.bind(mainList);// prevents infinite loop, bind means use provided as this keyword, this would otherwise be undefined
 
 			mainList.run = async () => {
-				oldRun();
-				that.run();
+				// oldRun();
+				return that.run();
+			};
+
+			mainList.run2 = async () => {
+				return await mainList.run().then(() => {
+					return that.returnValues;
+				});
 			};
 		}
 
@@ -568,13 +581,13 @@
 			const that = this;
 			function runTask(task) {
 				task().then((res) => {
-					that.returnValues.tasks[task.name] = res;
-					that.taskComplete(task.name);
+					that.returnValues.tasks[task.id] = res;
+					that.taskComplete(task.id);
 				});
 			}
 
-			for (let taskName in that.tasks) {
-				runTask(that.tasks[taskName].task);
+			for (let task of that.tasks) {
+				runTask(task.task);
 			}
 		}
 
@@ -586,11 +599,11 @@
 			});
 		}
 
-		async taskComplete(taskName) {
+		async taskComplete(taskId) {
 			this.numCompleted++;
 
 			if (typeof this.onTaskCompletion == "function") {
-				this.onTaskCompletion(taskName, this.tasks[taskName]);
+				this.onTaskCompletion(taskId, this.tasks[taskId]);
 			}
 
 			if (this.numCompleted == this.numTasks) {
@@ -680,32 +693,30 @@
 			html += `</div>`;
 			return html;
 		}
-/*
+
 		bindTaskComplete(taskList) {
 			function taskComplete(name, theTask) {
 				const html = document.getElementById(`taskList_${taskList.id}`);
-				let taskArea;
+				const taskArea = html.querySelector(`${getPath(theTask)}`);
+			}
+			function getPath(theTask) {
+				let path = `#${theTask.name}`;
 
-				if (theTask.isSubListOf) {
-					taskArea = html.querySelector(`.subList ${theTask.isSubListOf.name} #${name}`);
-				}
-				else {
-					taskArea = html.querySelector(`#${name}`);
+				while (theTask.isSubListOf) {
+					path += `#${theTask.isSubListOf.name} .subList ${path}`;
+					theTask = theTask.isSubListOf;
 				}
 
-				taskArea.
+				return path;
 			}
 
-			taskList.setOnTaskCompletion(taskComplete);
-		}
-
-		taskComplete(id, taskName) {
-			const taskList = this.get(id);
-			const html = document.getElementById(`taskList_${id}`);
-
+			function main(currentTaskList) {
+				for (let taskName in currentTaskList.tasks) {
+					currentTaskList.setOnTaskCompletion(taskComplete);
+				}
+			}
 			
 		}
-*/
 	}
 
 	// public - exported to window
