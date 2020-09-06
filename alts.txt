@@ -1,14 +1,13 @@
-all dates are UTC+1 US format
 all 2019-01-10+ (New features for 4.11.0: - Added chat rooms) very likely to be an alt
 
-last update: 09/06/2020
+last update: 06 Sept 2020
 
-definite
+? = probable, definite unless stated otherwise
+
 MAIN
 https://www.warzone.com/Profile?p=19117570425 - Kenghis Ghan 3/19/2020 01:52:39
 https://www.warzone.com/Profile?p=89121918519 - KG_3 4/8/2020 03:11:51
 https://www.warzone.com/Profile?p=95122049984 - KG's Little Helper 4/9/2020 02:32:53
-https://www.warzone.com/Profile?p=12124826334 - Kalfe 4/30/2020 16:50:09 banned
 https://www.warzone.com/Profile?p=81124837836 - Farah 4/28/2020 15:13:49 banned
 https://www.warzone.com/Profile?p=98124837992 - Farah♦ 4/28/2020 15:15:12 banned
 https://www.warzone.com/Profile?p=80124838368 - DanWL 4/28/2020 15:16:49 banned
@@ -18,22 +17,56 @@ https://www.warzone.com/Profile?p=77124839278 - krinid 4/28/2020 15:24:10 banned
 https://www.warzone.com/Profile?p=37124839503 - Plakh Gokhn 4/28/2020 15:26:01 banned
 https://www.warzone.com/Profile?p=47124839780 - Kenghis Ghan 4/28/2020 15:28:58 banned
 https://www.warzone.com/Profile?p=85124839873 - Farah♦ 4/28/2020 15:31:42 banned
+https://www.warzone.com/Profile?p=12124826334 - Kalfe 4/30/2020 16:50:09 banned
+? https://www.warzone.com/Profile?p=48125023100 - test account 4/30/2020 16:50:09 name style
 https://www.warzone.com/Profile?p=18125777123 - Big Brother 5/8/2020 20:34:19
 https://www.warzone.com/Profile?p=72125969159 - Big Brother 5/11/2020 07:20:15
 https://www.warzone.com/Profile?p=47126876307 - GM Benjamin Finegold 5/27/2020 11:40:37
 https://www.warzone.com/Profile?p=94126966104 - Definitely not an alt don't click my profile 5/29/2020 17:35:22
 https://www.warzone.com/Profile?p=81127128599 - KG_142 6/2/2020 11:33:57
+? https://www.warzone.com/Profile?p=36128431904 - Smurf 7/14/2020 14:42:35 name + tagline style
 https://www.warzone.com/Profile?p=57128434601 - Imitation Lightning 7/14/2020 16:11:06 banned
 
-https://www.warzone.com/Profile?p=27127400111 - Imitation DanWL 6/9/2020 09:07:43 banned IP 1269661 UK/USA VPN
+89121918519 IPs
+19117570425
+89121918519
+95122049984
+12124826334
+? 48125023100
+2125969159
+47126876307
+94126966104
+81127128599
+? 36128431904
+57128434601
+
+95122049984 IPs
+todo
+
+94126966104 IPs
+19117570425
+89121918519
+95122049984
+12124826334
+? 48125023100
+72125969159
+47126876307
+94126966104
+81127128599
+https://www.warzone.com/Profile?p=27127400111 - Imitation DanWL 6/9/2020 09:07:43 banned
+36128431904
+57128434601
+
+27127400111 IPs
+94126966104
+27127400111
 
 https://www.warzone.com/Profile?p=60127924971 - Name so long it can be considered for some as spam 6/26/2020 04:42:59 banned IPs 1271285 1268763 Americas VPN
 
 probable
-https://www.warzone.com/Profile?p=48125023100 - test account 4/30/2020 16:50:09 name style MAIN
 
+below this requires update
 https://www.warzone.com/Profile?p=43126881997 - Is this a Risk imitation? name style
-https://www.warzone.com/Profile?p=36128431904 - Smurf 7/14/2020 14:42:35 name style, IPs
 https://www.warzone.com/Profile?p=10127202711 - Mission: Block Global Chat 6/4/2020 09:52:41 name style, IPs
 https://www.warzone.com/Profile?p=83125820481 - CicciolinaCercaTori 5/9/2020 11:00:39 IPs
 https://www.warzone.com/Profile?p=19125821689 - CicciolinaCercaTuaMadre 5/9/2020 11:39:53 IPs
