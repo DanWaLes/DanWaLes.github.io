@@ -137,16 +137,6 @@
 			return `{${this.storageName}:${JSON.stringify(this._storage)}}`;
 		}
 	};
-	// force this in storage to be storage, instead of Window
-	// based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
-	for (let key in storage) {
-		const value = storage[key];
-
-		if (typeof value == "function") {
-			storage[key] = value.bind(storage);
-			console.log("set 'this' value in " + key)
-		}
-	}
 
 	async function notifyUsersOfChanges(THIS_USERSCRIPT) {
 		if (await storage[THIS_USERSCRIPT.NAME].getItem("UPDATE_NO") < THIS_USERSCRIPT.UPDATE_NO) {
@@ -837,6 +827,16 @@
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
 			return;
+		}
+
+		// force this in storage to be storage, instead of Window
+		// based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
+		for (let key in storage) {
+			const value = storage[key];
+
+			if (typeof value == "function") {
+				storage[key] = value.bind(storage);// works in isolation but not when fetched
+			}
 		}
 
 		storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, validateStorage, importLegacy);
