@@ -11,18 +11,17 @@
 		_storage: undefined,// only changes when necessary (on storage change), is faster
 		usedBy: [],
 
-		setupUserscriptStorage: (name, validateStorage, importLegacy) => {
-			console.log(this)
+		setupUserscriptStorage: function(name, validateStorage, importLegacy) {
 			this.usedBy.push(name);
 
 			this[name] = {
-				validate: async (stored) => {
+				validate: async function(stored) {
 					return await validateStorage(await this.validate(stored));
 				},
-				validateCorrectingErrors: async () => {
+				validateCorrectingErrors: async function() {
 					return this.validateCorrectingErrors(name);
 				},
-				get: async () => {
+				get: async function() {
 					let ret = this._storage[name];
 
 					if (!ret) {
@@ -32,19 +31,19 @@
 
 					return ret;
 				},
-				getItem: async (key) => {
+				getItem: async function(key) {
 					const stored = await this[name].get();
 
 					return stored[key];
 				},
-				setItem: async (key, value) => {
+				setItem: async function(key, value) {
 					const stored = await this[name].get();
 
 					stored[key] = value;
 
 					await this.updateUserscript(name, stored);
 				},
-				reset: async () => {
+				reset: async function() {
 					await this.updateUserscript(name, null);// has to be falsey to force a check and give minimal storage data for the userscript to function
 				}
 			};
@@ -53,7 +52,7 @@
 				this[name].importLegacy = importLegacy;
 			}
 		},
-		validate: async (stored, forceValidateEverything) => {
+		validate: async function(stored, forceValidateEverything) {
 			// only do top-level validate
 			if (typeof stored != "object" || !stored) {
 				throw "storage.validate requires storage input to validate where storage is a truthy object";
@@ -75,7 +74,7 @@
 
 			return this._storage;
 		},
-		validateCorrectingErrors: async (userscriptName) => {
+		validateCorrectingErrors: async function(userscriptName) {
 			// storage could be tampered with/cleared manually, so validate first
 			// if bad or no storage, reset
 			try {
@@ -96,12 +95,12 @@
 				return ret;
 			}
 		},
-		clear: () => {
+		clear: function() {
 			this._storage = undefined;
 
 			localStorage.removeItem(this.storageName);
 		},
-		updateUserscript: async (name, stored) => {
+		updateUserscript: async function(name, stored) {
 			if (!this._storage) {
 				this._storage = await this.validateCorrectingErrors(name);
 			}
@@ -109,7 +108,7 @@
 			this._storage[name] = stored;
 			localStorage[this.storageName] = JSON.stringify(this._storage);			
 		},
-		import: async (imported) => {
+		import: async function(imported) {
 			if (typeof imported != "string") {
 				throw "storage.import requires imported to be a string";
 			}
@@ -133,25 +132,10 @@
 				}
 			}
 		},
-		export: () => {
-			return `{${this.storageName}:${JSON.stringify(this._storage)}}`;
+		export: function() {
+			return `{${this.name}:${JSON.stringify(this._storage)}}`;
 		}
 	};
-
-	console.table("storage.name", storage.name);
-	console.table("storage.export()", storage.export());
-
-	// force this in storage to be storage, instead of Window
-	// based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
-	for (let key in storage) {
-		const value = storage[key];
-
-		if (typeof value == "function") {
-			storage[key] = value.bind(storage);// works in isolation but not when fetched
-		}
-	}
-	console.table("storage.name", storage.name);
-	console.table("storage.export()", storage.export());
 
 	async function notifyUsersOfChanges(THIS_USERSCRIPT) {
 		if (await storage[THIS_USERSCRIPT.NAME].getItem("UPDATE_NO") < THIS_USERSCRIPT.UPDATE_NO) {
