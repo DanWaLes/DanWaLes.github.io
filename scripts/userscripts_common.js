@@ -85,9 +85,11 @@
 			}
 			catch(err) {
 				// whole of storage is bad if it can't be parsed
-				this.clear();					
+				this.clear();
 
-				localStorage[this.name] = await this[name].validate({});
+				const corrected = await this[name].validate({});
+				console.log(corrected)
+				localStorage[this.name] = corrected;
 			}
 			finally {
 				const ret = JSON.parse(localStorage[this.name]);
