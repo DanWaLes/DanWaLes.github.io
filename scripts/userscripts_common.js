@@ -17,34 +17,29 @@
 
 				this[name] = {
 					validate: async (stored) => {
-						console.table("stored", stored);
-						const s1 = await this.validate(stored);
-						console.table("s1", s1);
-						const result = await validateStorage(s1);
-
-						console.table("result", result);
-						return result;
+						// this is storage
+						return await validateStorage(await this.validate(stored));
 					},
-					get: async function() {
+					get: async () => {
 						if (!this._storage || !this._storage[name]) {
 							this._storage = await this.validateCorrectingErrors(name);
 						}
 
 						return this._storage[name];
 					},
-					getItem: async function(key) {
+					getItem: async (key) => {
 						const stored = await this[name].get();
 
 						return stored[key];
 					},
-					setItem: async function(key, value) {
+					setItem: async (key, value) => {
 						const stored = await this[name].get();
 
 						stored[key] = value;
 
 						await this.updateUserscript(name, stored);
 					},
-					reset: async function() {
+					reset: async () => {
 						await this.updateUserscript(name, null);// has to be falsey to force a check and give minimal storage data for the userscript to function
 					}
 				};
@@ -82,27 +77,21 @@
 					const stored = JSON.parse(localStorage[this.name]);
 
 					localStorage[this.name] = userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored);
-
-					done();
+					return done();
 				}
 				catch(err) {
 					// whole of storage is bad if it can't be parsed
 					this.clear();
 
-					const corrected = await this[userscriptName].validate({});
-					console.table("corrected", corrected);
-					localStorage[this.name] = corrected;
-
-					done();
+					localStorage[this.name] = await this[userscriptName].validate({});
+					return done();
 				}
 
 				function done() {
 					// finally called before catch ends, so using an equivalent
-					console.log("init finally")
 					const ret = JSON.parse(localStorage[this.name]);
 
 					this._storage = ret;
-					console.log("done");
 					return ret;
 				}
 			},
