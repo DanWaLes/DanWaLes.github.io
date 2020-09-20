@@ -12,8 +12,6 @@
 		usedBy: [],
 
 		setupUserscriptStorage: (name, validateStorage, importLegacy) => {
-			console.log(this);
-
 			this.usedBy.push(name);
 
 			this[name] = {
@@ -138,6 +136,15 @@
 			return `{${this.storageName}:${JSON.stringify(this._storage)}}`;
 		}
 	};
+	// force this in storage to be storage, instead of Window
+	// based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
+	for (let key in storage) {
+		const value = storage[key];
+
+		if (typeof value == "function") {
+			storage[key] = value.bind(storage);
+		}
+	}
 
 	async function notifyUsersOfChanges(THIS_USERSCRIPT) {
 		if (await storage[THIS_USERSCRIPT.NAME].getItem("UPDATE_NO") < THIS_USERSCRIPT.UPDATE_NO) {
