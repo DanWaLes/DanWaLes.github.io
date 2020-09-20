@@ -19,6 +19,7 @@
 					return await validateStorage(await this.validate(stored));
 				},
 				validateCorrectingErrors: async () => {
+					console.log(this);
 					return this.validateCorrectingErrors(name);
 				},
 				get: async function() {
