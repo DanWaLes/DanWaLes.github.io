@@ -16,7 +16,7 @@
 				this.usedBy.push(name);
 
 				this[name] = {
-					validate: async function(stored) {
+					validate: async (stored) => {
 						console.table("stored", stored);
 						const s1 = await this.validate(stored);
 						console.table("s1", s1);
