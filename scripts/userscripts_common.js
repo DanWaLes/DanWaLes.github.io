@@ -18,7 +18,7 @@
 				validate: async function(stored) {
 					return await validateStorage(await this.validate(stored));
 				},
-				validateCorrectingErrors: async function() {
+				validateCorrectingErrors: async () => {
 					return this.validateCorrectingErrors(name);
 				},
 				get: async function() {
