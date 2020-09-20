@@ -78,18 +78,18 @@
 			// storage could be tampered with/cleared manually, so validate first
 			// if bad or no storage, reset
 			try {
-				const stored = JSON.parse(localStorage[this.storageName]);
+				const stored = JSON.parse(localStorage[this.name]);
 
-				localStorage[this.storageName] = userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored);
+				localStorage[this.name] = userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored);
 			}
 			catch(err) {
 				// whole of storage is bad if it can't be parsed
 				this.clear();					
 
-				localStorage[this.storageName] = await this[name].validate({});
+				localStorage[this.name] = await this[name].validate({});
 			}
 			finally {
-				const ret = JSON.parse(localStorage[this.storageName]);
+				const ret = JSON.parse(localStorage[this.name]);
 
 				this._storage = ret;
 				return ret;
@@ -98,7 +98,7 @@
 		clear: function() {
 			this._storage = undefined;
 
-			localStorage.removeItem(this.storageName);
+			localStorage.removeItem(this.name);
 		},
 		updateUserscript: async function(name, stored) {
 			if (!this._storage) {
@@ -106,7 +106,7 @@
 			}
 
 			this._storage[name] = stored;
-			localStorage[this.storageName] = JSON.stringify(this._storage);			
+			localStorage[this.name] = JSON.stringify(this._storage);			
 		},
 		import: async function(imported) {
 			if (typeof imported != "string") {
@@ -116,8 +116,8 @@
 			try {
 				imported = await this.validate(JSON.parse(imported), true);
 
-				if (imported[this.storageName]) {
-					localStorage[this.storageName] = await this.validate(imported[this.storageName]);
+				if (imported[this.name]) {
+					localStorage[this.name] = await this.validate(imported[this.name]);
 				}
 				else {
 					throw "Cannot import as the import data is bad";
