@@ -74,6 +74,16 @@
 				// storage could be tampered with/cleared manually, so validate first
 				// if bad or no storage, reset
 				console.table("validateCorrectingErrors this", this);
+
+				const done = () => {
+					// finally called before catch ends, so using an equivalent
+					console.table("done this", this);
+					const ret = JSON.parse(localStorage[this.name]);
+
+					this._storage = ret;
+					return ret;
+				};
+
 				try {
 					const stored = JSON.parse(localStorage[this.name]);
 
@@ -88,15 +98,6 @@
 					console.table("validated", validated);
 					localStorage[this.name] = JSON.stringify(validated);
 					return done();
-				}
-
-				function done() {
-					// finally called before catch ends, so using an equivalent
-					console.table("this", this);
-					const ret = JSON.parse(localStorage[this.name]);
-
-					this._storage = ret;
-					return ret;
 				}
 			},
 			clear: function() {
