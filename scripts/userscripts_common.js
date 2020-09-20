@@ -23,14 +23,11 @@
 						return result;
 					},
 					get: async function() {
-						let ret = this._storage[name];
-
-						if (!ret) {
-							ret = this.validateCorrectingErrors(name);
-							this._storage = ret;
+						if (!this._storage || !this._storage[name]) {
+							this._storage = await this.validateCorrectingErrors(name);
 						}
 
-						return ret;
+						return this._storage[name];
 					},
 					getItem: async function(key) {
 						const stored = await this[name].get();
@@ -67,7 +64,7 @@
 
 				if (forceValidateEverything) {
 					for (let name of this.usedBy) {
-						await this[name].validateCorrectingErrors(stored);
+						await this.validateCorrectingErrors(name);
 					}
 				}
 
@@ -841,7 +838,7 @@
 
 			storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, validateStorage, importLegacy);
 
-			await storage[THIS_USERSCRIPT.NAME].validateCorrectingErrors().then(() => {
+			await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
 				notifyUsersOfChanges(THIS_USERSCRIPT).then(() => {
 					dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);	
 				}, (err) => {
