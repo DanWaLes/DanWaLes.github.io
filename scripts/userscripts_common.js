@@ -82,19 +82,25 @@
 					const stored = JSON.parse(localStorage[this.name]);
 
 					localStorage[this.name] = userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored);
+
+					done();
 				}
 				catch(err) {
 					// whole of storage is bad if it can't be parsed
 					console.log("storage is bad");
-					console.log(this.clear);
 					this.clear();
 					console.log("cleared storage, about to get corrected");
+					console.log(this[name].validate);
 
 					const corrected = await this[name].validate({});
 					console.table("corrected", corrected);
 					localStorage[this.name] = corrected;
+
+					done();
 				}
-				finally {
+
+				function done() {
+					// finally called before catch ends, so using an equivalent
 					console.log("init finally")
 					const ret = JSON.parse(localStorage[this.name]);
 
