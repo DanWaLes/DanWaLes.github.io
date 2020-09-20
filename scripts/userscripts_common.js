@@ -20,7 +20,6 @@
 						return await validateStorage(await this.validate(stored));
 					},
 					validateCorrectingErrors: async () => {
-						console.log(this);
 						return this.validateCorrectingErrors(name);
 					},
 					get: async function() {
@@ -86,17 +85,20 @@
 				}
 				catch(err) {
 					// whole of storage is bad if it can't be parsed
+					console.log("storage is bad")
 					this.clear();
 
 					const corrected = await this[name].validate({});
-					console.log(corrected)
+					console.table("corrected", corrected);
 					localStorage[this.name] = corrected;
 				}
 				finally {
+					console.log("init finally")
 					const ret = JSON.parse(localStorage[this.name]);
 
 					this._storage = ret;
 					return ret;
+					console.log("done");
 				}
 			},
 			clear: function() {
