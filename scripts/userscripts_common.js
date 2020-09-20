@@ -133,9 +133,10 @@
 				}
 			},
 			export: function() {
-				const exported = {this.name: this._storage};
+				const exported = {};
+				exported[this.name] = this._storage;
 
-				return `${JSON.stringify(exported)}`;
+				return `${JSON.stringify(exported)}}`;
 			}
 		};
 
