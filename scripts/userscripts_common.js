@@ -12,6 +12,7 @@
 		usedBy: [],
 
 		setupUserscriptStorage: (name, validateStorage, importLegacy) => {
+			console.log(this)
 			this.usedBy.push(name);
 
 			this[name] = {
@@ -143,6 +144,7 @@
 
 		if (typeof value == "function") {
 			storage[key] = value.bind(storage);
+			console.log("set 'this' value in " + value)
 		}
 	}
 
