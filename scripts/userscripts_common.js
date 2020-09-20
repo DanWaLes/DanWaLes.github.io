@@ -436,11 +436,15 @@
 						importOutput.className = "";
 						importOutput.innerHTML = "";
 
-						storage.import(importArea.querySelector('input[type="text"]').value)
+						const settings = importArea.querySelector('input[type="text"]');
+
+						storage.import(settings.value)
 							.then(() => {
 								importOutput.innerHTML = "Done";
 								setTimeout(() => {
 									importArea.style.display = "none";
+									importOutput.innerHTML = "";
+									settings.value = "";
 								}, 1000);
 							}, (err) => {
 								importOutput.className = "errors";
