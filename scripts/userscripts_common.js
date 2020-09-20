@@ -87,6 +87,7 @@
 					// whole of storage is bad if it can't be parsed
 					console.log("storage is bad")
 					this.clear();
+					console.log("cleared storage, about to get corrected");
 
 					const corrected = await this[name].validate({});
 					console.table("corrected", corrected);
@@ -97,8 +98,8 @@
 					const ret = JSON.parse(localStorage[this.name]);
 
 					this._storage = ret;
-					return ret;
 					console.log("done");
+					return ret;
 				}
 			},
 			clear: function() {
