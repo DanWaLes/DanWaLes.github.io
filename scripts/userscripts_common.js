@@ -12,6 +12,8 @@
 		usedBy: [],
 
 		setupUserscriptStorage: (name, validateStorage, importLegacy) => {
+			console.log(this);
+
 			this.usedBy.push(name);
 
 			this[name] = {
@@ -216,7 +218,6 @@
 					@param options
 					{
 						useCollapsible: boolean to include a collase button surrounding whole content
-						collapsibleName: string e.g. settings, menu
 						mainContent: string the actual menu for this userscript
 						setupMainContentEvents: function for function binding on mainContent
 					}
@@ -232,7 +233,7 @@
 					const mainContent = this.makeLegacyImportSettings.HTML(THIS_USERSCRIPT) + `<div>${options.mainContent}</div>`;
 
 					if (options.useCollapsible) {
-						this.useCollapsibleMenu(content, options.collapsibleName, mainContent);
+						this.useCollapsibleMenu(content, mainContent);
 					}
 					else {
 						content.innerHTML = mainContent;
@@ -244,10 +245,8 @@
 						options.setupMainContentEvents(content);
 					}
 				},
-				useCollapsibleMenu: function(content, name, mainContent) {
-					if (!name) {
-						name = "menu";// nice to have a default
-					}
+				useCollapsibleMenu: function(content, mainContent) {
+					const name = "menu";
 
 					const expandHideSettingsBtn = {
 						id: "hideExpand",
@@ -491,6 +490,36 @@
 		return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 
+	const PlayerNumber = {
+		get: (link) => {
+			let number = link.match(/https?:\/\/(?:(?:www\.)?(?:warzone\.com)|(?:warlight\.net))\/Profile\?p=(\d+)/i);
+
+			if (number) {
+				number = number[1];
+			}
+
+			return parseInt(number);
+		},
+		toUrl: (num) => {
+			return "https://www.warzone.com/Profile?p=" + num;
+		}
+	};
+	deepFreeze(PlayerNumber);
+
+	function getPlayerId(link) {
+		const number = PlayerNumber.get(link);
+		let id = "" + number;
+
+		if (isNaN(number)) {
+			return number;
+		}
+
+		id = id.substring(2, id.length);
+		id = id.substring(0, id.length - 2);
+
+		return parseInt(id);
+	}
+
 	function deepFreeze(object) {
 		// Retrieve the property names defined on object
 		const propNames = Object.getOwnPropertyNames(object);
@@ -516,7 +545,6 @@
 		return false;
 	}
 
-	// TODO change so that tasks names aren't an identifier, use numbers instead
 	class TaskList {
 		// everything starts at same time. when completed, run the callback
 		// displays progress to user
@@ -537,8 +565,6 @@
 
 			for (let id in list) {
 				id = parseInt(id);
-
-				const task = list[id];
 	
 				this.tasks[id] = {
 					id: id,
@@ -548,6 +574,7 @@
 			}
 		}
 
+		/*
 		markAsSubList(mainList, mainTaskId) {
 			// add bottom to top to get expected results
 			// mainTaskId is the parent task - this would be the sub parts
@@ -571,7 +598,7 @@
 					return that.returnValues;
 				});
 			};
-		}
+		}*/
 
 		setOnTaskCompletion(onTaskCompletion) {
 			this.onTaskCompletion = onTaskCompletion;
@@ -580,14 +607,14 @@
 		async run() {
 			const that = this;
 			function runTask(task) {
-				task().then((res) => {
+				task.task().then((res) => {
 					that.returnValues.tasks[task.id] = res;
 					that.taskComplete(task.id);
 				});
 			}
 
 			for (let task of that.tasks) {
-				runTask(task.task);
+				runTask(task);
 			}
 		}
 
@@ -614,6 +641,84 @@
 		}
 	}
 
+	/*
+	class TaskListFactory {
+		constructor() {
+			this.numTaskLists = 0;
+			this.taskLists = [];
+		}
+
+		create(list, onAllDone) {
+			const taskList = new TaskList(list, onAllDone);
+			taskList.id = this.numTaskLists++;
+
+			this.taskLists.push(taskList);
+		}
+
+		markSublist(mainListId, mainListTaskId, subListId) {
+			const mainList = this.taskLists[mainListId];
+			const mainTask = mainList.tasks[mainListTaskId];
+			const subTaskList = this.taskLists[subListId];
+
+			subTaskList.isSubListOf = mainTask;
+			mainTask.hasSubList = subTaskList;
+		}
+
+		addUI(taskListId) {
+			function initialize() {
+				let html = "";
+
+				function makeMarker(rounds) {
+					let marker = "";
+
+					for (let i = 0; i < rounds; i++) {
+						marker += "-";
+					}
+
+					marker += "> ";
+
+					return marker;
+				}
+
+				function main(taskList, rounds) {
+					html += `<div id="taskList_${taskList.id}">`;
+
+					for (let task of taskList.tasks) {
+						html += `<div id="task_${task.id}">
+			<span class="marker">${makeMarker(rounds)}</span><span class="taskName">${cammelCaseToTitle(task.task.name)}</span>
+			<span class="taskProgress"><span class="currentProgress">`;
+
+						if (task.hasSubList) {
+							html += `0</span>/${task.hasSubList.numTasks}</span>`;
+							main(task.hasSubList, rounds + 1);
+						}
+						else {
+							html += `Not started</span></span>`;
+						}
+
+						html += `</div>`;
+					}
+
+					html += `</div>`;
+				}
+
+				main(this.taskLists[taskListId], 0);
+
+				const listContainer = document.createElement("div");
+
+				listContainer.innerHTML = html;
+				document.body.appendChild(listContainer);
+			}
+
+			function bindTaskComplete() {
+				
+			}
+
+			initialize();
+			bindTaskComplete();
+		}
+	}
+
 	class TaskListWithUI {
 		// shows progress
 		constructor() {
@@ -622,9 +727,8 @@
 		}
 
 		create(taskList, options) {
-			/*
-				@param taskList the overall taskList, with any subLists included (only 1st supported)
-			*/
+			// @param taskList the overall taskList, with any subLists included (only 1st supported)
+
 			// this.taskLists.push({id: id, taskList: taskList, options: options});
 
 			taskList.id = this.id;
@@ -718,6 +822,7 @@
 			
 		}
 	}
+	*/
 
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
@@ -735,7 +840,7 @@
 			});
 		});
 
-		const shared = [storage, cammelCaseToTitle, escapeRegExp, deepFreeze, TaskList];
+		const shared = [storage, cammelCaseToTitle, escapeRegExp, PlayerNumber, getPlayerId, deepFreeze, TaskList];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {
