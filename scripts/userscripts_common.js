@@ -17,7 +17,10 @@
 
 				this[name] = {
 					validate: async function(stored) {
-						const result = await validateStorage(await this.validate(stored));
+						console.table("stored", stored);
+						const s1 = await this.validate(stored);
+						console.table("s1", s1);
+						const result = await validateStorage(s1);
 
 						console.table("result", result);
 						return result;
