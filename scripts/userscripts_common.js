@@ -83,7 +83,9 @@
 					// whole of storage is bad if it can't be parsed
 					this.clear();
 
-					localStorage[this.name] = JSON.stringify(await this[userscriptName].validate({}));
+					const validated = await this[userscriptName].validate({});
+					console.table("validated", validated);
+					localStorage[this.name] = JSON.stringify(validated);
 					return done();
 				}
 
