@@ -73,11 +73,10 @@
 			validateCorrectingErrors: async function(userscriptName) {
 				// storage could be tampered with/cleared manually, so validate first
 				// if bad or no storage, reset
-				console.table("validateCorrectingErrors this", this);
 
 				const done = () => {
 					// finally called before catch ends, so using an equivalent
-					console.table("done this", this);
+					// has to be => because plain function uses window
 					const ret = JSON.parse(localStorage[this.name]);
 
 					this._storage = ret;
@@ -95,7 +94,6 @@
 					this.clear();
 
 					const validated = await this[userscriptName].validate({});
-					console.table("validated", validated);
 					localStorage[this.name] = JSON.stringify(validated);
 					return done();
 				}
@@ -287,7 +285,7 @@
 						};
 
 						content.innerHTML += `<input id="${expandHideSettingsBtn.id}" type="button">
-						<div id="${settings.id}">${mainContent}</div>"`;
+						<div id="${settings.id}">${mainContent}</div>`;
 
 						expandHideSettingsBtn.changeState(false);// to set initial
 						expandHideSettingsBtn.get().onclick = function() {
