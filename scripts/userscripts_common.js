@@ -73,6 +73,7 @@
 			validateCorrectingErrors: async function(userscriptName) {
 				// storage could be tampered with/cleared manually, so validate first
 				// if bad or no storage, reset
+				console.table("this", this);
 				try {
 					const stored = JSON.parse(localStorage[this.name]);
 
