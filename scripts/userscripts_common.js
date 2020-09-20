@@ -418,7 +418,6 @@
 					const importArea = menu.querySelector("#importArea");
 					const importOutput = importArea.querySelector("#output");
 					const exportArea = menu.querySelector("#exportArea");
-					const exportOutput = exportArea.querySelector("#output");
 
 					menu.querySelector("#import").onclick = function() {
 						exportArea.style.display = "none";
@@ -440,7 +439,7 @@
 
 					menu.querySelector("#export").onclick = function() {
 						importArea.style.display = "none";
-						exportOutput.innerHTML = storage.export();
+						exportArea.innerHTML = storage.export();
 						exportArea.style.display = "block";
 					};
 				},
