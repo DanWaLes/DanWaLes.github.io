@@ -385,13 +385,16 @@
 					<a href="https://www.warzone.com/Discussion/SendMail?PlayerID=222685" style="margin: 5px;">Report bug/request feature</a>
 					<div>
 						<input id="import" type="button" value="Import settings">
+						<input id="export" type="button" value="Export settings">
 						<div id="importArea" style="display: none;">
 							<input type="button" value="Ok">
 							<p id="output"></p>
-							<textarea></textarea>
+							<input type="text">
 						</div>
-						<input id="export" type="button" value="Export settings">
-						<div id="exportArea" style="display: none;"></div>
+						<div id="exportArea" style="display: none;">
+							<input type="button" value="Done">
+							<input type="text">
+						</div>
 					</div>
 					<div id="list" style="max-width: 2000px">`;
 
@@ -423,19 +426,22 @@
 					const importArea = menu.querySelector("#importArea");
 					const importOutput = importArea.querySelector("#output");
 					const exportArea = menu.querySelector("#exportArea");
+					const exportOutput = exportArea.querySelector('input[type="text"]');
 
 					menu.querySelector("#import").onclick = function() {
 						exportArea.style.display = "none";
 						importArea.style.display = "block";
 					};
-
 					importArea.querySelector("input").onclick = function() {
 						importOutput.className = "";
 						importOutput.innerHTML = "";
 
-						storage.import(importArea.querySelector("textarea").value)
+						storage.import(importArea.querySelector('input[type="text"]').value)
 							.then(() => {
 								importOutput.innerHTML = "Done";
+								setTimeout(() => {
+									importArea.style.display = "none";
+								}, 1000);
 							}, (err) => {
 								importOutput.className = "errors";
 								importOutput.innerHTML = err;
@@ -444,8 +450,11 @@
 
 					menu.querySelector("#export").onclick = function() {
 						importArea.style.display = "none";
-						exportArea.innerHTML = storage.export();
+						exportOutput.innerHTML = storage.export();
 						exportArea.style.display = "block";
+					};
+					exportArea.querySelector("input").onclick = function() {
+						exportArea.style.display = "none";
 					};
 				},
 				view: function() {
