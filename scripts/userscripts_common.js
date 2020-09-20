@@ -76,14 +76,14 @@
 				try {
 					const stored = JSON.parse(localStorage[this.name]);
 
-					localStorage[this.name] = userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored);
+					localStorage[this.name] = JSON.stringify(userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored));
 					return done();
 				}
 				catch(err) {
 					// whole of storage is bad if it can't be parsed
 					this.clear();
 
-					localStorage[this.name] = await this[userscriptName].validate({});
+					localStorage[this.name] = JSON.stringify(await this[userscriptName].validate({}));
 					return done();
 				}
 
@@ -116,10 +116,7 @@
 				try {
 					imported = await this.validate(JSON.parse(imported), true);
 
-					if (imported[this.name]) {
-						localStorage[this.name] = await this.validate(imported[this.name]);
-					}
-					else {
+					if (!imported[this.name]) {
 						throw "Cannot import as the import data is bad";
 					}
 				}
