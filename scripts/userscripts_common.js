@@ -393,7 +393,7 @@
 						</div>
 						<div id="exportArea" style="display: none;">
 							<input type="button" value="Done">
-							<input type="text">
+							<textarea readonly="readonly"></textarea>
 						</div>
 					</div>
 					<div id="list" style="max-width: 2000px">`;
@@ -426,7 +426,7 @@
 					const importArea = menu.querySelector("#importArea");
 					const importOutput = importArea.querySelector("#output");
 					const exportArea = menu.querySelector("#exportArea");
-					const exportOutput = exportArea.querySelector('input[type="text"]');
+					const exportOutput = exportArea.querySelector('textarea');
 
 					menu.querySelector("#import").onclick = function() {
 						exportArea.style.display = "none";
