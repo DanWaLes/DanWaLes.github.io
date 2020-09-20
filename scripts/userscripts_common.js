@@ -301,7 +301,7 @@
 							return `<div id="importContainer">
 								<input type="button" value="Import pre-2020 settings">
 								<div id="importArea" style="display: none;">
-									<input value="Ok">
+									<input type="button" value="Ok">
 									<p id="output"></p>
 									<textarea></textarea>
 								</div>
@@ -381,14 +381,12 @@
 					<div>
 						<input id="import" type="button" value="Import settings">
 						<div id="importArea" style="display: none;">
-							<input value="Ok">
+							<input type="button" value="Ok">
 							<p id="output"></p>
 							<textarea></textarea>
 						</div>
 						<input id="export" type="button" value="Export settings">
 						<div id="exportArea" style="display: none;">
-							<input value="Ok">
-							<p id="output"></p>
 							<textarea></textarea>
 						</div>
 					</div>
@@ -444,16 +442,14 @@
 
 					menu.querySelector("#export").onclick = function() {
 						importArea.style.display = "none";
-						exportArea.style.display = "block";
-					};
 
-					exportArea.querySelector("input").onclick = function() {
 						exportOutput.innerHTML = "";
-
 						storage.export()
 							.then((exported) => {
 								exportOutput.innerHTML = exported;
 							});
+
+						exportArea.style.display = "block";
 					};
 				},
 				view: function() {
@@ -489,6 +485,7 @@
 		}
 
 		const PlayerNumber = {
+			name: "PlayerNumber",
 			get: (link) => {
 				let number = link.match(/https?:\/\/(?:(?:www\.)?(?:warzone\.com)|(?:warlight\.net))\/Profile\?p=(\d+)/i);
 
