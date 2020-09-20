@@ -4,8 +4,8 @@
 /* jshint devel: true */
 
 (() => {
-	alert("test")
-	// alert("test2");
+	// alert("test")
+	alert("test2");
 	try {
 		// required internal
 		// async/await because validation does everything at once, so need to wait for completion of that before moving on
