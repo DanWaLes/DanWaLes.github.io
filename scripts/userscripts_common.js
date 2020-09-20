@@ -118,6 +118,7 @@
 
 				try {
 					imported = await this.validate(JSON.parse(imported), true);
+					console.log(imported);
 
 					if (!imported[this.name]) {
 						throw "Cannot import as the import data is bad";
@@ -136,7 +137,7 @@
 				const exported = {};
 				exported[this.name] = this._storage;
 
-				return `${JSON.stringify(exported)}}`;
+				return JSON.stringify(exported);
 			}
 		};
 
