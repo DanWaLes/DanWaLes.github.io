@@ -17,16 +17,16 @@
 
 				this[name] = {
 					validate: async function(stored) {
-						return await validateStorage(await this.validate(stored));
-					},
-					validateCorrectingErrors: async () => {
-						return this.validateCorrectingErrors(name);
+						const result = await validateStorage(await this.validate(stored));
+
+						console.table("result", result);
+						return result;
 					},
 					get: async function() {
 						let ret = this._storage[name];
 
 						if (!ret) {
-							ret = await this[name].validateCorrectingErrors();
+							ret = this.validateCorrectingErrors(name);
 							this._storage = ret;
 						}
 
