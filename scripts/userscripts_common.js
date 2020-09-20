@@ -91,6 +91,7 @@
 
 				function done() {
 					// finally called before catch ends, so using an equivalent
+					console.table("this", this);
 					const ret = JSON.parse(localStorage[this.name]);
 
 					this._storage = ret;
