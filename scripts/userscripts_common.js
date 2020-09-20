@@ -441,14 +441,9 @@
 					};
 
 					menu.querySelector("#export").onclick = function() {
+						exportOutput.innerHTML = storage.export();
+
 						importArea.style.display = "none";
-
-						exportOutput.innerHTML = "";
-						storage.export()
-							.then((exported) => {
-								exportOutput.innerHTML = exported;
-							});
-
 						exportArea.style.display = "block";
 					};
 				},
