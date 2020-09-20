@@ -386,9 +386,7 @@
 							<textarea></textarea>
 						</div>
 						<input id="export" type="button" value="Export settings">
-						<div id="exportArea" style="display: none;">
-							<textarea></textarea>
-						</div>
+						<div id="exportArea" style="display: none;"></div>
 					</div>
 					<div id="list" style="max-width: 2000px">`;
 
@@ -420,7 +418,7 @@
 					const importArea = menu.querySelector("#importArea");
 					const importOutput = importArea.querySelector("#output");
 					const exportArea = menu.querySelector("#exportArea");
-					const exportOutput = importArea.querySelector("#output");
+					const exportOutput = exportArea.querySelector("#output");
 
 					menu.querySelector("#import").onclick = function() {
 						exportArea.style.display = "none";
@@ -441,9 +439,8 @@
 					};
 
 					menu.querySelector("#export").onclick = function() {
-						exportOutput.innerHTML = storage.export();
-
 						importArea.style.display = "none";
+						exportOutput.innerHTML = storage.export();
 						exportArea.style.display = "block";
 					};
 				},
