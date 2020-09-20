@@ -87,12 +87,9 @@
 				}
 				catch(err) {
 					// whole of storage is bad if it can't be parsed
-					console.log("storage is bad");
 					this.clear();
-					console.log("cleared storage, about to get corrected");
-					console.log(this[name].validate);
 
-					const corrected = await this[name].validate({});
+					const corrected = await this[userscriptName].validate({});
 					console.table("corrected", corrected);
 					localStorage[this.name] = corrected;
 
