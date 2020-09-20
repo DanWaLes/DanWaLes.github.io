@@ -144,7 +144,7 @@
 
 		if (typeof value == "function") {
 			storage[key] = value.bind(storage);
-			console.log("set 'this' value in " + value)
+			console.log("set 'this' value in " + key)
 		}
 	}
 
