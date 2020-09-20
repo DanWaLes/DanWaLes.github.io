@@ -450,7 +450,7 @@
 
 					menu.querySelector("#export").onclick = function() {
 						importArea.style.display = "none";
-						exportOutput.innerHTML = storage.export();
+						exportOutput.value = storage.export();
 						exportArea.style.display = "block";
 					};
 					exportArea.querySelector("input").onclick = function() {
