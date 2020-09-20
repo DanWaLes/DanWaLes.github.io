@@ -3,7 +3,7 @@
 /* jshint browser: true */
 /* jshint devel: true */
 
-(() => {
+(async () => {
 	// required internal
 	// async/await because validation does everything at once, so need to wait for completion of that before moving on
 	const storage = {
@@ -854,11 +854,12 @@
 	}
 
 	window.createDansUserscriptsCommon = createDansUserscriptsCommon;
-})().catch((err) => {
-	if (err instanceof Error) {
-		console.exception(`${err.name} ${err.message}\n${err.stack}`);
-	}
-	else {
-		console.exception(err);
-	}
-});
+})
+	.catch((err) => {
+		if (err instanceof Error) {
+			console.exception(`${err.name} ${err.message}\n${err.stack}`);
+		}
+		else {
+			console.exception(err);
+		}
+	})();
