@@ -852,4 +852,11 @@
 	}
 
 	window.createDansUserscriptsCommon = createDansUserscriptsCommon;
-})();
+})().catch((err) => {
+	if (err instanceof Error) {
+		console.exception(`${err.name} ${err.message}\n${err.stack}`);
+	}
+	else {
+		console.exception(err);
+	}
+});
