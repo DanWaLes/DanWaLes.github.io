@@ -117,12 +117,13 @@
 				}
 
 				try {
-					imported = await this.validate(JSON.parse(imported), true);
-					console.log(imported);
+					imported = JSON.parse(imported);
 
 					if (!imported[this.name]) {
 						throw "Cannot import as the import data is bad";
 					}
+
+					await this.validate(imported[this.name], true);
 				}
 				catch(err) {
 					if (err instanceof SyntaxError) {
