@@ -85,7 +85,8 @@
 				}
 				catch(err) {
 					// whole of storage is bad if it can't be parsed
-					console.log("storage is bad")
+					console.log("storage is bad");
+					console.log(this.clear);
 					this.clear();
 					console.log("cleared storage, about to get corrected");
 
