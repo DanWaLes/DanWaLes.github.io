@@ -8,7 +8,8 @@
 		// required internal
 		// async/await because validation does everything at once, so need to wait for completion of that before moving on
 		const storage = {
-			name: "dans_userscripts",
+			name: "storage",
+			storageName: "dans_userscripts",
 			_storage: undefined,// only changes when necessary (on storage change), is faster
 			usedBy: [],
 
@@ -83,16 +84,16 @@
 				const done = () => {
 					// finally called before catch ends, so using an equivalent
 					// has to be => because plain function uses window
-					const ret = JSON.parse(localStorage[this.name]);
+					const ret = JSON.parse(localStorage[this.storageName]);
 
 					this._storage = ret;
 					return ret;
 				};
 
 				try {
-					const stored = JSON.parse(localStorage[this.name]);
+					const stored = JSON.parse(localStorage[this.storageName]);
 
-					localStorage[this.name] = JSON.stringify(userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored));
+					localStorage[this.storageName] = JSON.stringify(userscriptName ? await this[userscriptName].validate(stored) : await this.validate(stored));
 					return done();
 				}
 				catch(err) {
@@ -100,14 +101,14 @@
 					this.clear();
 
 					const validated = await this[userscriptName].validate({});
-					localStorage[this.name] = JSON.stringify(validated);
+					localStorage[this.storageName] = JSON.stringify(validated);
 					return done();
 				}
 			},
 			clear: function() {
 				this._storage = undefined;
 
-				localStorage.removeItem(this.name);
+				localStorage.removeItem(this.storageName);
 			},
 			updateUserscript: async function(name, stored) {
 				if (!this._storage) {
@@ -115,7 +116,7 @@
 				}
 
 				this._storage[name] = stored;
-				localStorage[this.name] = JSON.stringify(this._storage);			
+				localStorage[this.storageName] = JSON.stringify(this._storage);			
 			},
 			import: async function(imported) {
 				if (typeof imported != "string") {
@@ -125,11 +126,11 @@
 				try {
 					imported = JSON.parse(imported);
 
-					if (!imported[this.name]) {
+					if (!imported[this.storageName]) {
 						throw "Cannot import as the import data is bad";
 					}
 
-					await this.validate(imported[this.name], true);
+					await this.validate(imported[this.storageName], true);
 				}
 				catch(err) {
 					if (err instanceof SyntaxError) {
@@ -142,7 +143,7 @@
 			},
 			export: function() {
 				const exported = {};
-				exported[this.name] = this._storage;
+				exported[this.storageName] = this._storage;
 
 				return JSON.stringify(exported);
 			}
@@ -250,7 +251,7 @@
 							content.innerHTML = mainContent;
 						}
 
-						this.makeLegacyImportSettings.Onclick(THIS_USERSCRIPT);
+						this.makeLegacyImportSettings.Onclick(THIS_USERSCRIPT, content);
 
 						if (typeof options.setupMainContentEvents == "function") {
 							options.setupMainContentEvents(content);
@@ -530,6 +531,28 @@
 			id = id.substring(0, id.length - 2);
 
 			return parseInt(id);
+		}
+
+		function waitForElementsToExist(queryString, queryFrom) {
+			// based on https://stackoverflow.com/questions/24928846/get-return-value-from-settimeout
+			const main = new Promise((resolve, reject) => {
+				const interval = setInterval(() => {
+					const elements = queryFrom.querySelectorAll(queryString);
+
+					if (elements.length) {
+						clearInterval(interval);
+						resolve(elements);
+					}
+				}, 1000);
+			});
+
+			return main;
+		}
+		function waitForElementToExist(queryString, queryFrom) {
+			return waitForElementsToExist(queryString, queryFrom)
+				.then((elements) => {
+					return elements[0];
+				});
 		}
 
 		function deepFreeze(object) {
@@ -846,13 +869,13 @@
 
 			await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
 				notifyUsersOfChanges(THIS_USERSCRIPT).then(() => {
-					dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);	
+					dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);
 				}, (err) => {
 					console.exception(err);
 				});
 			});
 
-			const shared = [storage, cammelCaseToTitle, escapeRegExp, PlayerNumber, getPlayerId, deepFreeze, TaskList];
+			const shared = [storage, cammelCaseToTitle, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, deepFreeze, TaskList];
 			const ret = {};
 
 			for (let i = shared.length - 1; i > -1; i--) {
