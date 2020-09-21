@@ -151,15 +151,10 @@
 		async function notifyUsersOfChanges(THIS_USERSCRIPT) {
 			const storedUpdateNo = await storage[THIS_USERSCRIPT.NAME].getItem("UPDATE_NO");
 
-			console.table("storedUpdateNo", storedUpdateNo);
-			console.table("THIS_USERSCRIPT.UPDATE_NO", THIS_USERSCRIPT.UPDATE_NO);
-
-			console.log("storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO = " + (storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO));
-
 			if (storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO) {
 				const capitalisedName = cammelCaseToTitle(THIS_USERSCRIPT.NAME);
 
-				alert(`${capitalisedName} has been updated to version ${THIS_USERSCRIPT.VERSION}. Changes:\n${THIS_USERSCRIPT.VERSION_CHANGES}`);
+				alert(`${capitalisedName} has been updated to version ${THIS_USERSCRIPT.VERSION}!\nChanges:\n${THIS_USERSCRIPT.VERSION_CHANGES}`);
 
 				await storage[THIS_USERSCRIPT.NAME].setItem("UPDATE_NO", THIS_USERSCRIPT.UPDATE_NO);
 			}
