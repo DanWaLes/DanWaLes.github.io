@@ -389,7 +389,7 @@
 					menu.className = "unmoveable BackgroundImage";
 
 					let menuContent = `
-					<div style="margin: 5px;">
+					<div style="margin: 5px; text-align: center;">
 						<div>
 							<h1 style="display: inline">Dan's Userscripts</h1>
 							<input id="closeBtn" title="Close settings" type="button" value="X" style="float: right;">
@@ -398,14 +398,15 @@
 						<div>
 							<input id="import" type="button" value="Import settings">
 							<input id="export" type="button" value="Export settings">
+							<input id="reset" type="button" value="Reset settings">
 							<div id="importArea" style="display: none;">
 								<input type="button" value="Ok">
 								<p id="output"></p>
 								<input type="text">
 							</div>
 							<div id="exportArea" style="display: none;">
-								<input type="button" value="Done">
 								<textarea readonly="readonly"></textarea>
+								&nbsp;<input type="button" value="Done">
 							</div>
 						</div>
 					</div>
@@ -459,7 +460,7 @@
 									importArea.style.display = "none";
 									importOutput.innerHTML = "";
 									settings.value = "";
-									location.reload();// easy way to make sure correct numbers are entered
+									location.reload();// easy way to make sure correct data is used from storage
 								}, 1000);
 							}, (err) => {
 								importOutput.className = "errors";
@@ -475,6 +476,11 @@
 					exportArea.querySelector("input").onclick = function() {
 						exportArea.style.display = "none";
 					};
+
+					menu.querySelector("#reset").onclick = function() {
+						storage.clear();
+						location.reload();
+					}
 				},
 				view: function() {
 					window.$(document.getElementById("MainNavBar")).hide();
