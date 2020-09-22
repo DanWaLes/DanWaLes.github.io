@@ -152,9 +152,12 @@
 		const storedUpdateNo = await storage[THIS_USERSCRIPT.NAME].getItem("UPDATE_NO");
 
 		if (storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO) {
+			const script = cammelCaseToTitle(THIS_USERSCRIPT.NAME);
+
 			Alert(`
-				<h2>${cammelCaseToTitle(THIS_USERSCRIPT.NAME)} update</h2>
+				<h2>${script} update</h2>
 				<p>This userscript has been updated to version ${THIS_USERSCRIPT.VERSION}!</p>
+				<p>Menu / settings are located under [Your name] > Dan's Userscripts > ${script}.</p>
 				<p>Changes:</p>
 				<ul>${THIS_USERSCRIPT.VERSION_CHANGES}</ul>`);
 
