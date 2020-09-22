@@ -418,7 +418,7 @@
 						});
 
 						menuContent += `
-						<div id="${key}" style="float: left; max-width: 33%; margin: 5px;">
+						<div id="${key}" style="float: left; max-width: 30%; margin: 5px;">
 							<h2>${capitalisedName}</h2>
 							<p>${content.description}</p>
 							<p class="install"><a href="${content.link}">View install page</a></p>
