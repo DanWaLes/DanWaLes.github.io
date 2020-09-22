@@ -154,8 +154,25 @@
 
 			if (storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO) {
 				const capitalisedName = cammelCaseToTitle(THIS_USERSCRIPT.NAME);
+				const alertBox = document.createElement("div");
 
-				alert(`${capitalisedName} has been updated to version ${THIS_USERSCRIPT.VERSION}!\nChanges:\n${THIS_USERSCRIPT.VERSION_CHANGES}`);
+				alertBox.style.position = "fixed";
+				alertBox.style.margin = "50% auto";
+
+				alertBox.innerHTML = `
+					<div>
+						<h2 style="display: inline;">${capitalisedName} update</h2>
+						<input type="button" value="X" style="float: right;">
+					</div>
+					<p>This userscript has been updated to version ${THIS_USERSCRIPT.VERSION}!</p>
+					<p>Changes:</p>
+					<ul>${THIS_USERSCRIPT.VERSION_CHANGES}</ul>;`;
+
+				document.body.appendChild(alertBox);
+
+				alertBox.querySelector("input").onclick = () => {
+					alertBox.remove();
+				};
 
 				await storage[THIS_USERSCRIPT.NAME].setItem("UPDATE_NO", THIS_USERSCRIPT.UPDATE_NO);
 			}
