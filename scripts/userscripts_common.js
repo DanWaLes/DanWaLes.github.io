@@ -154,37 +154,12 @@
 
 			if (storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO) {
 				const capitalisedName = cammelCaseToTitle(THIS_USERSCRIPT.NAME);
-				const overlay = document.createElement("div");
-				const alertBox = document.createElement("div");
 
-				overlay.style.position = "fixed";
-				overlay.style.width = "100%";
-				overlay.style.height = "100%";
-				overlay.style.backgroundColor = "#fff";
-				overlay.style.opacity = "0.5";
-
-				alertBox.className = "BackgroundImage";
-				alertBox.style.position = "fixed";
-				alertBox.style.top = "50%";
-				alertBox.style.right = "50%";
-				alertBox.style.borderRadius = "1em";
-				alertBox.style.padding = "0.5em";
-
-				alertBox.innerHTML = `
-					<div>
-						<h2 style="display: inline;">${capitalisedName} update</h2>
-						<input type="button" value="X" style="float: right;">
-					</div>
+				Alert(`
+					<h2>${capitalisedName} update</h2>
 					<p>This userscript has been updated to version ${THIS_USERSCRIPT.VERSION}!</p>
 					<p>Changes:</p>
-					<ul>${THIS_USERSCRIPT.VERSION_CHANGES}</ul>;`;
-
-				document.body.appendChild(overlay);
-				document.body.appendChild(alertBox);
-
-				alertBox.querySelector("input").onclick = () => {
-					alertBox.remove();
-				};
+					<ul>${THIS_USERSCRIPT.VERSION_CHANGES}</ul>`);
 
 				await storage[THIS_USERSCRIPT.NAME].setItem("UPDATE_NO", THIS_USERSCRIPT.UPDATE_NO);
 			}
@@ -537,6 +512,36 @@
 			return str[0].toUpperCase() + str.substring(1, str.length).replace(/_(\w)/g, function(match, p1) {
 				return " " + p1.toUpperCase();
 			});
+		}
+
+		function Alert(message) {
+			const overlay = document.createElement("div");
+			const alertBox = document.createElement("div");
+
+			overlay.style.position = "fixed";
+			overlay.style.top = "0";
+			overlay.style.right = "0";
+			overlay.style.width = "100%";
+			overlay.style.height = "100%";
+			overlay.style.backgroundColor = "#fff";
+			overlay.style.opacity = "0.5";
+
+			alertBox.className = "BackgroundImage";
+			alertBox.style.position = "fixed";
+			alertBox.style.top = "50%";
+			alertBox.style.right = "50%";
+			alertBox.style.borderRadius = "1em";
+			alertBox.style.padding = "0.5em";
+
+			alertBox.innerHTML = `<input type="button" value="X" style="float: right;">${message}`;
+
+			document.body.appendChild(overlay);
+			document.body.appendChild(alertBox);
+
+			alertBox.querySelector("input").onclick = () => {
+				alertBox.remove();
+				overlay.remove();
+			};
 		}
 
 		function escapeRegExp(string) {
@@ -916,7 +921,7 @@
 				});
 			});
 
-			const shared = [storage, cammelCaseToTitle, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, deepFreeze, TaskList];
+			const shared = [storage, cammelCaseToTitle, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, deepFreeze, TaskList, Alert];
 			const ret = {};
 
 			for (let i = shared.length - 1; i > -1; i--) {
