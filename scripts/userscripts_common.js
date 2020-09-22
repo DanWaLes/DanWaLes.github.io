@@ -69,7 +69,7 @@
 
 				if (forceValidateEverything) {
 					for (let name of this.usedBy) {
-						await this.validateCorrectingErrors(name);
+						stored = await this[name].validate(stored);
 					}
 				}
 
@@ -130,7 +130,7 @@
 						throw "Cannot import as the import data is bad";
 					}
 
-					await this.validate(imported[this.storageName], true);
+					localStorage[this.storageName] = JSON.stringify(await this.validate(imported[this.storageName], true));
 				}
 				catch(err) {
 					if (err instanceof SyntaxError) {
@@ -194,9 +194,11 @@
 				}
 			},
 			btn: {
-				id: this.name + "Btn",
+				getId: function() {
+					return dansUserscripts.storageName + "Btn";
+				},
 				get: function() {
-					return document.getElementById(this.id);
+					return document.getElementById(this.getId());
 				},
 				create: function() {
 					if (this.get()) {
@@ -205,7 +207,7 @@
 
 					const btn = document.createElement("a");
 
-					btn.id = this.id;
+					btn.id = this.getId();
 					btn.className = "dropdown-item";
 					btn.href = "#";
 					btn.innerText = "Dan's Userscripts";
@@ -219,7 +221,7 @@
 			menu: {
 				getId: function() {
 					// no super and can't access variable that hasn't quite been initialized
-					return dansUserscripts.name + "MainMenu";
+					return dansUserscripts.storageName + "MainMenu";
 				},
 				get: function() {
 					return document.getElementById(this.getId());
