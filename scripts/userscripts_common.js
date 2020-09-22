@@ -20,7 +20,7 @@
 					// this is storage
 					stored = await this.validate(stored);
 
-					if (!stored[name]) {
+					if (typeof stored[name] != "object" || !stored[name]) {
 						stored[name] = {};
 					}
 
