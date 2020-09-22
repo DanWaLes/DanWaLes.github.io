@@ -948,6 +948,10 @@
 			return;
 		}
 
+		if (localStorage.dans_userscript_user) {
+			localStorage.removeItem("dans_userscript_user");
+		}
+
 		storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, validateStorage, importLegacy);
 
 		await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
