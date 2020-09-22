@@ -195,7 +195,7 @@
 			},
 			btn: {
 				getId: function() {
-					return dansUserscripts.storageName + "Btn";
+					return dansUserscripts.name + "Btn";
 				},
 				get: function() {
 					return document.getElementById(this.getId());
@@ -221,7 +221,7 @@
 			menu: {
 				getId: function() {
 					// no super and can't access variable that hasn't quite been initialized
-					return dansUserscripts.storageName + "MainMenu";
+					return dansUserscripts.name + "MainMenu";
 				},
 				get: function() {
 					return document.getElementById(this.getId());
@@ -390,21 +390,23 @@
 
 					let menuContent = `
 					<div style="margin: 5px;">
-						<h1 style="display: inline">Dan's Userscripts</h1>
-						<input id="closeBtn" title="Close settings" type="button" value="X" style="float: right;">
-					</div>
-					<a href="https://www.warzone.com/Discussion/SendMail?PlayerID=222685" style="margin: 5px;">Report bug/request feature</a>
-					<div>
-						<input id="import" type="button" value="Import settings">
-						<input id="export" type="button" value="Export settings">
-						<div id="importArea" style="display: none;">
-							<input type="button" value="Ok">
-							<p id="output"></p>
-							<input type="text">
+						<div>
+							<h1 style="display: inline">Dan's Userscripts</h1>
+							<input id="closeBtn" title="Close settings" type="button" value="X" style="float: right;">
 						</div>
-						<div id="exportArea" style="display: none;">
-							<input type="button" value="Done">
-							<textarea readonly="readonly"></textarea>
+						<a href="https://www.warzone.com/Discussion/SendMail?PlayerID=222685">Report bug/request feature</a>
+						<div>
+							<input id="import" type="button" value="Import settings">
+							<input id="export" type="button" value="Export settings">
+							<div id="importArea" style="display: none;">
+								<input type="button" value="Ok">
+								<p id="output"></p>
+								<input type="text">
+							</div>
+							<div id="exportArea" style="display: none;">
+								<input type="button" value="Done">
+								<textarea readonly="readonly"></textarea>
+							</div>
 						</div>
 					</div>
 					<div id="list" style="max-width: 2000px">`;
@@ -451,11 +453,13 @@
 
 						storage.import(settings.value)
 							.then(() => {
-								importOutput.innerHTML = "Done";
+								importOutput.innerHTML = "Done, refreshing...";
+
 								setTimeout(() => {
 									importArea.style.display = "none";
 									importOutput.innerHTML = "";
 									settings.value = "";
+									location.reload();// easy way to make sure correct numbers are entered
 								}, 1000);
 							}, (err) => {
 								importOutput.className = "errors";
