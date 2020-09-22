@@ -595,6 +595,46 @@
 			});
 	}
 
+	function download(contents, filename, type) {
+		const types = {
+			"txt": "text/plain",
+			"html": "text/html",
+			"json": "application/json"
+		};
+
+		if (typeof contents != "string") {
+			console.exception("contents must be a string");
+			return;
+		}
+		if (typeof filename != "string") {
+			console.exception("filename must be a string");
+			return;
+		}
+
+		const mimeType = types[type];
+
+		if (!mimeType) {
+			console.exception(`file type ${type} is unsupported`);
+			return;
+		}
+
+		const blob = new Blob([contents], {type: mimeType});
+		const downloadLink = document.createElement('a');
+
+		downloadLink.download = filename + '.' + type;
+		downloadLink.href = window.URL.createObjectURL(blob);
+		downloadLink.onclick = function(e) {
+			setTimeout(function()
+			{
+				window.URL.revokeObjectURL(downloadLink.href);
+			}, 1500);
+		};
+
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		downloadLink.remove();
+	}
+
 	function deepFreeze(object) {
 		// Retrieve the property names defined on object
 		const propNames = Object.getOwnPropertyNames(object);
@@ -915,7 +955,7 @@
 			});
 		});
 
-		const shared = [storage, cammelCaseToTitle, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, deepFreeze, TaskList, Alert];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {
