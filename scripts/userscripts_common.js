@@ -154,10 +154,21 @@
 
 			if (storedUpdateNo < THIS_USERSCRIPT.UPDATE_NO) {
 				const capitalisedName = cammelCaseToTitle(THIS_USERSCRIPT.NAME);
+				const overlay = document.createElement("div");
 				const alertBox = document.createElement("div");
 
+				overlay.style.position = "fixed";
+				overlay.style.width = "100%";
+				overlay.style.height = "100%";
+				overlay.style.backgroundColor = "#fff";
+				overlay.style.opacity = "0.5";
+
+				alertBox.className = "BackgroundImage";
 				alertBox.style.position = "fixed";
-				alertBox.style.margin = "50% auto";
+				alertBox.style.top = "50%";
+				alertBox.style.right = "50%";
+				alertBox.style.borderRadius = "1em";
+				alertBox.style.padding = "0.5em";
 
 				alertBox.innerHTML = `
 					<div>
@@ -168,6 +179,7 @@
 					<p>Changes:</p>
 					<ul>${THIS_USERSCRIPT.VERSION_CHANGES}</ul>;`;
 
+				document.body.appendChild(overlay);
 				document.body.appendChild(alertBox);
 
 				alertBox.querySelector("input").onclick = () => {
