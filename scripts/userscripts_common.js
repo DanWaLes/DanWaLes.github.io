@@ -409,7 +409,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="list" style="max-width: 2000px; overflow: auto;">`;
+					<div id="list" style="max-width: 2000px;">`;
 
 					for (let key in dansUserscripts.list) {
 						const content = dansUserscripts.list[key];
