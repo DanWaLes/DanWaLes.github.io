@@ -131,16 +131,22 @@
 		// console.table("sortData = ", sortData);
 		// console.table("sortData.originals = ", sortData.originals);
 
-		for (let i = 0; i < sortData.length; i++) {
+		for (let i = 0; i < numRows; i++) {
 			// place the sorted items into the table
 
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 
-			rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset]);
+			if (foundIndex > -1) {
+				const toMove = rows[foundIndex].parentNode;
+
+				toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i + offset]);
+			}
+			
+			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
-			sortData.splice(i, 1);
-			sortData.originals.splice(foundIndex, 1);
+			// sortData.splice(i, 1);
+			// sortData.originals.splice(foundIndex, 1);
 		}
 
 		/*
@@ -158,6 +164,7 @@
 		}
 		*/
 	}
+	alert(1)
 
 	/**
 	 * Makes a nw sorter, allowing the table to become sortable and making it clear that table header items can be sorted
