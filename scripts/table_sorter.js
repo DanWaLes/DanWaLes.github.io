@@ -131,6 +131,19 @@
 		// console.table("sortData = ", sortData);
 		// console.table("sortData.originals = ", sortData.originals);
 
+		for (let i = 0; i < sortData.length; i++) {
+			// place the sorted items into the table
+
+			const itemToFind = sortData[i];
+			const foundIndex = sortData.originals.indexOf(itemToFind);
+
+			rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset]);
+			// can now delete item at found index, free up memory
+			sortData.splice(i, 1);
+			sortData.originals.splice(foundIndex, 1);
+		}
+
+		/*
 		for (let i = numRows - 1; i > (-1 + offset); i--) {
 			// place the sorted items into the table
 			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
@@ -143,6 +156,7 @@
 				sortData.originals.splice(foundIndex, 1);
 			}
 		}
+		*/
 	}
 
 	/**
