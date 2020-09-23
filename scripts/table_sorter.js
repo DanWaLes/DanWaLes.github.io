@@ -140,7 +140,7 @@
 			const toMove = rows[foundIndex + offset];
 
 			toMove.dataset.pos = i;
-			toMove.parentNode.insertBefore(toMove, rows[i]);
+			toMove.parentNode.insertBefore(toMove, rows[i + offset])
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
