@@ -93,12 +93,17 @@
 			throw "table doesn't have a header";
 		}
 
+		window.table = table;
+		console.log(header);
+
 		const sorter = header.children[colNo].dataset.sorter;
 		const isSortingByNumber = sorter == "number";
 		const isSortingByDate = sorter == "date";
 
 		let sortData = [];
 		const offset = theadTr ? 0 : 1;
+
+		console.log(offset);
 
 		for (let i = offset; i < numRows; i++) {
 			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
@@ -131,7 +136,7 @@
 		// console.table("sortData = ", sortData);
 		// console.table("sortData.originals = ", sortData.originals);
 
-		for (let i = numRows - 1; i > -1; i--) {
+		for (let i = numRows - 1; i > (-1 + offset); i--) {
 			// place the sorted items into the table
 			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
 			const foundIndex = sortData.originals.indexOf(itemToFind);
