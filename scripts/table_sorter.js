@@ -144,8 +144,8 @@
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
-			// sortData.splice(i, 1);
-			// sortData.originals.splice(foundIndex, 1);
+			sortData.splice(i, 1);
+			sortData.originals.splice(foundIndex, 1);
 		}
 
 		/*
