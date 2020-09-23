@@ -93,17 +93,12 @@
 			throw "table doesn't have a header";
 		}
 
-		window.table = table;
-		console.log(header);
-
 		const sorter = header.children[colNo].dataset.sorter;
 		const isSortingByNumber = sorter == "number";
 		const isSortingByDate = sorter == "date";
 
 		let sortData = [];
 		const offset = theadTr ? 0 : 1;
-
-		console.log(offset);
 
 		for (let i = offset; i < numRows; i++) {
 			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
