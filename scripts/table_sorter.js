@@ -129,15 +129,15 @@
 			sortData = insertionSort(sortData, dir);
 		}
 
-		// console.table("sortData = ", sortData);
-		// console.table("sortData.originals = ", sortData.originals);
+		console.table("sortData = ", sortData);
+		console.table("sortData.originals = ", sortData.originals);
 
 		for (let i = sortData.length - 1; i > -1; i--) {
 			// place the sorted items into the table
 
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
-			const toMove = rows[foundIndex];
+			const toMove = rows[foundIndex + offset];
 
 			toMove.dataset.pos = i;
 			// toMove.parentNode.insertBefore(toMove, rows[i + offset]);
