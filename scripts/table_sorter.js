@@ -103,7 +103,7 @@
 		for (let i = offset; i < numRows; i++) {
 			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
 			const row = rows[i].children;
-			console.log(row);
+
 			let item = {};
 			const rowItem = row[colNo];
 
@@ -137,7 +137,7 @@
 
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
-			const toMove = rows[foundIndex];
+			const toMove = rows[foundIndex + offset];
 
 			toMove.dataset.pos = i;
 
