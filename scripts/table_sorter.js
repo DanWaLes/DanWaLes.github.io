@@ -128,8 +128,8 @@
 			sortData = insertionSort(sortData, dir);
 		}
 
-		// console.table("sortData = ", sortData);
-		// console.table("sortData.originals = ", sortData.originals);
+		console.table("sortData = ", sortData);
+		console.table("sortData.originals = ", sortData.originals);
 
 		for (let i = numRows - 1; i > (-1 + offset); i--) {
 			// place the sorted items into the table
