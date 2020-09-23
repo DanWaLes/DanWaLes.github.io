@@ -140,8 +140,8 @@
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 			const toMove = rows[foundIndex + offset];
 
-			toMove.setAttribute("data-pos", i);
-			console.log(i);
+			console.log("toMove num = " + (foundIndex + offset));
+			console.table(i, toMove);
 			// toMove.parentNode.insertBefore(toMove, rows[i]);
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
