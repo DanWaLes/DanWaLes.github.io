@@ -132,22 +132,25 @@
 		console.table("sortData = ", sortData);
 		console.table("sortData.originals = ", sortData.originals);
 
-		for (let i = sortData.length - 1; i > -1; i--) {
+		for (let i = offset; i < numRows; i++) {
 			// place the sorted items into the table
 			// the actual sort is correct but the visual is not right
 
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
-			const toMove = rows[foundIndex + offset];
 
-			console.log("toMove num = " + (foundIndex + offset));
-			console.table(i, toMove);
-			// toMove.parentNode.insertBefore(toMove, rows[i]);
+			if (foundIndex > -1) {
+				const toMove = rows[foundIndex + offset];
 
-			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
-			// can now delete item at found index, free up memory
-			sortData.splice(i, 1);
-			sortData.originals.splice(foundIndex, 1);
+				// console.log("toMove num = " + (foundIndex + offset));
+				// console.table(i, toMove);
+				toMove.parentNode.insertBefore(toMove, rows[i]);
+
+				// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
+				// can now delete item at found index, free up memory
+				sortData.splice(i, 1);
+				sortData.originals.splice(foundIndex, 1);
+			}
 		}
 
 		/*
