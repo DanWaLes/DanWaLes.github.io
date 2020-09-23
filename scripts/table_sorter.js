@@ -139,7 +139,7 @@
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 			const toMove = rows[foundIndex];
 
-			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i]);
+			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i + 1]);
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
