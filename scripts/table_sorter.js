@@ -140,7 +140,7 @@
 			if (foundIndex > -1) {
 				const toMove = rows[foundIndex].parentNode;
 
-				toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i + offset]);
+				toMove.parentNode.insertBefore(toMove, rows[i].parentNode);
 			}
 			
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
@@ -164,7 +164,7 @@
 		}
 		*/
 	}
-	alert(1)
+	alert(2)
 
 	/**
 	 * Makes a nw sorter, allowing the table to become sortable and making it clear that table header items can be sorted
