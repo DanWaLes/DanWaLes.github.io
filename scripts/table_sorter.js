@@ -5,7 +5,7 @@
 
 (function() {
 	// https://en.wikipedia.org/wiki/Insertion_sort
-	function insertionSort(array, dir) {
+	function insertionSort(array, dir, ORIGIN) {
 		if (!Array.isArray(array.originals)) {
 			array.originals = [];
 		}
@@ -13,7 +13,7 @@
 		const isAsc = dir == "asc";
 		const arrayLen = array.length;
 
-		array.originals[arrayLen - 1] = array[arrayLen - 1];// to keep references intact
+		array.originals[ORIGIN] = array[arrayLen - 1];// to keep references intact
 
 		let i = 1;
 		while (i < arrayLen) {
@@ -126,7 +126,7 @@
 			// }
 
 			sortData.push(item);
-			sortData = insertionSort(sortData, dir);
+			sortData = insertionSort(sortData, dir, i);
 		}
 
 		console.table("sortData = ", sortData);
@@ -139,11 +139,11 @@
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 
-			console.log(`${itemToFind} is set at index ${i}. was originally ${foundIndex}`);
-			const toMove = rows[foundIndex + offset];
+			console.log(`${itemToFind} is set at index ${i}. was originally at ${foundIndex}`);
+			const toMove = rows[foundIndex];
 
 			// toMove.setAttribute("data-pos", i);// doesn't update visually
-			console.log("toMove num = " + (foundIndex + offset));
+			console.log("toMove num = " + foundIndex);
 			console.log(toMove);
 			toMove.parentNode.appendChild(toMove);
 
