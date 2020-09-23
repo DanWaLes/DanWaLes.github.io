@@ -132,11 +132,11 @@
 		console.table("sortData = ", sortData);
 		console.table("sortData.originals = ", sortData.originals);
 
-		for (let i = sortData.length - 1; i > -1; i--) {
+		for (let i = 0; i < sortData.length; i++) {
 			// place the sorted items into the table
 			// the actual sort is correct but the visual is not right
 
-			const itemToFind = sortData[i - i * 2];
+			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 			const toMove = rows[foundIndex + offset];
 
@@ -147,8 +147,8 @@
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
-			sortData.splice(i - i * 2, 1);
-			sortData.originals.splice(foundIndex, 1);
+			// sortData.splice(i, 1);
+			// sortData.originals.splice(foundIndex, 1);
 		}
 
 		/*
