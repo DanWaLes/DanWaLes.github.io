@@ -131,6 +131,7 @@
 		// console.table("sortData = ", sortData);
 		// console.table("sortData.originals = ", sortData.originals);
 
+		let j = offset;
 		for (let i = sortData.length - 1; i > -1; i--) {
 			// place the sorted items into the table
 
@@ -138,7 +139,7 @@
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 			const toMove = rows[foundIndex];
 
-			toMove.parentNode.insertBefore(toMove, rows[offset + i]);
+			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i]);
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
