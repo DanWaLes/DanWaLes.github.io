@@ -141,8 +141,8 @@
 			const toMove = rows[foundIndex + offset];
 
 			// toMove.setAttribute("data-pos", i);
-			// console.log("toMove num = " + (foundIndex + offset));
-			// console.table(i, toMove);
+			console.log("toMove num = " + (foundIndex + offset));
+			console.table(i, toMove);
 			toMove.parentNode.appendChild(toMove);
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
