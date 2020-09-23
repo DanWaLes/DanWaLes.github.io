@@ -127,6 +127,7 @@
 
 			sortData.push(item);
 			sortData = insertionSort(sortData, dir, i);
+			break;// lets only do one and see what happens
 		}
 
 		console.table("sortData = ", sortData);
