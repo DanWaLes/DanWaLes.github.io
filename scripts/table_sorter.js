@@ -138,11 +138,13 @@
 
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
+
+			console.log(`${itemToFind} is set at index ${i}. was originally ${foundIndex}`);
 			const toMove = rows[foundIndex + offset];
 
-			// toMove.setAttribute("data-pos", i);
+			// toMove.setAttribute("data-pos", i);// doesn't update visually
 			console.log("toMove num = " + (foundIndex + offset));
-			console.table(i, toMove);
+			console.log(toMove);
 			toMove.parentNode.appendChild(toMove);
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
