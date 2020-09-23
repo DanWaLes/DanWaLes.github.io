@@ -134,12 +134,14 @@
 
 		for (let i = sortData.length - 1; i > -1; i--) {
 			// place the sorted items into the table
+			// the actual sort is correct but the visual is not right
 
 			const itemToFind = sortData[i];
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 			const toMove = rows[foundIndex + offset];
 
 			toMove.setAttribute("data-pos", i);
+			console.log(i);
 			// toMove.parentNode.insertBefore(toMove, rows[i]);
 
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
