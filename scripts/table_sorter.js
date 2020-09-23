@@ -138,7 +138,7 @@
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 			const toMove = rows[foundIndex];
 
-			toMove.parentNode.insertBefore(toMove, rows[i]);
+			toMove.parentNode.insertBefore(toMove, rows[numRows - i]);
 			
 			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
 			// can now delete item at found index, free up memory
@@ -161,7 +161,7 @@
 		}
 		*/
 	}
-	alert(4)
+	alert(5)
 
 	/**
 	 * Makes a nw sorter, allowing the table to become sortable and making it clear that table header items can be sorted
