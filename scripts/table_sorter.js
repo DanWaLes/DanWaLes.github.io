@@ -5,7 +5,7 @@
 
 (function() {
 	// https://en.wikipedia.org/wiki/Insertion_sort
-	function insertionSort(array, dir, ORIGIN) {
+	function insertionSort(array, dir) {
 		if (!Array.isArray(array.originals)) {
 			array.originals = [];
 		}
@@ -13,7 +13,7 @@
 		const isAsc = dir == "asc";
 		const arrayLen = array.length;
 
-		array.originals[ORIGIN] = array[arrayLen - 1];// to keep references intact
+		array.originals[arrayLen - 1] = array[arrayLen - 1];// to keep references intact
 
 		let i = 1;
 		while (i < arrayLen) {
@@ -103,7 +103,6 @@
 		for (let i = offset; i < numRows; i++) {
 			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
 			const row = rows[i].children;
-
 			let item = {};
 			const rowItem = row[colNo];
 
@@ -126,52 +125,28 @@
 			// }
 
 			sortData.push(item);
-			sortData = insertionSort(sortData, dir, i);
-			break;// lets only do one and see what happens
+			sortData = insertionSort(sortData, dir);
 		}
 
-		console.table("sortData = ", sortData);
-		console.table("sortData.originals = ", sortData.originals);
+		// console.table("sortData = ", sortData);
+		// console.table("sortData.originals = ", sortData.originals);
 
-		for (let i = 0; i < sortData.length; i++) {
-			// place the sorted items into the table
-			// the actual sort is correct but the visual is not right
-
-			const itemToFind = sortData[i];
-			const foundIndex = sortData.originals.indexOf(itemToFind);
-
-			console.log(`${itemToFind} is set at index ${i}. was originally at ${foundIndex}`);
-			const toMove = rows[foundIndex];
-
-			// toMove.setAttribute("data-pos", i);// doesn't update visually
-			console.log("toMove num = " + foundIndex);
-			console.log(toMove);
-			toMove.parentNode.appendChild(toMove);
-
-			// rows[i + offset]rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + offset].parentNode);
-			// can now delete item at found index, free up memory
-			// sortData.splice(i, 1);
-			// sortData.originals.splice(foundIndex, 1);
-		}
-
-		/*
-		for (let i = numRows - 1; i > (-1 + offset); i--) {
+		for (let i = numRows - 1; i > -1; i--) {
 			// place the sorted items into the table
 			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
 			const foundIndex = sortData.originals.indexOf(itemToFind);
 
 			if (foundIndex > -1) {
-				rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + 1 - offset]);
+				rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + 1]);
 				// can now delete item at found index, free up memory
 				sortData.splice(i, 1);
 				sortData.originals.splice(foundIndex, 1);
 			}
 		}
-		*/
 	}
 
 	/**
-	 * Makes a nw sorter, allowing the table to become sortable and making it clear that table header items can be sorted
+	 * Makes a new sorter, allowing the table to become sortable and making it clear that table header items can be sorted
 	 *
 	 * @param table HTMLTableElement
 	 * @param columns an object in number-like: preferedSort format
