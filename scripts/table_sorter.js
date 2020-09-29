@@ -124,6 +124,7 @@
 			return array;
 		};
 
+		console.log("dir = " + dir);
 		const sorted = rows.toArray().sort((a, b) => {
 			let sortItemA = a.children[colNo].innerText;
 			let sortItemB = b.children[colNo].innerText;
@@ -139,7 +140,7 @@
 
 			if (dir == "desc") {
 				if (isSortingByText) {
-					// encase + meant concat
+					// + means concat otherwise
 					return sortItemA.localeCompare(sortItemB);
 				}
 
