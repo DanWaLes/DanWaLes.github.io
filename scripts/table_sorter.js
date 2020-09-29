@@ -148,7 +148,7 @@
 		console.log("sortData.originals");
 		console.log(sortData.originals);
 
-		for (let i = numRows - 1; i > -1; i--) {
+		/*for (let i = numRows - 1; i > -1; i--) {
 			// place the sorted items into the table
 			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
 			const foundIndex = sortData.originals.indexOf(itemToFind);
@@ -158,7 +158,7 @@
 				const newPos = rows[i + 1];
 				console.log("moving");
 				console.log(row);
-				console.log("to");
+				console.log("before");
 				console.log(newPos);
 
 				row.parentNode.insertBefore(row, newPos);
@@ -166,7 +166,18 @@
 				sortData.splice(i, 1);
 				sortData.originals.splice(foundIndex, 1);
 			}
+		}*/
+
+		console.log("start visual");
+		for (let i = 0; i < sortData.length; i++) {
+			const toFind = sortData[i];
+			const originalIndex = sortData.originals.indexOf[toFind];
+			const rowToMove = rows[originalIndex];
+			const rowToMoveBefore = rows[i];
+
+			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 		}
+		console.log("done visual");
 	}
 
 	/**
