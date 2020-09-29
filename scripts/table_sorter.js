@@ -141,14 +141,14 @@
 			if (dir == "desc") {
 				if (isSortingByText) {
 					// + means concat otherwise
-					return sortItemA.localeCompare(sortItemB);
+					return sortItemA.localeCompare(sortItemB, navigator.language, {caseFirst: "upper"});
 				}
 
 				return sortItemA + sortItemB;
 			}
 
 			if (isSortingByText) {
-				return toNegative(sortItemA.localeCompare(sortItemB));
+				return toNegative(sortItemA.localeCompare(sortItemB, navigator.language, {caseFirst: "upper"}));
 			}
 
 			return sortItemA - sortItemB;
