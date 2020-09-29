@@ -143,18 +143,25 @@
 			sortData = insertionSort(sortData, dir);
 		}
 
-		console.table("sortData = ", sortData);
-		console.table("sortData.originals = ", sortData.originals);
+		console.log("sortData");
+		console.log(sortData);
+		console.log("sortData.originals");
+		console.log(sortData.originals);
 
 		for (let i = numRows - 1; i > -1; i--) {
 			// place the sorted items into the table
 			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
 			const foundIndex = sortData.originals.indexOf(itemToFind);
-			console.table("itemToFind = ", itemToFind);
-			console.table("foundIndex = ", foundIndex);
 
 			if (foundIndex > -1) {
-				rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + 1]);
+				const row = rows[foundIndex];
+				const newPos = rows[i + 1];
+				console.log("moving");
+				console.log(row);
+				console..log("to");
+				console.log(newPos);
+
+				row.parentNode.insertBefore(row, newPos);
 				// can now delete item at found index, free up memory
 				sortData.splice(i, 1);
 				sortData.originals.splice(foundIndex, 1);
