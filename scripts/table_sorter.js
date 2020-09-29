@@ -136,6 +136,8 @@
 
 			return parseInt(sortItemA) + parseInt(sortItemB);// TODO support dir
 		});
+		console.log("sorted");
+		console.log(sorted);
 
 		for (let i = 0; i < rows.length; i++) {
 			const toMove = sorted[i];
