@@ -151,7 +151,7 @@
 			const toFind = sortData.pop();// free up memory
 			const originalIndex = sortData.originals.indexOf(toFind);
 			const rowToMove = rows[originalIndex];
-			const rowToMoveBefore = rows[i - 1];
+			const rowToMoveBefore = rows[i + 1];
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 			sortData.originals.splice(originalIndex, 1);// free up memory, fast to find next because less items
