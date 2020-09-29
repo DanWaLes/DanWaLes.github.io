@@ -136,7 +136,11 @@
 				sortItemB = Number(sortItemB);
 			}
 
-			return parseInt(sortItemA) + parseInt(sortItemB);// TODO support dir
+			if (dir == "desc") {
+				return sortItemA + sortItemB;// TODO support dir
+			}
+
+			return sortItemA - sortItemB;
 		});
 		console.log("sorted");
 		console.log(sorted);
