@@ -4,40 +4,8 @@
 /* jshint devel: true */
 
 (function() {
-	// https://en.wikipedia.org/wiki/Insertion_sort
-	function insertionSort(array, dir) {
-		if (!Array.isArray(array.originals)) {
-			array.originals = [];
-		}
-
-		const isAsc = dir == "asc";
-		const arrayLen = array.length;
-
-		array.originals[arrayLen - 1] = array[arrayLen - 1];// to keep references intact
-
-		let i = 1;
-		while (i < arrayLen) {
-			let x = array[i];
-			let j = i - 1;
-
-			if (isAsc) {
-				while (j >= 0 && array[j] > x) {
-					array[j + 1] = array[j];
-					j--;
-				}
-			}
-			else {
-				while (j >= 0 && array[j] < x) {
-					array[j + 1] = array[j];
-					j--;
-				}
-			}
-
-			array[j + 1] = x;
-			i++;
-		}
-
-		return array;
+	function toNegative(n) {
+		return n - n * 2;
 	}
 
 	function sortTableOptionsAreValid(options) {
@@ -67,10 +35,6 @@
 		}
 
 		return true;
-	}
-
-	function toNegative(n) {
-		return n - n * 2;
 	}
 
 	// https://www.w3schools.com/howto/howto_js_sort_table.asp was too slow, browser unresponsive
