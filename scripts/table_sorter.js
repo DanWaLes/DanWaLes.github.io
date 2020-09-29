@@ -148,16 +148,12 @@
 
 		console.log("start visual");
 		// rows[original index] always changes as the structure is changed
-		const rowsClone = [];// stable
-		for (let n in rows) {
-			rowsClone[n] = rows[n];
-		}
 
 		for (let i = 0; i < sortData.length; i++) {
 			const toFind = sortData[i];
 			const originalIndex = sortData.originals.indexOf(toFind);
-			const rowToMove = rowsClone[originalIndex];
-			const rowToMoveBefore = rowsClone[i - 1];
+			const rowToMove = rows[originalIndex];
+			const rowToMoveBefore = rows[i];
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 			// prevent wrong row reference due to dope data
