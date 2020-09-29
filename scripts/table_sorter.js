@@ -147,10 +147,13 @@
 		console.log(sortData.originals);
 
 		console.log("start visual");
+		// rows[original index] always changes as the structure is changed
+		const rowsClone = rows;// stable
+
 		for (let i = 0; i < sortData.length; i++) {
 			const toFind = sortData[i];
 			const originalIndex = sortData.originals.indexOf(toFind);
-			const rowToMove = rows[originalIndex];
+			const rowToMove = rowsClone[originalIndex];
 			const rowToMoveBefore = rows[i];
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
