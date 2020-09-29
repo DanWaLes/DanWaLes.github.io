@@ -75,7 +75,6 @@
 		if (!sortTableOptionsAreValid(options)) {
 			return;
 		}
-		// console.table("options = ", options);
 
 		const table = options.table;
 
@@ -92,7 +91,6 @@
 		let offset = 0;
 
 		if (rows[0] == header) {
-			// console.log("0th row is header");
 			let newRows = {length: 0};
 
 			for (let i = 1; i < rows.length; i++) {
@@ -103,7 +101,6 @@
 			rows = newRows;
 			offset = 1;
 		}
-		// console.log(rows);
 
 		const numRows = rows.length;
 		const dir = options.dir;
@@ -146,74 +143,14 @@
 				return sortItemA + sortItemB;
 			}*/
 
-			return sortItemA - sortItemB;
+			return sortItemA - sortItemB;// asc then auto changes
 		});
-		console.log("sorted");
-		console.log(sorted);
 
 		for (let i = 0; i < rows.length; i++) {
 			const toMove = sorted[i];
 
 			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i + offset]);
 		}
-		console.log("done");
-
-		/*
-		let sortData = [];
-
-		for (let i = 0; i < numRows; i++) {
-			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
-			const row = rows[i].children;
-			let item = {};
-			const rowItem = row[colNo];
-
-			if (rowItem.dataset.sortVal === undefined) {
-				item = rowItem.innerText.trim();
-			}
-			else {
-				item = rowItem.dataset.sortVal;
-			}
-
-			if (isSortingByNumber) {
-				item = Number(item);
-			}
-			else if (isSortingByDate) {
-				item = new Date(item).getTime();
-			}
-			// sortVal wasnt initialised before sort, made everything undefined
-			// if (!item[i]) {
-				// throw `item ${i} is falsey\nrowItem.sortVal = ${rowItem.sortVal}\nrowItem.innerHTML = ${rowItem.innerHTML}`;
-			// }
-
-			sortData.push(item);
-			sortData = insertionSort(sortData, dir);
-		}
-
-		console.log("sortData");
-		console.log(sortData);
-		console.log("sortData.originals");
-		console.log(sortData.originals);
-
-		console.log("start visual");
-		// rows[original index] always changes as the structure is changed
-		const newRows = [];
-
-		for (let i = 0; i < sortData.length; i++) {
-			const toFind = sortData[i];
-			const originalIndex = sortData.originals.indexOf(toFind);
-			const rowToMove = rows[originalIndex];
-
-			newRows.push(rowToMove);
-
-			// const rowToMoveBefore = rows[i + 1];
-
-			// rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
-			// prevent wrong row reference due to dope data
-			sortData.splice(i, 1);
-			sortData.originals.splice(originalIndex, 1);
-		}
-		console.log("done visual");
-		*/
 	}
 
 	/**
