@@ -155,7 +155,7 @@
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 			// prevent wrong row reference due to dope data
-			sortData.splice(i, 1);
+			// sortData.splice(i, 1);
 			sortData.originals.splice(originalIndex, 1);
 		}
 		console.log("done visual");
