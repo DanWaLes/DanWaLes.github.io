@@ -112,6 +112,7 @@
 		const sorter = header.children[colNo].dataset.sorter;
 		const isSortingByNumber = sorter == "number";
 		const isSortingByDate = sorter == "date";
+		const isSortingByText = !isSortingByDate && !isSortingByNumber;
 
 		rows.toArray = function() {
 			const array = [];
@@ -137,7 +138,12 @@
 			}
 
 			if (dir == "desc") {
-				return sortItemA + sortItemB;// TODO support dir
+				if (isSortingByText) {
+					// encase + meant concat
+					return sortItemA.localeCompare(sortItemB);
+				}
+
+				return sortItemA + sortItemB;
 			}
 
 			return sortItemA - sortItemB;
