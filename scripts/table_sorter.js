@@ -153,7 +153,7 @@
 			const toFind = sortData[i];
 			const originalIndex = sortData.originals.indexOf(toFind);
 			const rowToMove = rows[originalIndex];
-			const rowToMoveBefore = rows[i];
+			const rowToMoveBefore = rows[i + 1];
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 			// prevent wrong row reference due to dope data
