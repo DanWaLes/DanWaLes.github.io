@@ -100,6 +100,7 @@
 			}
 
 			rows = newRows;
+			console.log(rows);
 		}
 
 		const numRows = rows.length;
