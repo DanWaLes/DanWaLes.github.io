@@ -235,10 +235,11 @@
 			}
 		}
 
+		const that = this;
 		function updatePreventRun() {
-			if (typeof this.preventRun == "function" && typeof this.updatePreventRun == "function") {
-				console.log("init updatePreventRun");
-				this.updatePreventRun();
+			if (typeof that.preventRun == "function" && typeof that.updatePreventRun == "function") {
+				// console.log("init updatePreventRun");
+				that.updatePreventRun();
 			}
 		}
 
