@@ -79,12 +79,6 @@
 
 		const table = options.table;
 
-		const tableBody = table.tBodies[0] || table;// use table body or entire table, whichever is more relevant
-		const rows = tableBody.rows;
-		const numRows = rows.length;
-		const dir = options.dir;
-		const colNo = options.colNo;
-
 		const thead = table.tHead;
 		const theadTr = thead ? thead.rows : null;
 		const header = theadTr ? theadTr[theadTr.length - 1] : null || table.getElementsByTagName("tr")[0];
@@ -93,14 +87,34 @@
 			throw "table doesn't have a header";
 		}
 
+		const tableBody = table.tBodies[0] || table;// use table body or entire table, whichever is more relevant
+		let rows = tableBody.rows;
+
+		if (rows[0] == header) {
+			console.log("0th row is header");
+			let newRows = {length: 0};
+
+			for (let i = 1; i < rows.length; i++) {
+				newRows[i - 1] = rows[i];
+				newRows.length++;
+			}
+
+			rows = newRows;
+		}
+
+		const numRows = rows.length;
+		const dir = options.dir;
+		const colNo = options.colNo;
+
+
 		const sorter = header.children[colNo].dataset.sorter;
 		const isSortingByNumber = sorter == "number";
 		const isSortingByDate = sorter == "date";
 
 		let sortData = [];
-		const offset = theadTr ? 0 : 1;
+		// const offset = theadTr ? 0 : 1;
 
-		for (let i = offset; i < numRows; i++) {
+		for (let i = 0; /*offset;*/ i < numRows; i++) {
 			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
 			const row = rows[i].children;
 			let item = {};
