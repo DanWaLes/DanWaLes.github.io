@@ -124,7 +124,6 @@
 			return array;
 		};
 
-		console.log("dir = " + dir);
 		const sorted = rows.toArray().sort((a, b) => {
 			let sortItemA = a.children[colNo].innerText;
 			let sortItemB = b.children[colNo].innerText;
@@ -138,14 +137,14 @@
 				sortItemB = Number(sortItemB);
 			}
 
-			if (dir == "desc") {
+			/*if (dir == "desc") {
 				if (isSortingByText) {
 					// + means concat otherwise
 					return sortItemA.localeCompare(sortItemB);
 				}
 
 				return sortItemA + sortItemB;
-			}
+			}*/
 
 			return sortItemA - sortItemB;
 		});
