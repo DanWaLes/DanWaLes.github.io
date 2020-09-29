@@ -158,7 +158,7 @@
 				const newPos = rows[i + 1];
 				console.log("moving");
 				console.log(row);
-				console..log("to");
+				console.log("to");
 				console.log(newPos);
 
 				row.parentNode.insertBefore(row, newPos);
