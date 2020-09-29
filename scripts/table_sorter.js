@@ -111,6 +111,39 @@
 		const isSortingByNumber = sorter == "number";
 		const isSortingByDate = sorter == "date";
 
+		rows.toArray = function() {
+			const array = [];
+
+			for (let i = 0; i < rows.length; i++) {
+				array.push(rows[i]);
+			}
+
+			return array;
+		};
+
+		const sorted = rows.toArray().sort((a, b) => {
+			let sortItemA = a.children[colNo].innerText;
+			let sortItemB = b.children[colNo].innerText;
+
+			if (isSortingByDate) {
+				sortItemA = new Date(sortItemA).getTime();
+				sortItemB = new Date(sortItemB).getTime();
+			}
+			else if (isSortingByNumber) {
+				sortItemA = Number(sortItemA);
+				sortItemB = Number(sortItemB);
+			}
+
+			return parseInt(sortItemA) + parseInt(sortItemB);// TODO support dir
+		});
+
+		for (let i = 0; i < rows.length; i++) {
+			const toMove = sorted[i];
+
+			toMove.parentNode.insertBefore(toMove, rows[i]);
+		}
+
+		/*
 		let sortData = [];
 
 		for (let i = 0; i < numRows; i++) {
@@ -148,19 +181,24 @@
 
 		console.log("start visual");
 		// rows[original index] always changes as the structure is changed
+		const newRows = [];
 
 		for (let i = 0; i < sortData.length; i++) {
 			const toFind = sortData[i];
 			const originalIndex = sortData.originals.indexOf(toFind);
 			const rowToMove = rows[originalIndex];
-			const rowToMoveBefore = rows[i + 1];
 
-			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
+			newRows.push(rowToMove);
+
+			// const rowToMoveBefore = rows[i + 1];
+
+			// rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 			// prevent wrong row reference due to dope data
-			// sortData.splice(i, 1);
+			sortData.splice(i, 1);
 			sortData.originals.splice(originalIndex, 1);
 		}
 		console.log("done visual");
+		*/
 	}
 
 	/**
