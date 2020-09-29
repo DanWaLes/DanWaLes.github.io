@@ -147,14 +147,13 @@
 		// console.log(sortData.originals);
 
 		// console.log("start visual");
-		for (let i = sortData.length - 1; i > -1; i--) {
-			const toFind = sortData.pop();// free up memory
+		for (let i = 0; i < sortData.length; i++) {
+			const toFind = sortData[i];
 			const originalIndex = sortData.originals.indexOf(toFind);
 			const rowToMove = rows[originalIndex];
-			const rowToMoveBefore = rows[i + 1];
+			const rowToMoveBefore = rows[i - 1];
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
-			sortData.originals.splice(originalIndex, 1);// free up memory, fast to find next because less items
 		}
 		// console.log("done visual");
 	}
