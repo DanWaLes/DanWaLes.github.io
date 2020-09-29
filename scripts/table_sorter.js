@@ -164,7 +164,7 @@
 	 * @param table HTMLTableElement
 	 * @param columns an object in number-like: preferedSort format
 	 */
-	function Sorter(table, columns) {
+	function Sorter(table, columns, preventRun, updatePreventRun) {
 		this.validSorts = ["asc", "desc"];
 
 		if (!(table instanceof HTMLTableElement)) {
@@ -188,6 +188,8 @@
 		this.columns = {};
 		this.isRunning = false;
 		this.lastSortedCol = undefined;
+		this.preventRun = preventRun;
+		this.updatePreventRun = updatePreventRun;
 
 		for (let colNo in columns) {
 			colNo = parseInt(colNo);
@@ -226,8 +228,22 @@
 
 		// console.table("col", col);
 
+		if (typeof this.preventRun == "function" && typeof this.updatePreventRun == "function") {
+			// for if this.isRunning isn't enough
+			if (this.preventRun()) {
+				return;
+			}
+		}
+
+		function updatePreventRun() {
+			if (typeof this.preventRun == "function" && typeof this.updatePreventRun == "function") {
+				this.updatePreventRun();
+			}
+		}
+
 		if (this.isRunning || !col) {
 			console.warn("cannot do sort as already sorting or col doesn't exist");
+			updatePreventRun();
 			return;
 		}
 
@@ -255,6 +271,7 @@
 
 		this.lastSortedCol = colNo;
 		this.isRunning = false;
+		updatePreventRun();
 	};
 	Sorter.prototype.addSortEvent = function(colNo) {
 		const header = this.header;
