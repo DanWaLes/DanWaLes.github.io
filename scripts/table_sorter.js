@@ -142,8 +142,9 @@
 		for (let i = 0; i < rows.length; i++) {
 			const toMove = sorted[i];
 
-			toMove.parentNode.insertBefore(toMove, rows[i]);
+			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i]);
 		}
+		console.log("done");
 
 		/*
 		let sortData = [];
