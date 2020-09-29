@@ -171,7 +171,7 @@
 		console.log("start visual");
 		for (let i = 0; i < sortData.length; i++) {
 			const toFind = sortData[i];
-			const originalIndex = sortData.originals.indexOf[toFind];
+			const originalIndex = sortData.originals.indexOf(toFind);
 			const rowToMove = rows[originalIndex];
 			const rowToMoveBefore = rows[i];
 
