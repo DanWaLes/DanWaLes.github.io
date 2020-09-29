@@ -143,13 +143,15 @@
 			sortData = insertionSort(sortData, dir);
 		}
 
-		// console.table("sortData = ", sortData);
-		// console.table("sortData.originals = ", sortData.originals);
+		console.table("sortData = ", sortData);
+		console.table("sortData.originals = ", sortData.originals);
 
 		for (let i = numRows - 1; i > -1; i--) {
 			// place the sorted items into the table
 			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
 			const foundIndex = sortData.originals.indexOf(itemToFind);
+			console.table("itemToFind = ", itemToFind);
+			console.table("foundIndex = ", foundIndex);
 
 			if (foundIndex > -1) {
 				rows[foundIndex].parentNode.insertBefore(rows[foundIndex], rows[i + 1]);
