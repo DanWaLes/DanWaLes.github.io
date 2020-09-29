@@ -148,7 +148,10 @@
 
 		console.log("start visual");
 		// rows[original index] always changes as the structure is changed
-		const rowsClone = rows;// stable
+		const rowsClone = [];// stable
+		for (let n in rows) {
+			rowsClone[n] = rows[n];
+		}
 
 		for (let i = 0; i < sortData.length; i++) {
 			const toFind = sortData[i];
