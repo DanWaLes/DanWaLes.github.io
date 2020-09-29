@@ -69,6 +69,10 @@
 		return true;
 	}
 
+	function toNegative(n) {
+		return n - n * 2;
+	}
+
 	// https://www.w3schools.com/howto/howto_js_sort_table.asp was too slow, browser unresponsive
 	// this is something i put together and works nicely :)
 	function sortTable(options) {
@@ -134,16 +138,20 @@
 				sortItemB = Number(sortItemB);
 			}
 
-			/*if (dir == "desc") {
+			if (dir == "desc") {
 				if (isSortingByText) {
 					// + means concat otherwise
 					return sortItemA.localeCompare(sortItemB);
 				}
 
 				return sortItemA + sortItemB;
-			}*/
+			}
 
-			return sortItemA - sortItemB;// asc then auto changes
+			if (isSortingByText) {
+				return toNegative(sortItemA.localeCompare(sortItemB));
+			}
+
+			return sortItemA - sortItemB;
 		});
 
 		for (let i = 0; i < rows.length; i++) {
