@@ -89,6 +89,7 @@
 
 		const tableBody = table.tBodies[0] || table;// use table body or entire table, whichever is more relevant
 		let rows = tableBody.rows;
+		let offset = 0;
 
 		if (rows[0] == header) {
 			// console.log("0th row is header");
@@ -100,6 +101,7 @@
 			}
 
 			rows = newRows;
+			offset = 1;
 		}
 		// console.log(rows);
 
@@ -142,7 +144,7 @@
 		for (let i = 0; i < rows.length; i++) {
 			const toMove = sorted[i];
 
-			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i]);
+			toMove.parentNode.insertBefore(toMove, toMove.parentNode.children[i + offset]);
 		}
 		console.log("done");
 
