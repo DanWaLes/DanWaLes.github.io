@@ -100,8 +100,8 @@
 			}
 
 			rows = newRows;
-			// console.log(rows);
 		}
+		console.log(rows);
 
 		const numRows = rows.length;
 		const dir = options.dir;
@@ -141,12 +141,12 @@
 			sortData = insertionSort(sortData, dir);
 		}
 
-		// console.log("sortData");
-		// console.log(sortData);
-		// console.log("sortData.originals");
-		// console.log(sortData.originals);
+		console.log("sortData");
+		console.log(sortData);
+		console.log("sortData.originals");
+		console.log(sortData.originals);
 
-		// console.log("start visual");
+		console.log("start visual");
 		for (let i = 0; i < sortData.length; i++) {
 			const toFind = sortData[i];
 			const originalIndex = sortData.originals.indexOf(toFind);
@@ -155,7 +155,7 @@
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
 		}
-		// console.log("done visual");
+		console.log("done visual");
 	}
 
 	/**
