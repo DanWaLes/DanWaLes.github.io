@@ -101,7 +101,7 @@
 
 			rows = newRows;
 		}
-		console.log(rows);
+		// console.log(rows);
 
 		const numRows = rows.length;
 		const dir = options.dir;
@@ -237,6 +237,7 @@
 
 		function updatePreventRun() {
 			if (typeof this.preventRun == "function" && typeof this.updatePreventRun == "function") {
+				console.log("init updatePreventRun");
 				this.updatePreventRun();
 			}
 		}
