@@ -105,6 +105,7 @@
 			if (dir == "desc") {
 				if (isSortingByText) {
 					// + means concat otherwise
+					// https://www.techonthenet.com/js/string_localecompare.php
 					return sortItemA.localeCompare(sortItemB, document.documentElement.lang || navigator.language, {caseFirst: "upper"});
 				}
 
