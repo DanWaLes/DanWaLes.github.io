@@ -105,14 +105,14 @@
 			if (dir == "desc") {
 				if (isSortingByText) {
 					// + means concat otherwise
-					return sortItemA.localeCompare(sortItemB, navigator.language, {caseFirst: "upper"});
+					return sortItemA.localeCompare(sortItemB, document.documentElement.lang || navigator.language, {caseFirst: "upper"});
 				}
 
 				return sortItemA + sortItemB;
 			}
 
 			if (isSortingByText) {
-				return toNegative(sortItemA.localeCompare(sortItemB, navigator.language, {caseFirst: "upper"}));
+				return toNegative(sortItemA.localeCompare(sortItemB, document.documentElement.lang || navigator.language, {caseFirst: "upper"}));
 			}
 
 			return sortItemA - sortItemB;
