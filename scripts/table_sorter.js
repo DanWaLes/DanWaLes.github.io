@@ -91,7 +91,7 @@
 		let rows = tableBody.rows;
 
 		if (rows[0] == header) {
-			console.log("0th row is header");
+			// console.log("0th row is header");
 			let newRows = {length: 0};
 
 			for (let i = 1; i < rows.length; i++) {
@@ -100,22 +100,20 @@
 			}
 
 			rows = newRows;
-			console.log(rows);
+			// console.log(rows);
 		}
 
 		const numRows = rows.length;
 		const dir = options.dir;
 		const colNo = options.colNo;
 
-
 		const sorter = header.children[colNo].dataset.sorter;
 		const isSortingByNumber = sorter == "number";
 		const isSortingByDate = sorter == "date";
 
 		let sortData = [];
-		// const offset = theadTr ? 0 : 1;
 
-		for (let i = 0; /*offset;*/ i < numRows; i++) {
+		for (let i = 0; i < numRows; i++) {
 			// get all the sort data - dont modify the html yet as more total dom operations are required. dom = slow
 			const row = rows[i].children;
 			let item = {};
@@ -143,41 +141,22 @@
 			sortData = insertionSort(sortData, dir);
 		}
 
-		console.log("sortData");
-		console.log(sortData);
-		console.log("sortData.originals");
-		console.log(sortData.originals);
+		// console.log("sortData");
+		// console.log(sortData);
+		// console.log("sortData.originals");
+		// console.log(sortData.originals);
 
-		/*for (let i = numRows - 1; i > -1; i--) {
-			// place the sorted items into the table
-			const itemToFind = sortData[i];// may not be there due to offset used when getting sort data
-			const foundIndex = sortData.originals.indexOf(itemToFind);
-
-			if (foundIndex > -1) {
-				const row = rows[foundIndex];
-				const newPos = rows[i + 1];
-				console.log("moving");
-				console.log(row);
-				console.log("before");
-				console.log(newPos);
-
-				row.parentNode.insertBefore(row, newPos);
-				// can now delete item at found index, free up memory
-				sortData.splice(i, 1);
-				sortData.originals.splice(foundIndex, 1);
-			}
-		}*/
-
-		console.log("start visual");
-		for (let i = 0; i < sortData.length; i++) {
-			const toFind = sortData[i];
+		// console.log("start visual");
+		for (let i = sortData.length - 1; i > -1; i--) {
+			const toFind = sortData.pop();// free up memory
 			const originalIndex = sortData.originals.indexOf(toFind);
 			const rowToMove = rows[originalIndex];
 			const rowToMoveBefore = rows[i - 1];
 
 			rowToMove.parentNode.insertBefore(rowToMove, rowToMoveBefore);
+			sortData.originals.splice(originalIndex, 1);// free up memory, fast to find next because less items
 		}
-		console.log("done visual");
+		// console.log("done visual");
 	}
 
 	/**
