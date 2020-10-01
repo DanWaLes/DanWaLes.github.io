@@ -90,8 +90,21 @@
 		};
 
 		const sorted = rows.toArray().sort((a, b) => {
-			let sortItemA = a.children[colNo].innerText;
-			let sortItemB = b.children[colNo].innerText;
+			let sortItemA = a.children[colNo];
+			if (sortItemA.dataset.sortVal) {
+				sortItemA = sortItemA.dataset.sortVal;
+			}
+			else {
+				sortItemA = sortItemA.innerText;
+			}
+
+			let sortItemB = b.children[colNo];
+			if (sortItemB.dataset.sortVal) {
+				sortItemB = sortItemB.dataset.sortVal;
+			}
+			else {
+				sortItemB = sortItemB.innerText;
+			}
 
 			if (isSortingByDate) {
 				sortItemA = new Date(sortItemA).getTime();
