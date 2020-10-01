@@ -398,7 +398,7 @@
 						<h1 style="display: inline">Dan's Userscripts</h1>
 						<input id="closeBtn" title="Close settings" type="button" value="X" style="float: right;">
 					</div>
-					<a href="https://www.warzone.com/Discussion/SendMail?PlayerID=222685">Report bug/request feature</a>
+					<p>Report bug/request feature - Discord DanWL#2759</p>
 					<div>
 						<input id="import" type="button" value="Import settings">
 						<input id="export" type="button" value="Export settings">
