@@ -1,0 +1,116 @@
+<!-- minimal code for making a custom select dropdon menu -->
+
+<html>
+	<head>
+		<style>
+			/* custom selects so that they can be opened programmatically */
+
+			.select {
+				cursor: default;
+				display: inline-block;
+				background: #800080;
+				border: 2px outset #4B0082;
+				padding: 2px;
+			}
+
+			.select * {
+				background: inherit;
+			}
+
+			.select .selectedOption {
+				display: inline;
+			}
+
+			.select .selectedOption:after {
+				content: ' \25BD';
+			}
+
+			.select .options {
+				display: none;
+				position: relative;
+				padding: 2px;
+			}
+
+			.select .options .option:hover {
+				background: #DA70D6;
+			}
+		</style>
+		<script>
+			<!-- custom selects so that they can be opened programmatically -->
+
+			(() => {
+				function run() {
+					if (document.readyState != 'complete') {
+						return setTimeout(run, 100);
+					}
+	
+					var selects = document.getElementsByClassName('select');
+	
+					function doSelect(select) {
+						const current = select.getElementsByClassName('selectedOption')[0];
+						const optionsContainer = select.getElementsByClassName('options')[0];
+						const options = optionsContainer.getElementsByClassName('option');
+						let expanded = false;
+					
+						current.innerText = options[0].innerText;
+					
+						function collapse() {
+							if (!expanded) {
+								return;
+							}
+					
+							expanded = false;
+					
+							optionsContainer.style.display = 'none';
+							select.style.position = 'static';
+							current.style.display = 'inline';
+						}
+					
+						function expand() {
+							if (expanded) {
+								return;
+							}
+					
+							expanded = true;
+					
+							current.style.display = 'none';
+							select.style.position = 'absolute';
+							optionsContainer.style.display = 'block';
+						}
+					
+						current.onclick = expand;
+					
+						function doOption(option) {
+							function clicked() {
+								current.innerText = option.innerText;
+								collapse();
+							}
+					
+							option.onclick = clicked;
+						}
+						
+						for (let option of options) {
+							doOption(option);
+						}
+					}
+					
+					for (var select of selects) {
+						doSelect(select);
+					}
+				}
+	
+				run();
+			})();
+		</script>
+	</head>
+	<body>
+		<div class="select">
+			<div class="selectedOption"></div>
+			<div class="options">
+				<div class="option">dff</div>
+				<div class="option">sgd</div>
+				<div class="option">dffsdegrdf</div>
+			</div>
+		</div>
+	</body>
+</html>

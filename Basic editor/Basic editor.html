@@ -1,0 +1,807 @@
+<html lang="en">
+	<head>
+		<title>Basic editor</title>
+		<meta charset="UTF-8">
+		<style>
+			body {
+				margin: 1em;
+			}
+
+			*, input, textarea {
+				font-family: monospace;
+				line-height: 1.2;
+				background: #111;
+				color: #eee;
+			}
+
+			select, option, input {
+				background: #800080;
+				border: 2px outset #4B0082;
+			}
+
+			textarea {
+				margin-block: 0;
+				padding-inline: 0;
+				padding: 0;
+				width: 100%;
+				overflow: auto;
+				resize: none;
+				-moz-tab-size: 4;
+				tab-size: 4;
+			}
+
+			header > div {
+				display: inline-block;
+			}
+		</style>
+		<script>
+			function run() {
+				if (document.readyState != 'complete') {
+					return setTimeout(run, 100);
+				}
+
+				const textarea = document.querySelector('textarea');
+				const suggestionsArea = document.getElementById('suggestionsArea');
+				const line = document.getElementById('line');
+				const col = document.getElementById('col');
+
+				function goToPosition() {
+					goTo(line.value, col.value);
+					window.HOTKEYS_DISABLED = false;
+				}
+
+				line.onchange = goToPosition;
+				col.onchange = goToPosition;
+
+				function setInputText(lineNo, colNo) {
+					lineNo = '' + lineNo;
+					colNo = '' + colNo;
+
+					function main(input, text) {
+						input.value = text;
+						input.style.width = text.length + 'em';
+						input.onclick = () => {
+							input.focus();
+							window.HOTKEYS_DISABLED = true;
+						};
+					}
+
+					main(line, lineNo);
+					main(col, colNo);
+				}
+
+				let updateLineColVisual;
+				function tryToUpdateLineColVisual() {
+					if (typeof updateLineColVisual == 'function') {
+						updateLineColVisual();
+					}
+				}
+
+				setInputText(1, 1);
+				goToPosition();
+
+				function goTo(ln, col) {
+					ln = parseInt(ln);
+					col = parseInt(col);
+
+					if (isNaN(ln) || isNaN(col)) {
+						return;
+					}
+
+					col--;// prevents off by one
+
+					let i = 0;
+					let targetLineIndex;
+					let lineNo = 1;
+					let endOfLine;
+
+					for (; i < textarea.value.length; i++) {
+						const c = textarea.value[i];
+
+						if (c == '\n') {
+							lineNo++;
+						}
+
+						if (lineNo == ln) {
+							targetLineIndex = i;
+							break;
+						}
+					}
+
+					if (typeof targetLineIndex != 'number') {
+						targetLineIndex = i;
+					}
+					
+					for (i = targetLineIndex + 1; i < textarea.value.length; i++) {
+						const c = textarea.value[i];
+
+						if (c == '\n') {
+							endOfLine = i;
+							break;
+						}
+					}
+
+					if (typeof endOfLine != 'number') {
+						endOfLine = i;
+					}
+
+					const pos = (targetLineIndex + col) > endOfLine ? endOfLine : targetLineIndex + col;
+
+					textarea.focus();
+					setCaretPos(pos, pos);
+				}
+
+				function getLang() {
+					let lang = document.querySelector('#lang .selectedOption') || '';
+
+					if (lang) {
+						lang = lang.dataset.val;
+					}
+
+					return lang;
+				}
+				function getCommentType() {
+					const lang = getLang();
+
+					if (!lang) {
+						return '';
+					}
+					else if (lang == 'py') {
+						return '#';
+					}
+					else if (lang == 'sql') {
+						return '--';
+					}
+
+					return '//';
+				}
+
+				window.onfocus = () => {
+					textarea.focus();
+				};
+				window.onresize = () => {
+					let header = document.getElementsByTagName('header');
+
+					header = (header ? header[0].clientHeight : 0);
+
+					textarea.style.height = 'calc(' + document.body.clientHeight + 'px - ' + (header) + 'px - 2em)';
+				};
+				window.focus();
+				window.onresize();
+
+				const keywords = {
+					generic: ['break','case','catch','continue','default','do','else','finally','for','if','import','in','return','static','switch','throw','try','while','true','false','null'],
+					classes: ['abstract','class','extends','implements','interface','super','this','instanceof','new'],
+					accessMod: ['private','protected','public','requires'],
+					typed: ['boolean','char','double','enum','float','int','long','short','void'],
+					opNames: ['and','or','not'],
+					cFam: function() {
+						return this.generic.concat(this.typed).concat(['auto','const','extern','inline','register','restrict','signed','sizeof','struct','typedef','union','unsigned','volatile']);
+					},
+					cClass: ['class','new','template','this'],
+					'js': function() {
+						return this.generic.concat(this.classes).concat(['await','delete','const','let','function','with','of','typeof','undefined']);
+					},
+					'py': function() {
+						return this.generic.concat(this.opNames).concat(['as','assert','class','def','del','elif','except','False','from','global','import','is','lambda','None','nonlocal','pass','raise','True','with','yield']);
+					},
+					'java': function() {
+						return this.generic.concat(this.classes).concat(this.accessMod).concat(this.typed).concat(['package','exports','byte','final','throws']);
+					},
+					'c': function() {
+						return this.cFam();
+					},
+					'c++': function() {
+						return this.cFam().concat(this.opNames).concat(this.cClass).concat(['alignas','alignof','and_eq','asm','atomic_cancel','atomic_commit','atomic_noexcept','bitand','bitor','bool','char8_t','char16_t','char32_t','compl','concept','consteval','constexpr','constinit','const_cast','co_await','co_return','co_yield','decltype','dynamic_cast','explicit','export','extern','friend','mutable','namespace','noexcept','not_eq','nullptr','operator','or_eq','reflexpr','reinterpret_cast','static_assert','static_cast','synchronized','thread_local','typeid','typename','using','virtual','wchar_t','xor','xor_eq']);
+					},
+					'sql': function() {
+						return ['ADD','ADD CONSTRAINT','ALTER','ALTER COLUMN','ALTER TABLE','ALL','AND','ANY','AS','ASC','BACKUP DATABASE','BETWEEN','CASE','CHECK','COLUMN','CONSTRAINT','CREATE','CREATE DATABASE','CREATE INDEX','CREATE OR REPLACE VIEW','CREATE TABLE','CREATE PROCEDURE','CREATE UNIQUE INDEX','CREATE VIEW','DATABASE','DEFAULT','DELETE','DESC','DISTINCT','DROP','DROP COLUMN','DROP CONSTRAINT','DROP DATABASE','DROP DEFAULT','DROP INDEX','DROP TABLE','DROP VIEW','EXEC','EXISTS','FOREIGN KEY','FROM','FULL OUTER JOIN','GROUP BY','HAVING','IN','INDEX','INNER JOIN','INSERT INTO','INSERT INTO SELECT','IS NULL','IS NOT NULL','JOIN','LEFT JOIN','LIKE','LIMIT','NOT','NOT NULL','OR','ORDER BY','OUTER JOIN','PRIMARY KEY','PROCEDURE','RIGHT JOIN','ROWNUM','SELECT','SELECT DISTINCT','SELECT INTO','SELECT TOP','SET','TABLE','TOP','TRUNCATE TABLE','UNION','UNION ALL','UNIQUE','UPDATE','VALUES','VIEW','WHERE'];
+					},
+					'': function() {return [];}
+				};
+
+				let predictions = [];
+				let predictsActive = false;// toggle with alt/
+				let predict = 0;// increase with alt. decrease with alt,
+
+				function focusOnPredict() {
+					const available = suggestionsArea.children;
+
+					if (!available.length) {
+						return;
+					}
+
+					const active = available[(predict + available.length) % available.length];
+
+					active.style.border = '2px outset #EE82EE';
+
+					return active;
+				}
+
+				function getCaretPos() {
+					return {start: textarea.selectionStart, end: textarea.selectionEnd};
+				}
+				function setCaretPos(start, end) {
+					textarea.selectionStart = start;
+					textarea.selectionEnd = end;
+				}
+
+				textarea.onkeydown = (e) => {
+					const active = {
+						get: function() {return textarea.value.substring(this.getStartOfLine(), getCaretPos().end)},
+						getStartOfLine: function() {
+							const originalStart = getCaretPos().start;
+							let start = originalStart - 1;
+							// console.log(start);
+
+							for (; start > -1; start--) {
+								const c = textarea.value[start];
+
+								if (c == '\n') {
+									// console.log(start);
+									return start;
+								}
+							}
+							// console.log(0);
+
+							return 0;
+						},
+						getEndOfLine: function() {
+							const absoluteEnd = textarea.value.length;
+
+							for (let end = getCaretPos().end; end < absoluteEnd; end++) {
+								const c = textarea.value[end];
+
+								if (c == '\n') {
+									return end - 1;
+								}
+							}
+
+							return absoluteEnd;
+						},
+						getLineNo: function() {
+							let index = 0;
+							let lineNo = 0;
+
+							for (let i = this.getStartOfLine(); i > -1; i--) {
+								const c = textarea.value[i];
+
+								if (c == '\n' || i == 0) {
+									lineNo++;
+								}
+
+								index++;
+							}
+
+							return {lineNo: lineNo, index: index};
+						},
+						getColNo: function() {
+							const lineNo = this.getLineNo();
+
+							return getCaretPos().start - lineNo.index + 1 + (lineNo.lineNo === 1 ? 1 : 0);
+						},
+						insertAtStartOfLines: function(toInsert) {
+							let modified = this.get().replace(/\n/g, '\n' + toInsert);
+
+							if (!this.getStartOfLine()) {
+								modified = modified.replace(/^/, toInsert);
+							}
+
+							return modified;
+						},
+						insertAtStartOfLinesIfNotAlreadyInserted: function(toInsert) {
+							const prevent = '(?!' + toInsert + ')';
+							let modified = this.get().replace(new RegExp('\n' + prevent, 'g'), '\n' + toInsert);
+
+							if (!this.getStartOfLine()) {
+								modified = modified.replace(new RegExp('^' + prevent), toInsert);
+							}
+
+							return modified;
+						},
+						removeFromStartOfLines: function(toRemove) {
+							return this.get().replace(new RegExp('(^|\\n)' + toRemove, 'g'), (match, p1) => {
+								if (p1 == '\n') {
+									return '\n';
+								}
+
+								return '';
+							});
+						},
+						insertAtEndOfLine: function(toInsert) {
+							return this.get() + toInsert;
+						},
+						getLeadingSpace: function() {
+							const match = this.get().match(/^\s+/);
+//							console.log(this.get());
+//							console.log(match);
+
+							if (match) {
+								return match[0].replace(/\n+/, '');
+							}
+
+							return '';
+						},
+						getCurrentWord: function() {
+							const word = this.get().match(/\w+$/);
+
+							if (word) {
+								return word[0];
+							}
+
+							return null;
+						},
+						insertOnCurrentWord: function(replacement) {
+							return this.get().replace(/\w+$/, replacement);
+						},
+						deleteCurrentLines: function() {
+							const start = this.getStartOfLine();
+							const end = this.getEndOfLine();
+
+							textarea.value = textarea.value.substring(0, start) + textarea.value.substring(end, textarea.value.length);
+
+							// move to line before deleted
+							setCaretPos(start - 1, start - 1);
+						},
+						duplicateCurrentLines: function() {
+							const originalPos = getCaretPos();
+							const start = this.getStartOfLine();
+							const end = this.getEndOfLine();
+							const toCopy = textarea.value.substring(start, end);
+
+							textarea.value = textarea.value.substring(0, end) + toCopy + textarea.value.substring(end, textarea.value.length);
+
+							// makes more sense to move cursor to relative position of last line
+							setCaretPos(originalPos.start + toCopy.length, originalPos.end + toCopy.length);
+						},
+						applyChanges: function(modified, start) {
+							const changed = textarea.value.substring(0, start) + modified;
+
+							textarea.value = changed + textarea.value.substring(getCaretPos().end, textarea.value.length);
+
+							return changed.length;
+						}
+					};
+
+					updateLineColVisual = () => {
+						if (window.HOTKEYS_DISABLED) {
+							return;
+						}
+
+						setInputText(active.getLineNo().lineNo, active.getColNo());
+					};
+
+					if (window.HOTKEYS_DISABLED) {
+						e.preventDefault();
+						return;
+					}
+
+					listenForHotkeys(e, active);
+					makePredictions(e, active);
+
+					tryToUpdateLineColVisual();
+				};
+
+				textarea.onkeyup = (e) => {
+					tryToUpdateLineColVisual();
+				};
+
+				function listenForHotkeys(e, selected) {
+					if (e.altKey && e.shiftKey && e.key.toUpperCase() == 'A') {
+						// untab pressed
+						const start = selected.getStartOfLine();
+						const modified = selected.removeFromStartOfLines('\t');
+						const end = selected.applyChanges(modified, start);
+						// move to last of tab
+
+						setCaretPos(end, end);
+					}
+					else if (e.altKey && e.key == 'a') {
+						// tab pressed
+						const start = selected.getStartOfLine();
+						const modified = selected.insertAtStartOfLines('\t');
+						const end = selected.applyChanges(modified, start);
+						// move to last of tab
+
+						setCaretPos(end, end);
+					}
+					else if (e.altKey && e.key == 'c') {
+						// clear all leading space
+						const start = selected.getStartOfLine();
+						const modified = selected.removeFromStartOfLines('\\s+');
+						const end = selected.applyChanges(modified, start);
+						// move to start of line
+
+						setCaretPos(end, end);
+					}
+					else if (e.altKey && e.key == '/') {
+						predictsActive = !predictsActive;
+						predict = 0;
+					}
+					else if (e.key == 'Enter' && !e.altKey) {
+						// make new line following indentation
+						e.preventDefault();
+
+						const start = selected.getStartOfLine();
+						const space = '\n' + selected.getLeadingSpace();
+						const end = selected.applyChanges(selected.insertAtEndOfLine(space), start);
+						// move to end of new line
+
+						setCaretPos(end, end);
+					}
+					else if (e.altKey && e.key == 'l') {
+						// focus language
+						const lang = document.querySelector('#lang .selectedOption');
+
+						if (!lang) {return;}
+
+						lang.click();
+					}
+					else if (e.ctrlKey && e.shiftKey && (e.key == ':' || e.key == ';')) {
+						// uncomment
+						const start = selected.getStartOfLine();
+						const modified = selected.removeFromStartOfLines(getCommentType());
+						const end = selected.applyChanges(modified, start);
+						// move to start of line
+
+						setCaretPos(end, end);
+					}
+					else if (e.ctrlKey && e.key == ';') {
+						// comment
+						const start = selected.getStartOfLine();
+						const modified = selected.insertAtStartOfLinesIfNotAlreadyInserted(getCommentType());
+						const end = selected.applyChanges(modified, start);
+						// move to start of line
+
+						setCaretPos(end, end);
+					}
+					else if (e.ctrlKey && e.shiftKey && (e.key == '\'' || e.key == '@')) {
+						// remove line
+						selected.deleteCurrentLines();
+					}
+					else if (e.ctrlKey && e.key == '\'') {
+						// dupe line
+						selected.duplicateCurrentLines();
+					}
+					else if (e.altKey && e.key == 'r') {
+						reformat(textarea);
+					}
+					else if (e.ctrlKey && e.shiftKey && (e.key == 'g' || e.key == 'G')) {
+						// goto col
+						e.preventDefault();
+						col.click();
+						col.select();
+					}
+					else if (e.ctrlKey && e.key == 'g') {
+						// goto line
+						e.preventDefault();
+						line.click();
+						line.select();
+					}
+					// TODO undo redo
+				}
+
+				function makePredictions(e, selected) {
+					suggestionsArea.innerHTML = '';
+
+					if (!predictsActive) {
+						return;
+					}
+
+					const currentWord = selected.getCurrentWord();
+
+					if (currentWord == null) {
+						return;
+					}
+
+					predictions = [];
+
+					keywords[getLang()]().forEach((word) => {
+						if (word.startsWith(currentWord)) {
+							predictions.push(word);
+						}
+					});
+
+					predictions = (predictWords(currentWord, textarea) || []).concat(predictions);
+
+					function insertWord(word) {
+						const start = selected.getStartOfLine();
+
+						const end = selected.applyChanges(selected.insertOnCurrentWord(word), start);
+						predict = 0;
+						suggestionsArea.innerHTML = '';
+						setCaretPos(end, end);
+						tryToUpdateLineColVisual();
+					}
+
+					displaySuggested(predictions, insertWord);
+
+					if (e.altKey && e.key == '.') {
+						predict = (predict + 1) % predictions.length;
+					}
+					else if (e.altKey && e.key == ',') {
+						predict = (predict - 1) % predictions.length;
+					}
+					else if (e.altKey && e.key == 'Enter') {
+						const active = focusOnPredict();
+
+						if (active) {
+							active.click();
+						}
+					}
+
+					focusOnPredict();
+				}
+
+				function displaySuggested(suggested, insertWord) {
+					suggestionsArea.innerHTML = '';
+
+					for (let i = 0; i < suggested.length; i++) {
+						const suggestion = suggested[i];
+
+						suggested[i] = null;
+						display(suggestion);
+					}
+
+					function display(suggestion) {
+						const btn = document.createElement('input');
+
+						btn.type = 'button';
+						btn.value = suggestion;
+						btn.onclick = () => {
+							insertWord(suggestion);
+						};
+						suggestionsArea.appendChild(btn);
+					}
+				}
+
+				function predictWords(startStr, textarea) {
+					const words = textarea.value.match(/\b\w+\b/g);
+
+					if (!words) {
+						return;
+					}
+
+					let result = {};
+
+					for (let i = words.length - 1; i > -1; i--) {
+						const word = words.pop();
+
+						if (word.startsWith(startStr)) {
+							if (!result[word]) {
+								result[word] = 0;
+							}
+
+							result[word]++;
+						}
+					}
+
+					// largest to smallest
+					result = Object.keys(result).sort((a, b) => {
+						return result[b] - result[a];
+					});
+
+					// let's limit to 10 suggestions
+					const max = 10;
+
+					if (result.length > max) {
+						result.splice(max, result.length - max);
+					}
+
+					return result;
+				}
+
+				function reformat(textarea) {
+					// remove trailing space, only 1 empty line allowed
+					textarea.value = textarea.value.replace(/(?!\n)\s+$/gm, '').replace(/\n\n\n+/g, '\n\n');
+				}
+			}
+
+			// https://stackoverflow.com/questions/646611/programmatically-selecting-partial-text-in-an-input-field#answer-646662
+			function createSelection(field, start, end) {
+				if (field.createTextRange) {
+					var selRange = field.createTextRange();
+					selRange.collapse(true);
+					selRange.moveStart('character', start);
+					selRange.moveEnd('character', end);
+					selRange.select();
+					field.focus();
+				}
+				else if (field.setSelectionRange) {
+					field.focus();
+					field.setSelectionRange(start, end);
+				}
+				else if (typeof field.selectionStart !='undefined') {
+					field.selectionStart = start;
+					field.selectionEnd = end;
+					field.focus();
+				}
+			}
+
+			run();
+		</script>
+
+		<style>
+			/* custom selects so that they can be opened programmatically */
+
+			.select {
+				cursor: default;
+				display: inline-block;
+				background: #800080;
+				border: 2px outset #4B0082;
+				padding: 2px;
+			}
+
+			.select * {
+				background: inherit;
+			}
+
+			.select .selectedOption {
+				display: inline;
+			}
+
+			.select .selectedOption:after {
+				content: ' \25BD';
+			}
+
+			.select .options {
+				display: none;
+				position: relative;
+				padding: 2px;
+			}
+
+			.select .options .option:hover, .select .options .option.hover {
+				background: #DA70D6;
+			}
+		</style>
+		<script>
+			<!-- custom selects so that they can be opened programmatically -->
+
+			(() => {
+				function run() {
+					if (document.readyState != 'complete') {
+						return setTimeout(run, 100);
+					}
+
+					var selects = document.getElementsByClassName('select');
+
+					function doSelect(select) {
+						const current = select.getElementsByClassName('selectedOption')[0];
+						const optionsContainer = select.getElementsByClassName('options')[0];
+						const options = optionsContainer.getElementsByClassName('option');
+						let expanded = false;
+						let optionNo = 0;
+
+						current.innerText = options[0].innerText;
+						current.dataset.val = options[0].dataset.val;
+
+						function collapse() {
+							if (!expanded) {
+								return;
+							}
+
+							expanded = false;
+							window.HOTKEYS_DISABLED = false;
+
+							optionsContainer.style.display = 'none';
+							document.body.style.position = 'static';
+							select.style.position = 'static';
+							current.style.display = 'inline';
+						}
+
+						function expand() {
+							if (expanded) {
+								return;
+							}
+
+							expanded = true;
+							window.HOTKEYS_DISABLED = true;
+
+							current.style.display = 'none';
+							select.style.position = 'relative';
+							select.style.top = options.length + 'em';
+							document.body.style.position = 'relative';
+							document.body.style.top = '-' + options.length + 'em';
+							optionsContainer.style.display = 'block';
+						}
+
+						current.onclick = expand;
+
+						function doOption(option, i) {
+							function clicked() {
+								current.innerText = option.innerText;
+								current.dataset.val = option.dataset.val;
+								options.className = option.className.replace(' hover', '');
+								optionNo = i;
+								collapse();
+							}
+
+							option.onclick = clicked;
+						}
+
+						for (let i in options) {
+							doOption(options[i], i);
+						}
+
+						// prevent typing while selecting from select
+						let lastHovered;
+
+						function getActiveOption() {
+							return options[(optionNo + options.length) % options.length];
+						}
+						function hoverOnOption() {
+							const active = getActiveOption();
+
+							if (lastHovered) {
+								lastHovered.className = lastHovered.className.replace(' hover', '');
+							}
+
+							active.className += ' hover';
+							lastHovered = active;
+						}
+
+						window.onkeydown = (e) => {
+							if (!expanded) {return;}
+
+							e.preventDefault();
+							// only listen to up and down arrows, as well as enter
+							if (e.key == 'ArrowDown') {
+								optionNo = (optionNo + 1) % options.length;
+								hoverOnOption();
+							}
+							else if (e.key == 'ArrowUp') {
+								optionNo = (optionNo - 1) % options.length;
+								hoverOnOption();
+							}
+							else if (e.key == 'Enter') {
+								getActiveOption().click();
+							}
+						};
+					}
+
+					for (var select of selects) {
+						doSelect(select);
+					}
+				}
+
+				run();
+			})();
+		</script>
+	</head>
+	<body>
+		<header>
+			<div>
+				<label for="lang">Lang:</label>
+				<!--<select id="lang">
+					<option value="">(none)</option>
+					<option value="js">JS</option>
+					<option value="py">Py</option>
+					<option value="java">Java</option>
+					<option value="c">C</option>
+					<option value="c++">C++</option>
+				</select>-->
+				<div id="lang" class="select">
+					<div class="selectedOption"></div>
+					<div class="options">
+						<div class="option" data-val="">(none)</div>
+						<div class="option" data-val="js">JS</div>
+						<div class="option" data-val="py">Py</div>
+						<div class="option" data-val="java">Java</div>
+						<div class="option" data-val="c">C</div>
+						<div class="option" data-val="c++">C++</div>
+						<div class="option" data-val="sql">SQL</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<!-- don't want browser to validate, if out of range go to 0 or max -->
+				<label for="line">Ln:</label>
+				<input id="line">
+				<label for="col">Col:</label>
+				<input id="col">
+			</div>
+			<div id="suggestionsArea"></div>
+		</header>
+		<textarea></textarea>
+	</body>
+</html>
