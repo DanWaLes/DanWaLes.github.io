@@ -33,6 +33,10 @@
 			header > div {
 				display: inline-block;
 			}
+
+			#help {
+				display: none;
+			}
 		</style>
 		<script>
 			function run() {
@@ -44,6 +48,27 @@
 				const suggestionsArea = document.getElementById('suggestionsArea');
 				const line = document.getElementById('line');
 				const col = document.getElementById('col');
+				const helpBtn = document.getElementById('helpBtn');
+				const helpMenu = document.getElementById('help');
+
+				let helpActive = false;
+
+				function toggleHelp() {
+					helpActive = !helpActive;
+
+					if (helpActive) {
+						helpBtn.className = 'selectedInput';
+						helpMenu.style.display = 'block';
+					}
+					else {
+						helpBtn.className = '';
+						helpMenu.style.display = 'none';
+					}
+
+					window.onresize();
+				}
+
+				helpBtn.onclick = toggleHelp;
 
 				function goToPosition() {
 					goTo(line.value, col.value);
@@ -62,6 +87,7 @@
 						input.style.width = text.length + 'em';
 						input.onclick = () => {
 							input.focus();
+							input.select();
 							window.HOTKEYS_DISABLED = true;
 						};
 					}
@@ -84,8 +110,14 @@
 					ln = parseInt(ln);
 					col = parseInt(col);
 
-					if (isNaN(ln) || isNaN(col)) {
-						return;
+					const isBadLn = isNaN(ln);
+					const isBadCol = isNaN(col);
+
+					if (isBadLn) {
+						ln = 1;
+					}
+					if (isBadCol) {
+						col = 1;
 					}
 
 					col--;// prevents off by one
@@ -123,6 +155,10 @@
 
 					if (typeof endOfLine != 'number') {
 						endOfLine = i;
+					}
+
+					if (isBadCol || isBadLn) {
+						setInputText(ln, col);
 					}
 
 					const pos = (targetLineIndex + col) > endOfLine ? endOfLine : targetLineIndex + col;
@@ -164,7 +200,7 @@
 
 					header = (header ? header[0].clientHeight : 0);
 
-					textarea.style.height = 'calc(' + document.body.clientHeight + 'px - ' + (header) + 'px - 2em)';
+					textarea.style.height = 'calc(' + document.body.clientHeight + 'px - ' + (header + helpMenu.clientHeight) + 'px - 2em)';
 				};
 				window.focus();
 				window.onresize();
@@ -455,7 +491,7 @@
 
 						setCaretPos(end, end);
 					}
-					else if (e.ctrlKey && e.shiftKey && (e.key == '\'' || e.key == '@')) {
+					else if (e.ctrlKey && e.shiftKey && (e.key == '\'' || e.key == '|')) {
 						// remove line
 						selected.deleteCurrentLines();
 					}
@@ -470,13 +506,16 @@
 						// goto col
 						e.preventDefault();
 						col.click();
-						col.select();
 					}
 					else if (e.ctrlKey && e.key == 'g') {
 						// goto line
 						e.preventDefault();
 						line.click();
-						line.select();
+					}
+					else if (e.altKey && e.key == 'h') {
+						// toggle help
+						e.preventDefault();
+						toggleHelp();
 					}
 					// TODO undo redo
 				}
@@ -650,7 +689,7 @@
 				padding: 2px;
 			}
 
-			.select .options .option:hover, .select .options .option.hover {
+			.select .options .option:hover, .select .options .option.hover, .selectedInput {
 				background: #DA70D6;
 			}
 		</style>
@@ -771,6 +810,7 @@
 	<body>
 		<header>
 			<div>
+				<input id="helpBtn" type="button" value="Help">
 				<label for="lang">Lang:</label>
 				<!--<select id="lang">
 					<option value="">(none)</option>
@@ -802,6 +842,70 @@
 			</div>
 			<div id="suggestionsArea"></div>
 		</header>
+		<div id="help">
+			<table>
+				<thead>
+					<tr>
+						<th>Key combo</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Enter</td>
+						<td>Make new line following indent</td>
+					</tr>
+					<tr>
+						<td>Alt a</td>
+						<td>Increase indent</td>
+					</tr>
+					<tr>
+						<td>Alt shift A</td>
+						<td>Decrease indent</td>
+					</tr>
+					<tr>
+						<td>Alt c</td>
+						<td>Remove all leading space</td>
+					</tr>
+					<tr>
+						<td>Ctrl \</td>
+						<td>Dupe line</td>
+					</tr>
+					<tr>
+						<td>Ctrl shift |</td>
+						<td>Delete line</td>
+					</tr>
+					<tr>
+						<td>Alt h</td>
+						<td>Toggle help (starts disabled)</td>
+					</tr>
+					<tr>
+						<td>Alt l</td>
+						<td>Change language; up and down arrows to switch; enter to use selected</td>
+					</tr>
+					<tr>
+						<td>Ctrl ;</td>
+						<td>Comment</td>
+					</tr>
+					<tr>
+						<td>Ctrl shift :</td>
+						<td>Uncomment</td>
+					</tr>
+					<tr>
+						<td>Ctrl g</td>
+						<td>Activate go to line; &lt;line num&gt; enter to go</td>
+					</tr>
+					<tr>
+						<td>Ctrl shift G</td>
+						<td>Activate go to column; &lt;col num&gt; enter to go</td>
+					</tr>
+					<tr>
+						<td>Alt /</td>
+						<td>Toggle predictions (starts disabled); alt , and alt . to switch; alt enter to insert selected</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<textarea></textarea>
 	</body>
 </html>
