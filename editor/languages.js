@@ -114,7 +114,7 @@
 			string_2: "'",
 			stringML_1: '',
 			stringML_2: '',
-			identifierRegex: /[A-Za-z_][\w]*,
+			identifierRegex: /[A-Za-z_][\w]*/,
 			numberRegex: /(?:\d+(?:\.)*)+/,
 			symbolsRegex: /[+\-*\/%=!<>&|^(),;]+/
 		},

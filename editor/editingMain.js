@@ -417,7 +417,7 @@
 
 				setCaretPos(end, end);
 			}
-			else if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() == 'D')) {
+			else if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() == 'D') {
 				// remove line
 				selected.deleteCurrentLines();
 				e.preventDefault();
