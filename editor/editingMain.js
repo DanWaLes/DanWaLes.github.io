@@ -417,18 +417,20 @@
 
 				setCaretPos(end, end);
 			}
-			else if (e.ctrlKey && e.shiftKey && (e.key == '\'' || e.key == '|')) {
+			else if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() == 'D')) {
 				// remove line
 				selected.deleteCurrentLines();
+				e.preventDefault();
 			}
-			else if (e.ctrlKey && e.key == '\'') {
+			else if (e.ctrlKey && e.key == 'd') {
 				// dupe line
+				e.preventDefault();
 				selected.duplicateCurrentLines();
 			}
 			else if (e.altKey && e.key == 'r') {
 				reformat(textarea);
 			}
-			else if (e.ctrlKey && e.shiftKey && (e.key == 'g' || e.key == 'G')) {
+			else if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() == 'G') {
 				// goto col
 				e.preventDefault();
 				col.click();
