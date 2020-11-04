@@ -1,0 +1,58 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 1em;
+}
+
+*, input, textarea {
+	font-family: monospace;
+	line-height: 1.2;
+	background: #111;
+	color: #eee;
+}
+
+select, option, input {
+	background: #800080;
+	border: 2px outset #4B0082;
+}
+
+.backdrop {
+    overflow: auto;
+}
+
+textarea, .highlights {
+	border: 0;
+	margin: 0;
+	margin-block: 0;
+	padding-inline: 0;
+	padding: 0;
+	width: 100%;
+	overflow: auto;
+	resize: none;
+	-moz-tab-size: 4;
+	tab-size: 4;
+
+	white-space: pre-wrap;
+    word-wrap: break-word;
+	resize: none;
+}
+
+textarea {
+	/* so that highlights apply */
+	background-color: transparent;
+	color: transparent;/* this hides the cursor unfortunately */
+}
+
+.highlights {
+	margin-bottom: -5px;/* fixes slight inaccuracy */
+}
+
+header > div {
+	display: inline-block;
+}
+
+#help {
+	display: none;
+}

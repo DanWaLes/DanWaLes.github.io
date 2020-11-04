@@ -1,0 +1,32 @@
+/* custom selects so that they can be opened programmatically */
+
+.select {
+	cursor: default;
+	display: inline-block;
+	background: #800080;
+	border: 2px outset #4B0082;
+	padding: 2px;
+}
+
+.select * {
+	background: inherit;
+}
+
+.select .selectedOption {
+	display: inline;
+}
+
+.select .selectedOption:after {
+	content: ' \25BD';
+}
+
+.select .options {
+	display: none;
+	position: relative;
+	padding: 2px;
+	z-index: 1000;
+}
+
+.select .options .option:hover, .select .options .option.hover, .selectedInput {
+	background: #DA70D6;
+}

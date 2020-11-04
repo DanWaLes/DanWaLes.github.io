@@ -1,0 +1,23 @@
+.comment {
+	color: lightgreen;
+}
+
+.string {
+	color: #ccc;
+}
+
+.keyword {
+	color: blue;
+}
+
+.number {
+	color: orange;
+}
+
+.symbol {
+	color: lightblue;
+}
+
+.error {
+	color: red;
+}
