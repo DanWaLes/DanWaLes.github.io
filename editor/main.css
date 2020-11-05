@@ -18,10 +18,6 @@ select, option, input {
 	border: 2px outset #4B0082;
 }
 
-.backdrop {
-    overflow: auto;
-}
-
 textarea, .highlights {
 	border: 0;
 	margin: 0;

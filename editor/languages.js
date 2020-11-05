@@ -43,8 +43,11 @@
 			stringML_2: '',
 			identifierRegex: /[A-Za-z$_][\w|$]*/,
 			numberRegex: /(?:\d+(?:\.|e|E)*)+/,
-			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;]+/
-			// todo regex
+			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;]+/,
+			special: /(?<=(?:\s|^))\/(?!\*)(?!\s)(?:\\.|(?!\n)[^\/\\])+(?<!\s)\/(?!\s)(?:\\.|(?!\n)[^\/\\])*(?<!\s)\/[gimsuy]*(?=(?:\s|$|\.|;))|(?<=(?:\s|^|\(|=))([gimsuy]?)?\/(?!\*)(?!\s)(?:\\.|(?!\n)[^\/\\])+(?<!\s)\/[gimsuy]*(?=(?:\s|$|\.|,|;|\)))/
+			// based on PHP "/(?<=[\\s^])(s|tr|y)\\/(?!\*)(?!\s)(?:\\\\.|(?!\n)[^\\/\\\\])+(?<!\s)\\/(?!\s)(?:\\\\.|(?!\n)[^\\/\\\\])*(?<!\s)\\/[msixpogcde]*(?=[\\s$\\.\\;])|(?<=[\\s^(=])(m|q[qrwx]?)?\\/(?!\*)(?!\s)(?:\\\\.|(?!\n)[^\\/\\\\])+(?<!\s)\\/[msixpogc]*(?=[\\s$\\.\\,\\;\\)])/iU"
+			// safe print as "/(?&lt;=[\\s^])(s|tr|y)\\/(?!\*)(?!\s)(?:\\\\.|(?!\\n)[^\\/\\\\])+(?&lt;!\s)\\/(?!\s)(?:\\\\.|(?!\\n)[^\\/\\\\])*(?&lt;!\s)\\/[msixpogcde]*(?=[\\s$\\.\\;])|(?&lt;=[\\s^(=])(m|q[qrwx]?)?\\/(?!\*)(?!\s)(?:\\\\.|(?!\\n)[^\\/\\\\])+(?&lt;!\s)\\/[msixpogc]*(?=[\\s$\\.\\,\\;\\)])/iU"
+			// results as the current but modified so that only valid flags are there and made is so that start and end of line function correctly
 		},
 		'py': {
 			keywords: () => {return keywords.py();},
@@ -58,7 +61,8 @@
 			stringML_2: '"""',
 			identifierRegex: /[A-Za-z_]\w*/,
 			numberRegex: /(?:\d+(?:\.|e|E)*)+(?:j|J)?/,
-			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\](),.;]+/
+			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\](),.;]+/,
+			special: ''
 		},
 		'java': {
 			keywords: () => {return keywords.java();},
@@ -72,7 +76,8 @@
 			stringML_2: '',
 			identifierRegex: /[A-Za-z$_][\w|$]*/,
 			numberRegex: /(?:\d+(?:\.)*)+/,
-			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;]+/
+			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;]+/,
+			special: ''
 		},
 		'c': {
 			keywords: () => {return keywords.c();},
@@ -86,7 +91,8 @@
 			stringML_2: '',
 			identifierRegex: /[A-Za-z$_][\w|$]*/,
 			numberRegex: /(?:\d+(?:\.|e|E)*)+/,// should accept F and the like
-			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;#]+/
+			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;#]+/,
+			special: ''
 			// todo preprocessor
 		},
 		'c++': {
@@ -101,13 +107,14 @@
 			stringML_2: '',
 			identifierRegex: /[A-Za-z_][\w]*/,
 			numberRegex: /(?:\d+(?:\.|e|E)*)+/,// should accept F and the like
-			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;#]+/
-			// todo preprocessor # so that is valid
+			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;#]+/,
+			special: ''
+			// todo preprocessor, # in symbols so it's valid
 		},
 		'sql': {
 			keywords: () => {return keywords.sql();},
-			escapeChar: '\\',// does it even have n escape
-			comment_singleLine: '--',// not sure about anything else beyond here
+			escapeChar: '\\',// does it even have an escape?
+			comment_singleLine: '--',
 			comment_multiLineStart: '',
 			comment_multiLineEnd: '',
 			string_1: '"',
@@ -116,7 +123,8 @@
 			stringML_2: '',
 			identifierRegex: /[A-Za-z_][\w]*/,
 			numberRegex: /(?:\d+(?:\.)*)+/,
-			symbolsRegex: /[+\-*\/%=!<>&|^(),;]+/
+			symbolsRegex: /[+\-*\/%=!<>&|^(),;]+/,
+			special: ''
 		},
 		'': {
 			keywords: () => {return keywords['']();},
@@ -130,7 +138,8 @@
 			stringML_2: '',
 			identifierRegex: /.+/,
 			numberRegex: '',
-			symbolsRegex: ''
+			symbolsRegex: '',
+			special: ''
 		},
 		getActive: function() {
 			let lang = document.querySelector('#lang .selectedOption') || '';

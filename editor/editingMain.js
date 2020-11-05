@@ -167,7 +167,7 @@
 		window.onresize();
 
 		let predictions = [];
-		let predictsActive = false;// toggle with alt/
+		let predictsActive = true;// toggle with alt/
 		let predict = 0;// increase with alt. decrease with alt,
 
 		function focusOnPredict() {
@@ -198,17 +198,14 @@
 				getStartOfLine: function() {
 					const originalStart = getCaretPos().start;
 					let start = originalStart - 1;
-					// console.log(start);
 
 					for (; start > -1; start--) {
 						const c = textarea.value[start];
 
 						if (c == '\n') {
-							// console.log(start);
 							return start;
 						}
 					}
-					// console.log(0);
 
 					return 0;
 				},
@@ -279,8 +276,6 @@
 				},
 				getLeadingSpace: function() {
 					const match = this.get().match(/^\s+/);
-	//							console.log(this.get());
-	//							console.log(match);
 
 					if (match) {
 						return match[0].replace(/\n+/, '');

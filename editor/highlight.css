@@ -18,6 +18,10 @@
 	color: lightblue;
 }
 
+.special {
+	color: green;
+}
+
 .error {
 	color: red;
 }

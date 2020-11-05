@@ -15,7 +15,8 @@
 		});
 
 		function handleInput() {
-			$highlights.html(applyHighlights($textarea.val()));
+			$highlights.html('');
+			applyHighlights($textarea.val());
 		}
 
 		window.inputChanged = handleInput;
@@ -196,14 +197,42 @@
 				return result;
 			}
 
+			function extractSpecial(i) {
+				let result = {found: false, startIndex: i, endIndex: textLen, type: 'special'};
+				
+				result.found = text.substring(i, textLen).match(activeLang.special);
+				
+				if (result.found) {
+					const match = result.found[0];
+
+					if (text[i] == match[0]) {
+						result.endIndex = i + match.length;
+					}
+					else {
+						result.found = false;
+					}
+				}
+
+				result.found = !!result.found;
+
+				return result;
+			}
+
 			let i = 0;
-			let highlighted = '';
+
+			function add(node) {
+				// prevents html getting rendered accidently
+				$highlights.append(node);
+			}
 
 			while (i < textLen) {
 				const c = text[i];
 
 				if (c.match(/\s/)) {
-					highlighted += c;
+					const span = document.createElement('span');
+
+					span.innerText = c;
+					add(span);
 					i++;
 				}
 				else {
@@ -230,11 +259,13 @@
 
 					foundData.push(extractKeywords(i));
 
-					foundData.push(extractWord(i));// todo keywords
+					foundData.push(extractWord(i));
 
 					foundData.push(extractNumber(i));
 
 					foundData.push(getSymbol(i));
+					
+					foundData.push(extractSpecial(i));
 
 					foundData.sort((a, b) => {
 						return b.found - a.found || a.startIndex - b.startIndex || b.endIndex - a.endIndex;
@@ -247,27 +278,31 @@
 
 					if (bestMatch.found) {
 						const isWord = bestMatch.type == 'word';
+						const textNode = document.createTextNode(text.substring(bestMatch.startIndex, bestMatch.endIndex));
+						let span;
 
 						if (!isWord) {
-							highlighted += `<span class="${bestMatch.type}">`;
+							span = document.createElement('span');
+							span.className = bestMatch.type;
+							span.appendChild(textNode);
 						}
 
-						highlighted += text.substring(bestMatch.startIndex, bestMatch.endIndex);
-
-						if (!isWord) {
-							highlighted += `</span>`;
-						}
+						add(span ? span : textNode);
 
 						i = bestMatch.endIndex;
 					}
 					else {
-						highlighted += '<span class="error">' + text.substring(i, textLen) + '</span>';
+						const span = document.createElement('span');
+
+						span.className = 'error';
+						span.innerText = text.substring(i, textLen);
+
+						add(span);
+
 						i = textLen;
 					}
 				}
 			}
-
-			return highlighted;
 		}
 	}
 	
