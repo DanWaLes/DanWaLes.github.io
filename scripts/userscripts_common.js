@@ -746,18 +746,24 @@
 
 	function TaskVisual(body) {
 		this.body = body;
+		this.hasNoBody = function() {
+			return !(this.body instanceof HTMLElement);
+		};
 		this.setup = function(tsks) {
+			if (this.hasNoBody()) {return;}
+
 			for (let i = 0; i < tsks.length; i++) {
 				const tsk = tsks[i];
 				const line = document.createElement('div');
 
 				line.id = tsk.name;
 				line.innerHTML = `${cammelCaseToTitle(tsk.name)} <span class="progress">Not started</span>`;
-				console.log(this);// should be instance of TaskVisual
 				this.body.appendChild(line);
 			}
 		};
 		this.find = function(toFind) {
+			if (this.hasNoBody()) {return;}
+
 			return this.body.querySelector(toFind);
 		};
 		this.setProgress = function(taskName, prog) {
