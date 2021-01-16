@@ -706,8 +706,8 @@
 		async run() {
 			const that = this;
 			function runTask(task) {
-				if (typeof this.onTaskStart == "function") {
-					this.onTaskStart(task.id);
+				if (typeof that.onTaskStart == "function") {
+					that.onTaskStart(task.id);
 				}
 
 				task.task().then((res) => {
