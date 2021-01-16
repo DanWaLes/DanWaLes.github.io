@@ -789,11 +789,12 @@
 			ret[func.name] = func;
 		}
 
-		validateStorage = async (is) => {
+		async function vs(is) {
+			// can;t redefine using same name because of recursion
 			return await validateStorage(is, ret);
 		};
 
-		storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, validateStorage, importLegacy);
+		storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, vs, importLegacy);
 
 		await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
 			notifyUsersOfChanges(THIS_USERSCRIPT).then(() => {
