@@ -24,7 +24,7 @@
 						stored[name] = {};
 					}
 
-					return await validateStorage(stored, GLOBALS);
+					return await validateStorage(stored);
 				},
 				get: async () => {
 					if (!this._storage || !this._storage[name]) {
