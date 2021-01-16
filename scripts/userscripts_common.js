@@ -686,7 +686,7 @@
 			this.numTasks = list.length;
 			this.numCompleted = 0;
 			this.allDone = onAllDone;
-			this.returnValues = {tasks: [], callback: undefined};
+			this.returnValues = {tasks: {}, callback: undefined};
 
 			for (let id in list) {
 				id = parseInt(id);
