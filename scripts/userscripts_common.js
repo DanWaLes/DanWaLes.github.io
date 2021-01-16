@@ -682,21 +682,11 @@
 				@param list Array of AsyncFunction
 				@param onAllDone AsyncFunction or not a Function
 			*/
-			this.tasks = [];
+			this.tasks = list;
 			this.numTasks = list.length;
 			this.numCompleted = 0;
 			this.allDone = onAllDone;
 			this.returnValues = {tasks: {}, callback: undefined};
-
-			for (let id in list) {
-				id = parseInt(id);
-	
-				this.tasks[id] = {
-					id: id,
-					task: list[id],
-					list: this.tasks
-				};
-			}
 		}
 
 		setOnTaskStart(onTaskStart) {
@@ -710,12 +700,12 @@
 			const that = this;
 			function runTask(task) {
 				if (typeof that.onTaskStart == "function") {
-					that.onTaskStart(task.id);
+					that.onTaskStart(task);
 				}
 
-				task.task().then((res) => {
-					that.returnValues.tasks[task.id] = res;
-					that.taskComplete(task.id);
+				task().then((res) => {
+					that.returnValues.tasks[task.name] = res;
+					that.taskComplete(task.name);
 				});
 			}
 
