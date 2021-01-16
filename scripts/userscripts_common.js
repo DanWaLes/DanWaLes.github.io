@@ -24,7 +24,7 @@
 						stored[name] = {};
 					}
 
-					return await validateStorage(stored);
+					return await validateStorage(stored, GLOBALS);
 				},
 				get: async () => {
 					if (!this._storage || !this._storage[name]) {
@@ -780,6 +780,19 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual];
+		const ret = {};
+
+		for (let i = shared.length - 1; i > -1; i--) {
+			const func = shared.pop();
+
+			ret[func.name] = func;
+		}
+
+		validateStorage = async (is) => {
+			return await validateStorage(is, ret);
+		};
+
 		storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, validateStorage, importLegacy);
 
 		await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
@@ -789,15 +802,6 @@
 				console.exception(err);
 			});
 		});
-
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual];
-		const ret = {};
-
-		for (let i = shared.length - 1; i > -1; i--) {
-			const func = shared.pop();
-
-			ret[func.name] = func;
-		}
 
 		return ret;
 	}
