@@ -42,7 +42,7 @@ textarea {
 }
 
 .highlights {
-	margin-bottom: -5px;/* fixes slight inaccuracy */
+	margin-bottom: calc(-2px - 1em);/* fixes slight inaccuracy */
 }
 
 header > div {

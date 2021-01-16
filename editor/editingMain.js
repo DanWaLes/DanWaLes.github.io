@@ -157,10 +157,11 @@
 
 			header = (header ? header[0].clientHeight : 0);
 
-			const height = 'calc(' + document.body.clientHeight + 'px - ' + (header + helpMenu.clientHeight) + 'px - 2em)';
+			height = 'calc(' + window.innerHeight + 'px - ' + (header + helpMenu.clientHeight) + 'px - 4px - 2em)';
 
 			highlights.style.height = height;
-			textarea.style.height = height;
+			height = highlights.clientHeight;
+			textarea.style.height = height + 'px';
 			textarea.style.marginTop = -textarea.clientHeight + 'px';
 		};
 		window.focus();
@@ -348,7 +349,7 @@
 		};
 
 		function listenForHotkeys(e, selected) {
-			if (e.altKey && e.shiftKey && e.key.toUpperCase() == 'A') {
+			if (e.altKey && e.key == '@') {
 				// untab pressed
 				const start = selected.getStartOfLine();
 				const modified = selected.removeFromStartOfLines('\t');
@@ -357,7 +358,7 @@
 
 				setCaretPos(end, end);
 			}
-			else if (e.altKey && e.key == 'a') {
+			else if (e.altKey && e.key == '\'') {
 				// tab pressed
 				const start = selected.getStartOfLine();
 				const modified = selected.insertAtStartOfLines('\t');

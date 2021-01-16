@@ -27,6 +27,7 @@
 		'sql': function() {
 			return ['ADD','ADD CONSTRAINT','ALTER','ALTER COLUMN','ALTER TABLE','ALL','AND','ANY','AS','ASC','BACKUP DATABASE','BETWEEN','CASE','CHECK','COLUMN','CONSTRAINT','CREATE','CREATE DATABASE','CREATE INDEX','CREATE OR REPLACE VIEW','CREATE TABLE','CREATE PROCEDURE','CREATE UNIQUE INDEX','CREATE VIEW','DATABASE','DEFAULT','DELETE','DESC','DISTINCT','DROP','DROP COLUMN','DROP CONSTRAINT','DROP DATABASE','DROP DEFAULT','DROP INDEX','DROP TABLE','DROP VIEW','EXEC','EXISTS','FOREIGN KEY','FROM','FULL OUTER JOIN','GROUP BY','HAVING','IN','INDEX','INNER JOIN','INSERT INTO','INSERT INTO SELECT','IS NULL','IS NOT NULL','JOIN','LEFT JOIN','LIKE','LIMIT','NOT','NOT NULL','OR','ORDER BY','OUTER JOIN','PRIMARY KEY','PROCEDURE','RIGHT JOIN','ROWNUM','SELECT','SELECT DISTINCT','SELECT INTO','SELECT TOP','SET','TABLE','TOP','TRUNCATE TABLE','UNION','UNION ALL','UNIQUE','UPDATE','VALUES','VIEW','WHERE'];
 		},
+		'xml': function() {return [];},
 		'': function() {return [];}
 	};
 	
@@ -44,10 +45,16 @@
 			identifierRegex: /[A-Za-z$_][\w|$]*/,
 			numberRegex: /(?:\d+(?:\.|e|E)*)+/,
 			symbolsRegex: /[+\-*\/%=!<>?:&|~^\[\]{}(),.;]+/,
-			special: /(?<=(?:\s|^))\/(?!\*)(?!\s)(?:\\.|(?!\n)[^\/\\])+(?<!\s)\/(?!\s)(?:\\.|(?!\n)[^\/\\])*(?<!\s)\/[gimsuy]*(?=(?:\s|$|\.|;))|(?<=(?:\s|^|\(|=))([gimsuy]?)?\/(?!\*)(?!\s)(?:\\.|(?!\n)[^\/\\])+(?<!\s)\/[gimsuy]*(?=(?:\s|$|\.|,|;|\)))/
+			special: /(?<=(?:\s|^))\/(?!\*)(?!\s)(?:\\.|(?!\n)[^\/\\])+(?<!\s)\/(?!\s)(?:\\.|(?!\n)[^\/\\])*(?<!\s)\/[gimsuy]*(?=(?:\s|$|\.|;))|(?<=(?:\s|^|\(|=))([gimsuy]?)?\/(?!\*)(?!\s)(?:\\.|(?!\n)[^\/\\])+(?<!\s)\/[gimsuy]*(?=(?:\s|$|\.|,|;|\)))/,
 			// based on PHP "/(?<=[\\s^])(s|tr|y)\\/(?!\*)(?!\s)(?:\\\\.|(?!\n)[^\\/\\\\])+(?<!\s)\\/(?!\s)(?:\\\\.|(?!\n)[^\\/\\\\])*(?<!\s)\\/[msixpogcde]*(?=[\\s$\\.\\;])|(?<=[\\s^(=])(m|q[qrwx]?)?\\/(?!\*)(?!\s)(?:\\\\.|(?!\n)[^\\/\\\\])+(?<!\s)\\/[msixpogc]*(?=[\\s$\\.\\,\\;\\)])/iU"
 			// safe print as "/(?&lt;=[\\s^])(s|tr|y)\\/(?!\*)(?!\s)(?:\\\\.|(?!\\n)[^\\/\\\\])+(?&lt;!\s)\\/(?!\s)(?:\\\\.|(?!\\n)[^\\/\\\\])*(?&lt;!\s)\\/[msixpogcde]*(?=[\\s$\\.\\;])|(?&lt;=[\\s^(=])(m|q[qrwx]?)?\\/(?!\*)(?!\s)(?:\\\\.|(?!\\n)[^\\/\\\\])+(?&lt;!\s)\\/[msixpogc]*(?=[\\s$\\.\\,\\;\\)])/iU"
 			// results as the current but modified so that only valid flags are there and made is so that start and end of line function correctly
+			contains: {
+				'html': {
+					match: 'SYMBOL WORD SYMBOL STRING ',
+					exact: {0: '\\.', 1: '^(?:inner|outer)HTML$', 2: '=', length: 3},
+				}
+			}
 		},
 		'py': {
 			keywords: () => {return keywords.py();},
@@ -126,6 +133,38 @@
 			symbolsRegex: /[+\-*\/%=!<>&|^(),;]+/,
 			special: ''
 		},
+		'xml': {
+			xmlLike: true,
+			comment_multiLineStart: '<!--',
+			comment_multiLineEnd: '-->',
+			keywords: () => {return keywords['xml']();}
+		},
+		'html': {
+			xmlLike: true,
+			comment_multiLineStart: '<!--',
+			comment_multiLineEnd: '-->',
+			keywords: () => {return keywords['xml']();},
+			contains: {
+				'css': 'style',
+				'js': 'script'
+			}
+		},
+		'json': {
+			jsonLike: true,
+			keywords: () => {return keywords['']();},
+			escapeChar: '',
+			comment_singleLine: '',
+			comment_multiLineStart: '',
+			comment_multiLineEnd: '',
+			string_1: '',
+			string_2: "",
+			stringML_1: '',
+			stringML_2: '',
+			identifierRegex: /.+/,
+			numberRegex: /(?:\d+(?:\.)*)+/,
+			symbolsRegex: '',
+			special: ''
+		},
 		'': {
 			keywords: () => {return keywords['']();},
 			escapeChar: '',
@@ -151,4 +190,8 @@
 			return this[lang];
 		}
 	};
+
+	for (let lang in window.languages) {
+		window.languages[lang].name = lang;
+	}
 })();

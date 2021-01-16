@@ -51,7 +51,9 @@
 			};
 
 			if (isAsyncFunc(importLegacy)) {
-				this[name].importLegacy = importLegacy;
+				this[name].importLegacy = async (toImport) => {
+					await this.updateUserscript(name, await importLegacy(toImport));
+				};
 			}
 		},
 		validate: async function(stored, forceValidateEverything) {
@@ -539,6 +541,8 @@
 			alertBox.remove();
 			overlay.remove();
 		};
+
+		return alertBox;
 	}
 
 	function escapeRegExp(string) {
@@ -692,32 +696,9 @@
 			}
 		}
 
-		/*
-		markAsSubList(mainList, mainTaskId) {
-			// add bottom to top to get expected results
-			// mainTaskId is the parent task - this would be the sub parts
-			for (let id in this.tasks) {
-				id = parseInt(id);
-
-				this.tasks[id].isSubListOf = mainList.tasks[mainTaskId];
-			}
-
-			mainList.tasks[mainTaskId].hasSubList = this;
-			const that = this;
-			// const oldRun = mainList.run.bind(mainList);// prevents infinite loop, bind means use provided as this keyword, this would otherwise be undefined
-
-			mainList.run = async () => {
-				// oldRun();
-				return that.run();
-			};
-
-			mainList.run2 = async () => {
-				return await mainList.run().then(() => {
-					return that.returnValues;
-				});
-			};
-		}*/
-
+		setOnTaskStart(onTaskStart) {
+			this.onTaskStart = onTaskStart;
+		}
 		setOnTaskCompletion(onTaskCompletion) {
 			this.onTaskCompletion = onTaskCompletion;
 		}
@@ -725,6 +706,10 @@
 		async run() {
 			const that = this;
 			function runTask(task) {
+				if (typeof this.onTaskStart == "function") {
+					this.onTaskStart(task.id);
+				}
+
 				task.task().then((res) => {
 					that.returnValues.tasks[task.id] = res;
 					that.taskComplete(task.id);
@@ -759,188 +744,31 @@
 		}
 	}
 
-	/*
-	class TaskListFactory {
-		constructor() {
-			this.numTaskLists = 0;
-			this.taskLists = [];
-		}
+	function TaskVisual(body) {
+		this.body = body;
+		this.setup = function(tsks) {
+			for (let i = 0; i < tsks.length; i++) {
+				const tsk = tsks[i];
+				const line = document.createElement('div');
 
-		create(list, onAllDone) {
-			const taskList = new TaskList(list, onAllDone);
-			taskList.id = this.numTaskLists++;
+				line.id = tsk.name;
+				line.innerHTML = `${cammelCaseToTitle(tsk.name)} <span class="progress">Not started</span>`;
+				this.body.appendChild(line);
+			}
+		};
+		this.find = function(toFind) {
+			return this.body.querySelector(toFind);
+		};
+		this.setProgress = function(taskName, prog) {
+			const item = this.find('#' + taskName + ' .progress');
 
-			this.taskLists.push(taskList);
-		}
-
-		markSublist(mainListId, mainListTaskId, subListId) {
-			const mainList = this.taskLists[mainListId];
-			const mainTask = mainList.tasks[mainListTaskId];
-			const subTaskList = this.taskLists[subListId];
-
-			subTaskList.isSubListOf = mainTask;
-			mainTask.hasSubList = subTaskList;
-		}
-
-		addUI(taskListId) {
-			function initialize() {
-				let html = "";
-
-				function makeMarker(rounds) {
-					let marker = "";
-
-					for (let i = 0; i < rounds; i++) {
-						marker += "-";
-					}
-
-					marker += "> ";
-
-					return marker;
-				}
-
-				function main(taskList, rounds) {
-					html += `<div id="taskList_${taskList.id}">`;
-
-					for (let task of taskList.tasks) {
-						html += `<div id="task_${task.id}">
-			<span class="marker">${makeMarker(rounds)}</span><span class="taskName">${cammelCaseToTitle(task.task.name)}</span>
-			<span class="taskProgress"><span class="currentProgress">`;
-
-						if (task.hasSubList) {
-							html += `0</span>/${task.hasSubList.numTasks}</span>`;
-							main(task.hasSubList, rounds + 1);
-						}
-						else {
-							html += `Not started</span></span>`;
-						}
-
-						html += `</div>`;
-					}
-
-					html += `</div>`;
-				}
-
-				main(this.taskLists[taskListId], 0);
-
-				const listContainer = document.createElement("div");
-
-				listContainer.innerHTML = html;
-				document.body.appendChild(listContainer);
+			if (!item) {
+				return;
 			}
 
-			function bindTaskComplete() {
-				
-			}
-
-			initialize();
-			bindTaskComplete();
-		}
+			item.innerHTML = prog;
+		};
 	}
-
-	class TaskListWithUI {
-		// shows progress
-		constructor() {
-			// this.taskLists = [];
-			this.id = 0;
-		}
-
-		create(taskList, options) {
-			// @param taskList the overall taskList, with any subLists included (only 1st supported)
-
-			// this.taskLists.push({id: id, taskList: taskList, options: options});
-
-			taskList.id = this.id;
-
-			const listMenu = document.createElement("div");
-			document.body.appendChild(listMenu);
-			listMenu.outerHTML = this.generateHtml(taskList, options);
-
-			// this.bindTaskComplete(taskList);
-			this.id++;
-		}
-
-		generateHtml(taskList, options) {
-			let html = `<div id="taskList_${taskList.id}">\n`;
-
-			function indent(indentNo) {
-				let tabs = "";
-
-				for (let i = 0; i < indentNo; i++) {
-					tabs += "\t";
-				}
-
-				return tabs;
-			}
-
-			function makeMarker(rounds) {
-				let marker = "";
-
-				for (let i = 0; i < rounds; i++) {
-					marker += "-";
-				}
-
-				marker += "> ";
-
-				return marker;
-			}
-
-			function main(currentTaskList, indentNo, roundNo) {
-				const indentLevel = indent(indentNo);
-				const marker = makeMarker(roundNo);
-
-				for (let taskName in currentTaskList.tasks) {
-					const task = currentTaskList.tasks[taskName];
-
-					html += `\t${indentLevel}<div id="${task.name}">
-		${indentLevel}<span class="marker">${marker}</span><span class="taskName">${cammelCaseToTitle(task.name)}</span>
-		${indentLevel}<span class="taskProgress"><span class="currentProgress">`;
-
-					if (task.hasSubList) {
-						html += `0</span>/${task.hasSubList.numTasks}</span>
-		${indentLevel}<div class="subList">\n`;
-
-						main(task.hasSubList, indentNo + 2, roundNo + 1);// start is 1, then add 1
-						html += `\t\t`;
-					}
-					else {
-						html += `Not started</span></span>\n\t`;
-					}
-
-					html += `${indentLevel}</div>\n`;
-				}
-			}
-
-			main(taskList, 0, 0);
-
-			html += `</div>`;
-			return html;
-		}
-
-		bindTaskComplete(taskList) {
-			function taskComplete(name, theTask) {
-				const html = document.getElementById(`taskList_${taskList.id}`);
-				const taskArea = html.querySelector(`${getPath(theTask)}`);
-			}
-			function getPath(theTask) {
-				let path = `#${theTask.name}`;
-
-				while (theTask.isSubListOf) {
-					path += `#${theTask.isSubListOf.name} .subList ${path}`;
-					theTask = theTask.isSubListOf;
-				}
-
-				return path;
-			}
-
-			function main(currentTaskList) {
-				for (let taskName in currentTaskList.tasks) {
-					currentTaskList.setOnTaskCompletion(taskComplete);
-				}
-			}
-			
-		}
-	}
-	*/
 
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
@@ -962,7 +790,7 @@
 			});
 		});
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {

@@ -2,6 +2,16 @@
 	color: lightgreen;
 }
 
+.symbol {
+	color: lightblue;
+}
+
+.error {
+	color: darkred;
+}
+
+/* most langs */
+
 .string {
 	color: #ccc;
 }
@@ -14,14 +24,20 @@
 	color: orange;
 }
 
-.symbol {
-	color: lightblue;
-}
-
 .special {
 	color: green;
 }
 
-.error {
-	color: red;
+/* xml like */
+
+.xmlTagName {
+	color: chocolate;
+}
+
+.xmlAttribName {
+	color: orangered;
+}
+
+.xmlAttribVal {
+	color: #A020F0;/* veronica */
 }

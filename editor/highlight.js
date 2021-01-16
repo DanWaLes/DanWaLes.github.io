@@ -6,28 +6,158 @@
 			return setTimeout(run, 100);
 		}
 
-		const $textarea = $(document.getElementsByTagName('textarea')[0]);
-		const $highlights = $(document.querySelector('.highlights'));
+		const txtarea = document.querySelector('textarea');
+		const $textarea = $(txtarea);
+		const highlights = document.querySelector('.highlights');
+		const $highlights = $(highlights);
 
 		$textarea.on({
 			'input': handleInput,
 	    	'scroll': handleScroll
 		});
+		window.inputChanged = handleInput;
 
 		function handleInput() {
-			$highlights.html('');
-			applyHighlights($textarea.val());
+			console.log('input triggered')
+			highlights.innerHTML = '';
+			applyHighlights(txtarea.value);
 		}
-
-		window.inputChanged = handleInput;
 
 		function handleScroll() {
 			$highlights.scrollTop($textarea.scrollTop());
 		}
 
-		function applyHighlights(text) {
+		let otherLangData;
+		function setupHighlightContainingLangs(activeLang) {
+			if (typeof activeLang != 'object' || !activeLang.contains) {
+				otherLangData = null;
+			}
+			else {
+				otherLangData = activeLang.contains;
+				console.log(otherLangData);
+			}
+		}
+
+		const TARGET = highlights;// this is a bug
+		let tracker = '';
+		function addToTracker(type, node) {
+			if (!otherLangData) {
+				tracker = '';
+				return;
+			}
+
+			tracker += type ? type + ' ' : '';
+
+			/*
+			for (let lang in otherLangData) {
+				const data = otherLangData[lang];
+
+				if (tracker.endsWith(data.match)) {
+					const numNodesNeeded = data.match.match(/\s+/g).length;
+
+					const TARGET_CHILDREN = TARGET.children;
+					let targetChildren = [];
+					for (let i = TARGET_CHILDREN.length - 1, n = numNodesNeeded - 1; i > -1; i--) {
+						const child = TARGET_CHILDREN[i];
+						
+						if (child.className) {
+							targetChildren[n] = child;
+							n--;
+
+							if (n == -1) {
+								break;
+							}
+						}
+					}
+
+					let numMatches = 0;
+
+					for (let i = 0; i < numNodesNeeded; i++) {
+						if (typeof data.exact[i] == 'string') {
+							const trackerItem = targetChildren[i].innerText;
+
+							if (trackerItem.match(data.exact[i])) {
+								numMatches++;
+							}
+						}
+					}
+
+					if (numMatches == data.exact.length) {
+						const currentNode = TARGET.lastElementChild;
+						const startStringNode = document.createElement('span');
+						const endStringNode = document.createElement('span');
+						const newLangNode = document.createElement('span');
+						const toMarkup = currentNode.innerText.substring(1, currentNode.innerText.length - 1);
+
+						startStringNode.innerHTML = currentNode.innerText[0];
+						newLangNode.className = lang;
+						endStringNode.innerHTML = currentNode.innerText[currentNode.innerText.length - 1];
+
+						currentNode.innerHTML = '';
+						currentNode.appendChild(startStringNode);
+						currentNode.appendChild(newLangNode);
+						currentNode.appendChild(endStringNode);
+
+						TARGET = newLangNode;
+						applyHighlights(toMarkup, lang);
+						TARGET = highlights;// this is a bug, not necessarily appropriate
+					}
+				}
+			}
+			*/
+		}
+		function add(node) {
+			// prevents html getting rendered accidentally
+			TARGET.append(node);
+
+			addToTracker(node.className.toUpperCase(), node);
+		}
+
+		function getBestMatch(matches) {
+			return matches.sort((a, b) => {
+				return b.found - a.found || a.startIndex - b.startIndex || b.endIndex - a.endIndex;
+				// found then first found then by match length (bigger is better - /* prioritized over / and * and returns over return)
+			})[0];
+		}
+		function displayBestMatch(bestMatch, txt, i) {
+			const textLen = txt.length;
+
+			if (bestMatch.found) {
+				const isWord = bestMatch.type == 'word';
+				const textNode = document.createTextNode(txt.substring(bestMatch.startIndex, bestMatch.endIndex));
+				const span = document.createElement('span');
+
+				span.className = bestMatch.type;
+				span.appendChild(textNode);
+
+				add(span);
+
+				i = bestMatch.endIndex;
+			}
+			else {
+				const span = document.createElement('span');
+
+				span.className = 'error';
+				span.innerText = txt.substring(i, textLen);
+
+				add(span);
+
+				i = textLen;
+			}
+
+			return i;
+		}
+
+		function applyHighlights(text, langName) {
 			const textLen = text.length;
-			const activeLang = window.languages.getActive();
+			
+			if (!window.languages[langName]) {
+				langName = window.languages.getActive().name;
+			}
+
+			const activeLang = window.languages[langName];
+
+			setupHighlightContainingLangs(activeLang);
 
 			function extractComment(i, commentType, commentStart, commentEnd) {
 				const charsLeft = textLen - i;
@@ -62,32 +192,32 @@
 				return extractComment(i, 'commentML', activeLang.comment_multiLineStart, activeLang.comment_multiLineEnd);
 			}
 
-			function extractString(i, string, isMultiline) {
-				const charsLeft = textLen - i;
+			function extractString(txt, i, string, isMultiline) {
+				const charsLeft = txt.length - i;
 				const neededChars = string.length;
 
-				let result = {found: false, startIndex: i, endIndex: textLen, type: 'string'};
+				let result = {found: false, startIndex: i, endIndex: txt.length, type: 'string'};
 
 				if (neededChars > charsLeft) {
 					return result;
 				}
 
-				if (text.substring(i, i + neededChars) != string) {
+				if (txt.substring(i, i + neededChars) != string) {
 					return result;
 				}
 
 				function find(start) {
-					const end = text.indexOf(string, start + 1);
+					const end = txt.indexOf(string, start + 1);
 
 					if (end == -1) {
 						result.found = true;
 					}
-					else if (end < textLen) {
+					else if (end < txt.length) {
 						let escapePos = end - string.length;
 
 						if (escapePos > -1) {
-							if (text.substring(escapePos, escapePos + string.length) == activeLang.escapeChar) {
-								const escapeIsEscaped = (escapePos--, escapePos > -1 ? text[escapePos] == activeLang.escapeChar : false);
+							if (txt.substring(escapePos, escapePos + string.length) == activeLang.escapeChar) {
+								const escapeIsEscaped = (escapePos--, escapePos > -1 ? txt[escapePos] == activeLang.escapeChar : false);
 
 								if (!escapeIsEscaped) {
 									return find(end + 1);
@@ -100,9 +230,9 @@
 					}
 
 					if (!isMultiline) {
-						if (text.substring(result.startIndex, result.endIndex).match(/\n/)) {
+						if (txt.substring(result.startIndex, result.endIndex).match(/\n/)) {
 							result.found = false;
-							result.endIndex = textLen;
+							result.endIndex = txt.length;
 						}
 					}
 
@@ -206,6 +336,7 @@
 					const match = result.found[0];
 
 					if (text[i] == match[0]) {
+						result.startIndex = text.indexOf(match, i);// because entire remainder of string is searched
 						result.endIndex = i + match.length;
 					}
 					else {
@@ -218,14 +349,175 @@
 				return result;
 			}
 
-			let i = 0;
+			function extractProgrammingLang(i) {
+				const c = text[i];
+				let foundData = [];
 
-			function add(node) {
-				// prevents html getting rendered accidently
-				$highlights.append(node);
+				if (c == activeLang.comment_singleLine[0]) {
+					foundData.push(extractCommentSL(i));
+				}
+				if (c == activeLang.comment_multiLineStart[0]) {
+					foundData.push(extractCommentML(i));
+				}
+				if (c == activeLang.string_1[0]) {
+					foundData.push(extractString(text, i, activeLang.string_1));
+				}
+				if (c == activeLang.string_2[0]) {
+					foundData.push(extractString(text, i, activeLang.string_2));
+				}
+				if (c == activeLang.stringML_1[0]) {
+					foundData.push(extractString(text, i, activeLang.stringML_1, true));
+				}
+				if (c == activeLang.stringML_2[0]) {
+					foundData.push(extractString(text, i, activeLang.stringML_2, true));
+				}
+
+				foundData.push(extractKeywords(i));
+
+				foundData.push(extractWord(i));
+
+				foundData.push(extractNumber(i));
+
+				foundData.push(getSymbol(i));
+				
+				foundData.push(extractSpecial(i));
+
+				return displayBestMatch(getBestMatch(foundData), text, i);
+			}
+			
+			function insideTag(tagname, start, end) {
+				// css or js
+				if (typeof activeLang.contains != 'object' || !activeLang.contains) {
+					activeLang.contains = {};
+				}
+
+				let foundOtherLang = false;
+
+				for (let lang in activeLang.contains) {
+					if (tagname.toLowerCase() == activeLang.contains[lang]) {
+						foundOtherLang = true;
+						applyHighlights(text.substring(start, end), lang);
+					}
+				}
+
+				return foundOtherLang;
 			}
 
-			while (i < textLen) {
+			let tag;
+			function extractXml(i) {
+				const c = text[i];
+				const symbols = ['<', '=', '>', '/'];
+				const prevC = (() => {
+					let j = i - 1;
+
+					for (; j > -1; j--) {
+						if (!text[j].match(/\s/)) {
+							break;
+						}
+					}
+
+					return text[j] || '';
+				})();
+				function cTo(offset) {
+					if (i + offset > textLen) {
+						return text.substring(i, textLen);
+					}
+
+					return text.substring(i, i + offset);
+				}
+
+				const isASymbol = symbols.includes(c);
+				const prevIsASymbol = symbols.includes(prevC);
+				let end = textLen;
+				let type;
+				let doingOtherLang = false;
+
+				if (cTo(activeLang.comment_multiLineStart.length) == activeLang.comment_multiLineStart) {
+					type = 'comment';
+					end = text.indexOf(activeLang.comment_multiLineEnd, i + activeLang.comment_multiLineStart.length);
+
+					if (end == -1) {
+						end = textLen;
+					}
+					else {
+						end += activeLang.comment_multiLineEnd.length;
+					}
+				}
+				else if (isASymbol && prevIsASymbol && !((prevC == '<' && c == '/') || (prevC == '>' && c == '<') || (prevC == '/' && (c == '<' || c == '>')))) {
+					type = 'error';
+				}
+				else if (isASymbol) {
+					type = 'symbol';
+					end = i + 1;
+				}
+				else {
+					if (prevIsASymbol && (prevC == '<' || prevC == '/')) {
+						type = 'xmlTagName';
+						end = (() => {
+							const match = text.substring(i, textLen).match(/\s|>/);
+
+							return match ? text.indexOf(match[0], i) : textLen;
+						})();
+						tag = text.substring(i, end);
+					}
+					else if (prevIsASymbol && prevC == '=' && (c == '"' || c == "'")) {
+						type = 'xmlAttribVal';
+						const index = text.indexOf(c, i + 1);
+						end = index == - 1 ? textLen : index + 1;
+					}
+					else if (prevIsASymbol && prevC == '>') {
+						// is inside a tag, could be another tag or character data
+						type = 'word';
+						let closeTagIndex = text.indexOf('</' + tag + '>', i);
+						// might be in a js string for example, difficult to see if it is. at orst style or script closed early causing incorrect highlighting
+						
+						const indexes = [closeTagIndex, text.indexOf('<', i)].filter(item => item > -1).sort((a, b) => {
+							return b - a;
+						});
+						end = !indexes.length ? textLen : indexes[0];
+
+						doingOtherLang = insideTag(tag, i, end);
+					}
+					else if (!prevIsASymbol) {
+						type = 'xmlAttribName';
+						end = (() => {
+							const match = text.substring(i, textLen).match(/\s|=|>/);
+							const index = match ? text.indexOf(match[0], i) : textLen;
+
+							return index;
+						})();
+					}
+					else {
+						type = 'error';
+					}
+				}
+
+				if (!doingOtherLang) {
+					const span = document.createElement('span');
+
+					span.innerText = text.substring(i, end);
+
+					if (type != 'word') {
+						span.className = type;
+					}
+
+					add(span);
+				}
+
+				return end;
+			}
+
+			let expectingOpening = true;
+			let closuresExpected = 0;
+			// has to be "
+			function extractJson(i) {
+				return i + 1;
+			}
+
+			let i = 0;
+			let prevI = -1;
+
+			while (i < textLen && i > -1) {
 				const c = text[i];
 
 				if (c.match(/\s/)) {
@@ -236,72 +528,22 @@
 					i++;
 				}
 				else {
-					let foundData = [];
-
-					if (c == activeLang.comment_singleLine[0]) {
-						foundData.push(extractCommentSL(i));
+					if (activeLang.xmlLike) {
+						i = extractXml(i)
 					}
-					if (c == activeLang.comment_multiLineStart[0]) {
-						foundData.push(extractCommentML(i));
-					}
-					if (c == activeLang.string_1[0]) {
-						foundData.push(extractString(i, activeLang.string_1));
-					}
-					if (c == activeLang.string_2[0]) {
-						foundData.push(extractString(i, activeLang.string_2));
-					}
-					if (c == activeLang.stringML_1[0]) {
-						foundData.push(extractString(i, activeLang.stringML_1, true));
-					}
-					if (c == activeLang.stringML_2[0]) {
-						foundData.push(extractString(i, activeLang.stringML_2, true));
-					}
-
-					foundData.push(extractKeywords(i));
-
-					foundData.push(extractWord(i));
-
-					foundData.push(extractNumber(i));
-
-					foundData.push(getSymbol(i));
-					
-					foundData.push(extractSpecial(i));
-
-					foundData.sort((a, b) => {
-						return b.found - a.found || a.startIndex - b.startIndex || b.endIndex - a.endIndex;
-						// found then first found then by match length (bigger is better - /* prioritized over / and * and returns over return)
-					});
-
-					const bestMatch = foundData[0];
-
-					foundData = null;
-
-					if (bestMatch.found) {
-						const isWord = bestMatch.type == 'word';
-						const textNode = document.createTextNode(text.substring(bestMatch.startIndex, bestMatch.endIndex));
-						let span;
-
-						if (!isWord) {
-							span = document.createElement('span');
-							span.className = bestMatch.type;
-							span.appendChild(textNode);
-						}
-
-						add(span ? span : textNode);
-
-						i = bestMatch.endIndex;
+					else if (activeLang.jsonLike) {
+						i = extractJson(i);
 					}
 					else {
-						const span = document.createElement('span');
-
-						span.className = 'error';
-						span.innerText = text.substring(i, textLen);
-
-						add(span);
-
-						i = textLen;
+						i = extractProgrammingLang(i);
 					}
 				}
+
+				if (i <= prevI) {
+					throw 'infinate loop';
+				}
+
+				prevI = i;
 			}
 		}
 	}
