@@ -753,6 +753,7 @@
 
 				line.id = tsk.name;
 				line.innerHTML = `${cammelCaseToTitle(tsk.name)} <span class="progress">Not started</span>`;
+				console.log(this);// should be instance of TaskVisual
 				this.body.appendChild(line);
 			}
 		};
