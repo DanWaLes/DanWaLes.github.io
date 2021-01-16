@@ -527,8 +527,11 @@
 
 		alertBox.className = "BackgroundImage";
 		alertBox.style.position = "fixed";
-		alertBox.style.top = "50%";
-		alertBox.style.right = "50%";
+		alertBox.style.top = "25%";
+		alertBox.style.right = "25%";
+		alertBox.style.width = "50%";
+		alertBox.style.height = "50%";
+		alertBox.style.overflowY = "auto";
 		alertBox.style.borderRadius = "1em";
 		alertBox.style.padding = "0.5em";
 
