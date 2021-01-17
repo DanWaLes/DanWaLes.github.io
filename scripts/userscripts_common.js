@@ -126,9 +126,7 @@
 			}
 
 			this._storage[name] = stored;
-			// cyclic object value error from htrp > importLegacy
-			console.log(this._storage);
-			localStorage[this.storageName] = JSON.stringify(this._storage);			
+			localStorage[this.storageName] = JSON.stringify(this._storage);
 		},
 		import: async function(imported) {
 			if (typeof imported != "string") {
@@ -529,23 +527,23 @@
 		const overlay = document.createElement("div");
 		const alertBox = document.createElement("div");
 
-		overlay.style.position = "fixed";
-		overlay.style.top = "0";
-		overlay.style.right = "0";
-		overlay.style.width = "100%";
+		overlay.className = "unmoveable";
 		overlay.style.height = "100%";
 		overlay.style.backgroundColor = "#fff";
 		overlay.style.opacity = "0.5";
+		overlay.style.display = "block";
 
-		alertBox.className = "BackgroundImage";
-		alertBox.style.position = "fixed";
+		alertBox.className = "unmoveable BackgroundImage";
 		alertBox.style.top = "25%";
 		alertBox.style.right = "25%";
+		alertBox.style.bottom = "unset";
+		alertBox.style.left = "unset";
 		alertBox.style.width = "50%";
 		alertBox.style.height = "50%";
 		alertBox.style.overflowY = "auto";
 		alertBox.style.borderRadius = "1em";
 		alertBox.style.padding = "0.5em";
+		alertBox.style.display = "block";
 
 		alertBox.innerHTML = `<input type="button" value="X" style="float: right;">${message}`;
 
@@ -804,7 +802,7 @@
 		async function vs(is) {
 			// can;t redefine using same name because of recursion
 			return await validateStorage(is, ret);
-		};
+		}
 
 		storage.setupUserscriptStorage(THIS_USERSCRIPT.NAME, vs, importLegacy);
 
