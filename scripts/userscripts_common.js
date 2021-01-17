@@ -118,7 +118,6 @@
 		},
 		clear: function() {
 			this._storage = undefined;
-
 			localStorage.removeItem(this.storageName);
 		},
 		updateUserscript: async function(name, stored) {
@@ -522,7 +521,7 @@
 	function cammelCaseToTitle(str) {
 		// case boundaries from https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
 		return str[0].toUpperCase() + str.substring(1, str.length).replace(/(?:(?<!^)(?=[A-Z])|(?:_(\w)))/g, function(match, p1) {
-			return ' ' + (p1 ? p1.toUpperCase() : '';
+			return ' ' + (p1 ? p1.toUpperCase() : '');
 		});
 	}
 
