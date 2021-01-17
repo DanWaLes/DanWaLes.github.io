@@ -710,7 +710,7 @@
 			const that = this;
 			function runTask(task) {
 				if (typeof that.onTaskStart == "function") {
-					that.onTaskStart(task);
+					that.onTaskStart(task.name);
 				}
 
 				task().then((res) => {
@@ -732,11 +732,11 @@
 			});
 		}
 
-		async taskComplete(taskId) {
+		async taskComplete(taskName) {
 			this.numCompleted++;
 
 			if (typeof this.onTaskCompletion == "function") {
-				this.onTaskCompletion(taskId, this.tasks[taskId]);
+				this.onTaskCompletion(taskName);
 			}
 
 			if (this.numCompleted == this.numTasks) {
