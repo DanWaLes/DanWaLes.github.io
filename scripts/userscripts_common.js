@@ -518,8 +518,9 @@
 
 	// util
 	function cammelCaseToTitle(str) {
-		return str[0].toUpperCase() + str.substring(1, str.length).replace(/_(\w)/g, function(match, p1) {
-			return " " + p1.toUpperCase();
+		// case boundaries from https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
+		return str[0].toUpperCase() + str.substring(1, str.length).replace(/(?:(?<!^)(?=[A-Z])|(?:_(\w)))/g, function(match, p1) {
+			return ' ' + (p1 ? p1.toUpperCase() : '';
 		});
 	}
 
