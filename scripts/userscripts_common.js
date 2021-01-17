@@ -10,7 +10,7 @@
 		let errStr = '';
 
 		for (const name of Object.getOwnPropertyNames(err)) {
-			errStr += name + ' = ' + err[name];
+			errStr += name + ' = ' + err[name] + ' ';
 		}
 
 		return errStr;
@@ -127,6 +127,8 @@
 			}
 
 			this._storage[name] = stored;
+			// cyclic object value error from htrp > importLegacy
+			console.log(this._storage);
 			localStorage[this.storageName] = JSON.stringify(this._storage);			
 		},
 		import: async function(imported) {
