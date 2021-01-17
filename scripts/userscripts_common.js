@@ -708,15 +708,15 @@
 
 		async run() {
 			const that = this;
-			function runTask(task) {
+			function async runTask(task) {
 				if (typeof that.onTaskStart == "function") {
 					that.onTaskStart(task.name);
 				}
 
-				task().then(async (res) => {
-					that.returnValues.tasks[task.name] = res;
-					await that.taskComplete(task.name);
-				});
+				const res = await task();
+
+				that.returnValues.tasks[task.name] = res;
+				await that.taskComplete(task.name);
 			}
 
 			for (let task of that.tasks) {
