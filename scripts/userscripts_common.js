@@ -713,9 +713,9 @@
 					that.onTaskStart(task.name);
 				}
 
-				task().then((res) => {
+				task().then(async (res) => {
 					that.returnValues.tasks[task.name] = res;
-					that.taskComplete(task.name);
+					await that.taskComplete(task.name);
 				});
 			}
 
