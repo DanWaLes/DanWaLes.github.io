@@ -6,6 +6,16 @@
 (() => {
 	// required internal
 	// async/await because validation does everything at once, so need to wait for completion of that before moving on
+	function errorStr(err) {
+		let errStr = '';
+
+		for (const name of Object.getOwnPropertyNames(err)) {
+			errStr += name + ' = ' + err[name];
+		}
+
+		return errStr;
+	}
+
 	const storage = {
 		name: "storage",
 		storageName: "dans_userscripts",
@@ -351,7 +361,7 @@
 									importOutput.innerHTML = "Done";
 								}, (err) => {
 									importOutput.className = "errors";
-									importOutput.innerHTML = err.message;
+									importOutput.innerHTML = errorStr(err);
 								});
 						};
 					}
@@ -467,7 +477,7 @@
 							}, 1000);
 						}, (err) => {
 							importOutput.className = "errors";
-							importOutput.innerHTML = err;
+							importOutput.innerHTML = errorStr(err);
 						});
 				};
 
