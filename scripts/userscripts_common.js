@@ -708,7 +708,7 @@
 
 		async run() {
 			const that = this;
-			function async runTask(task) {
+			async function runTask(task) {
 				if (typeof that.onTaskStart == "function") {
 					that.onTaskStart(task.name);
 				}
