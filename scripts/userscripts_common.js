@@ -562,37 +562,6 @@
 		return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 
-	const PlayerNumber = {
-		name: "PlayerNumber",
-		get: (link) => {
-			let number = link.match(/https?:\/\/(?:(?:www\.)?(?:warzone\.com)|(?:warlight\.net))\/Profile\?p=(\d+)/i);
-
-			if (number) {
-				number = number[1];
-			}
-
-			return parseInt(number);
-		},
-		toUrl: (num) => {
-			return "https://www.warzone.com/Profile?p=" + num;
-		}
-	};
-	deepFreeze(PlayerNumber);
-
-	function getPlayerId(link) {
-		const number = PlayerNumber.get(link);
-		let id = "" + number;
-
-		if (isNaN(number)) {
-			return number;
-		}
-
-		id = id.substring(2, id.length);
-		id = id.substring(0, id.length - 2);
-
-		return parseInt(id);
-	}
-
 	function waitForElementsToExist(queryString, queryFrom) {
 		// based on https://stackoverflow.com/questions/24928846/get-return-value-from-settimeout
 		const main = new Promise((resolve, reject) => {
@@ -780,6 +749,123 @@
 		};
 	}
 
+	function sleep(duration) {
+		const main = new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve();
+			}, duration);
+		});
+
+		return main;
+	}
+
+	async function extractClanMembers(clanWindow, onMemberFound) {
+		if (typeof onMemberFound = 'function') {
+			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
+		}
+
+		const maxMembersPerPage = 40;
+		const membersInfo = await waitForElementToExist('[id ^= "ujs_MembersPagingContainer"] [id ^= "ujs_Paging"] [id ^= "ujs_Label"] [id $= "tmp"]', clanWindow.document)
+			.then((label) => {
+				return label.innerText.match(/Members \d+ - \d+ of (\d+)/);
+			});
+		const totalClanMembers = parseInt(membersInfo[1]);
+		const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
+		const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
+		/*console.table('membersInfo', membersInfo);
+		console.table('membersOnLastPg', membersOnLastPg);
+		console.table('totalClanMembers', totalClanMembers);
+		console.table('totalPages', totalPages);*/
+
+		async function clickNext() {
+			// console.log('init clickNext');
+			const pagerBtns = await waitForElementsToExist("[id ^= 'ujs_MainContainer'] div[id ^= 'ujs_Button'].ujsGameObject.ujsBtn.ujsImg", clanWindow.document);
+			// console.table('pagerBtns', pagerBtns);
+			const nextBtn = pagerBtns[pagerBtns.length - 1];
+			// console.table('nextBtn', nextBtn);
+			async function retry() {
+				// console.log('retry called');
+				await sleep(100);
+				await clickNext();
+			}
+
+			if (nextBtn.innerText.trim() != "Next >>") {
+				await retry();
+			}
+
+			const mainBtn = nextBtn.querySelector("a[id $= 'btn']");
+			// console.table('mainBtn', mainBtn);
+
+			if (mainBtn) {
+				mainBtn.click();
+			}
+			else {
+				await retry();
+			}
+		}
+
+		let first;
+		async function waitForLoaded() {
+			const firstMember = (await waitForElementToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document)).id;
+
+			if (!firstMember || firstMember == first) {
+				await sleep(100);
+				await waitForLoaded()
+			}
+		}
+
+		async function pageLoaded(i) {
+			const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
+			let check = maxMembersPerPage;
+
+			if (i == totalPages) {
+				check = membersOnLastPg;
+			}
+
+			/*console.table('members', members);
+			console.table('check', check);*/
+
+			if (members.length == check) {
+				for (let i = 0; i < members.length; i++) {
+					const member = members[i];
+
+					if (!i) {
+						first = member.id;
+					}
+
+					const player = member.querySelector("[id ^= 'ujs_member']");
+					let data = {clanId: parseInt(clanWindow.location.href.match(/\d+/)[1]), name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
+
+					data.number = await getPlayerNumber(player);
+					onMemberFound(data);
+				}
+			}
+
+			await sleep(100);// wait until loaded correct number
+		}
+		async function getPlayerNumber(player) {
+			const popupBtn = player.firstElementChild.querySelector("a[id $= 'btn']");
+			const popupFinder = "[id ^= 'ujs_GenericContainer'] [id ^= 'ujs_MiniProfile']";
+
+			popupBtn.click();
+
+			const number = parseInt((await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(\d+)/)[1]);
+			const popup = document.querySelector(popupFinder);
+
+			popup.remove();
+			return number;
+		}
+
+		const start = 1;
+		await pageLoaded(start);
+
+		for (let i = start + 1; i < totalPages + start; i++) {
+			await clickNext();
+			await waitForLoaded();
+			await pageLoaded(i);
+		}
+	}
+
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
@@ -790,7 +876,7 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, PlayerNumber, getPlayerId, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, extractClanMembers];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {
