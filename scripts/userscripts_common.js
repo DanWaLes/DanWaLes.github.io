@@ -760,7 +760,7 @@
 	}
 
 	async function extractClanMembers(clanWindow, onMemberFound) {
-		if (typeof onMemberFound = 'function') {
+		if (typeof onMemberFound != 'function') {
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
 		}
 
@@ -810,7 +810,7 @@
 
 			if (!firstMember || firstMember == first) {
 				await sleep(100);
-				await waitForLoaded()
+				await waitForLoaded();
 			}
 		}
 
