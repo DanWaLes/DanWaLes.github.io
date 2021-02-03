@@ -765,12 +765,6 @@
 		}
 
 		async function getTotalClanMembers() {
-			console.log(clanWindow.location.href);
-			if (clanWindow.location.href.match(/https:\/\/www\.warzone.com\/Error\?e=InvalidID/i)) {
-				console.log('error');
-				throw new Error('This clan does not exist');
-			}
-
 			const re = /(\d+) members/;
 			const label = await waitForElementToExist('[id ^= "ujs_NumMembersLabel"] span', clanWindow.document);
 			const match = label.innerText.match(re);
