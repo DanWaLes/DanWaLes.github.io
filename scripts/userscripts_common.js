@@ -979,9 +979,13 @@
 				return profile.match(/Last seen <\/font\>\s+(.+)\s+</)[1];
 			},
 			boot: () => {
-				const match = profile.match(/Booted (\d+) times* \((\d+(?:\.\d+)*)% of their last 100\)/);
-				
+				const match = profile.match(/<font class="text-muted">(?:Booted (\d+) times* \((\d+(?:\.\d+)*)% of their last 100\))|(Never booted from a game)<\/font>/);
+
 				if (match) {
+					if (match[3]) {
+						return {total: 0, lastHundredPercent: 0};
+					}
+
 					return {total: parseInt(match[1]), lastHundredPercent: Number(match[2])};
 				}
 
