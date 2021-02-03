@@ -911,7 +911,19 @@
 
 			popupBtn.click();
 
-			const number = parseInt((await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(\d+)/)[1]);
+			async function checkIfNumberLoaded() {
+				const num = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(\d+)/);
+				
+				if (num) {
+					return parseInt(num[1]);
+				}
+				else {
+					await sleep(100);
+					return await checkIfNumberLoaded();
+				}
+			}
+
+			const number = await checkIfNumberLoaded();
 			const popup = clanWindow.document.querySelector(popupFinder);
 
 			popup.remove();
@@ -979,7 +991,7 @@
 				return profile.match(/Last seen <\/font\>\s+(.+)\s+</)[1];
 			},
 			boot: () => {
-				const match = profile.match(/<font class="text-muted">(?:Booted (\d+) times* \((\d+(?:\.\d+)*)% of their last 100\))|(Never booted from a game)<\/font>/);
+				const match = profile.match(/<font class="text-muted">(?:Booted (\d+) times* \((\d+(?:\.\d+)*)% of their last 100\))|(Never booted from a game\.)<\/font>/);
 
 				if (match) {
 					if (match[3]) {
