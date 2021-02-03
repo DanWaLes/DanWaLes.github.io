@@ -760,6 +760,10 @@
 	}
 
 	async function extractClanMembers(clanWindow, onMemberFound) {
+		if (clanWindow.location.href.match(/https:\/\/www\.warzone.com\/Error\?e=InvalidID/i)) {
+			throw new Error('This clan does not exist');
+		}
+
 		if (typeof onMemberFound != 'function') {
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
 		}
