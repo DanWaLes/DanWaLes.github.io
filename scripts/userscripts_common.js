@@ -766,6 +766,7 @@
 
 		async function getTotalClanMembers() {
 			if (clanWindow.location.href.match(/https:\/\/www\.warzone.com\/Error\?e=InvalidID/i)) {
+				console.log('error');
 				throw new Error('This clan does not exist');
 			}
 
