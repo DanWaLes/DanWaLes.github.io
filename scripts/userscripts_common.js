@@ -764,12 +764,24 @@
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
 		}
 
-		const maxMembersPerPage = 40;
-		const membersInfo = await waitForElementToExist('[id ^= "ujs_MembersPagingContainer"] [id ^= "ujs_Paging"] [id ^= "ujs_Label"] [id $= "tmp"]', clanWindow.document)
+		async function getMembersInfo() {
+			const re = /Members \d+ - \d+ of (\d+)/;
+			const membersInfo = await waitForElementToExist('[id ^= "ujs_MembersPagingContainer"] [id ^= "ujs_Paging"] [id ^= "ujs_Label"] [id $= "tmp"]', clanWindow.document)
 			.then((label) => {
-				console.table('label.innerText', label.innerText);
-				return label.innerText.match(/Members \d+ - \d+ of (\d+)/);
+				const match = label.innerText.match(re);
+
+				if (match) {
+					return match;
+				}
+				else {
+					await sleep(100);
+					return await getMembersInfo();
+				}
 			});
+		}
+
+		const maxMembersPerPage = 40;
+		const membersInfo = await getMembersInfo();
 		const totalClanMembers = parseInt(membersInfo[1]);
 		const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
 		const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
