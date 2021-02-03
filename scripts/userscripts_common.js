@@ -767,7 +767,7 @@
 		const maxMembersPerPage = 40;
 		const membersInfo = await waitForElementToExist('[id ^= "ujs_MembersPagingContainer"] [id ^= "ujs_Paging"] [id ^= "ujs_Label"] [id $= "tmp"]', clanWindow.document)
 			.then((label) => {
-				console.table('label', label);
+				console.table('label.innerText', label.innerText);
 				return label.innerText.match(/Members \d+ - \d+ of (\d+)/);
 			});
 		const totalClanMembers = parseInt(membersInfo[1]);
