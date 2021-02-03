@@ -859,7 +859,7 @@
 			popupBtn.click();
 
 			const number = parseInt((await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(\d+)/)[1]);
-			const popup = document.querySelector(popupFinder);
+			const popup = clanWindow.document.querySelector(popupFinder);
 
 			popup.remove();
 			return number;
