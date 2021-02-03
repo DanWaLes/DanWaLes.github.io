@@ -749,6 +749,37 @@
 		};
 	}
 
+	async function fetchText(url, delay, fetchOptions) {
+		if (typeof delay != "number") {
+			delay = 1000;
+		}
+
+		await sleep(delay);
+
+		// https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+		// if there was a connection when it started but later goes after 10 secs, try again
+		// but if there was none in the first place, waits until it comes back
+
+		return await fetchWithTimeout(url, 10000, fetchOptions)
+			.then(response => {
+				if (response.ok) {
+					return response.text();
+				}
+				else {
+					throw new Error("unable to load url " + url);
+				}
+			})
+			.then(data => {
+				return data;
+			})
+			.catch(err => {
+				if (err.message == "timeout") {
+					return fetchText(url, delay * 2, fetchOptions);
+				}
+
+				throw err;
+			});
+	}
 	function sleep(duration) {
 		const main = new Promise((resolve, reject) => {
 			setTimeout(() => {
@@ -757,6 +788,19 @@
 		});
 
 		return main;
+	}
+	function fetchWithTimeout(url, timeout, fetchOptions) {
+		// https://stackoverflow.com/questions/46946380/fetch-api-request-timeout#answer-49857905
+		if (timeout < 1 || typeof timeout != "number") {
+			return;
+		}
+
+		return Promise.race([
+			fetch(url, fetchOptions),
+			new Promise((_, reject) => {
+				setTimeout(() => reject(new Error("timeout")), timeout);
+			})
+		]);
 	}
 
 	async function extractClanMembers(clanWindow, onMemberFound) {
@@ -884,6 +928,98 @@
 		}
 	}
 
+	async function extractPlayerDetails(playerNumber, detailsToGet) {
+		const profile = await fetchText("https://www.warzone.com/Profile?p=" + playerNumber);
+		const get = {
+			name: () => {
+				return profile.match(/<title>(.+) - Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free<\/title>/)[1];
+			},
+			isMember: () => {
+				return !!profile.match(/https:\/\/warzonecdn\.com\/Images\/MemberIcon\.png/);
+			},
+			country: () => {
+				const match = profile.match(/<img src="https:\/\/warzonecdn\.com\/Images\/Flags\/([A-Z]+)\.jpg" title="Plays from ([\w\s]+)/);
+
+				if (match) {
+					return {code: match[1], country: match[2]};
+				}
+
+				return null;
+			},
+			level: () => {
+				return parseInt(profile.match(/<big><b>Level (\d+)<\/b><\/big>/)[1]);
+			},
+			clan: () => {
+				const match = profile.match(/<a href="\/Clans\/\?ID=(\d+)">\s+<img style="vertical-align: middle" src="https:\/\/warzonecdn\.com\/s3\/Data\/Clans\/\d+\/Icon\/(.+)" border="0" \/>(.+)\s+<\/a>/);
+				
+				if (match) {
+					return {id: parseInt(match[1]), iconFileName: match[2], name: match[3]};
+				}
+
+				return null;
+			},
+			points: () => {
+				return profile.match(/>Points earned in last 30 days:<\/font>\s*((?:(?:\d+|\,))+)\s*/)[1];
+			},
+			joinedSince: () => {
+				return new Date(profile.match(/<font class="text-muted">Joined Warzone:<\/font> (\d+\/\d+\/\d+)/)[1]);
+			},
+			memberSince: function() {
+				console.log(this);
+				if (this.isMember()) {
+					return new Date(profile.match(/<font class="text-muted">Member since<\/font> (\d+\/\d+\/\d+)/)[1]);
+				}
+
+				return null;
+			},
+			totalGames: () => {
+				return parseInt(profile.match(/<font class="text-muted">Played in<\/font> (\d+) multi-player games/)[1]);
+			},
+			lastSeen: () => {
+				return profile.match(/Last seen <\/font\>\s+(.+)\s+</)[1];
+			},
+			boot: () => {
+				const match = profile.match(/Booted (\d+) times* \((\d+(?:\.\d+)*)% of their last 100\)/);
+				
+				if (match) {
+					return {total: parseInt(match[1]), lastHundredPercent: Number(match[2])};
+				}
+
+				return null;
+			}
+		};
+
+		class FuncNotFoundError extends Error {
+			constructor(funcName) {
+				super('funcName ' + funcName + ' not recognized');
+				this.name = 'FuncNotFoundError';
+			}
+		}
+
+		try {
+			const ret = {};
+
+			for (let funcName of detailsToGet) {
+				if (get[funcName]) {
+					ret[funcName] = get[funcName]();
+				}
+				else {
+					throw new FuncNotFoundError(funcName);
+				}
+			}
+
+			return ret;
+		}
+		catch(err) {
+			if (err instanceof FuncNotFoundError) {
+				throw err;
+			}
+			else {
+				throw new Error('unexpected profile page layout change');
+			}
+		}
+	}
+
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
@@ -894,10 +1030,12 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, extractClanMembers];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, extractClanMembers, extractPlayerDetails];
 		const ret = {};
 
-		window._extractClanMembers = extractClanMembers;// other script creators need this
+		// globals that others may want to use in the event of everything becoming UJS-powered
+		window._extractClanMembers = extractClanMembers;
+		window._extractPlayerDetails = extractPlayerDetails;
 
 		for (let i = shared.length - 1; i > -1; i--) {
 			const func = shared.pop();
