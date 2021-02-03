@@ -1028,7 +1028,7 @@
 		}
 		catch(err) {
 			if (err instanceof FuncNotFoundError) {
-				throw err;
+				throw new FuncNotFoundError(err);
 			}
 			else {
 				throw new Error('unexpected profile page layout change');
