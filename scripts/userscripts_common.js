@@ -899,7 +899,7 @@
 					let data = {clanId: parseInt(clanWindow.location.href.match(/\d+/)[1]), name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
 
 					data.number = await getPlayerNumber(player);
-					onMemberFound(data);
+					onMemberFound(data, totalClanMembers);
 				}
 			}
 
