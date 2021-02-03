@@ -760,15 +760,15 @@
 	}
 
 	async function extractClanMembers(clanWindow, onMemberFound) {
-		if (clanWindow.location.href.match(/https:\/\/www\.warzone.com\/Error\?e=InvalidID/i)) {
-			throw new Error('This clan does not exist');
-		}
-
 		if (typeof onMemberFound != 'function') {
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
 		}
 
 		async function getTotalClanMembers() {
+			if (clanWindow.location.href.match(/https:\/\/www\.warzone.com\/Error\?e=InvalidID/i)) {
+				throw new Error('This clan does not exist');
+			}
+
 			const re = /(\d+) members/;
 			const label = await waitForElementToExist('[id ^= "ujs_NumMembersLabel"] span', clanWindow.document);
 			const match = label.innerText.match(re);
