@@ -971,9 +971,7 @@
 				return null;
 			},
 			points: () => {
-				const match = profile.match(/>Points earned in last 30 days:<\/font>\s*((?:(?:\d+|\,))+)\s*/);
-				console.log(match);
-				return match[1];//ignores past the comma somehow
+				return profile.match(/>Points earned in last 30 days:<\/font>\s*((?:(?:\d+|\,))+)\s*/)[1];
 			},
 			joinedSince: () => {
 				return new Date(profile.match(/<font class="text-muted">Joined Warzone:<\/font> (\d+\/\d+\/\d+)/)[1]);
