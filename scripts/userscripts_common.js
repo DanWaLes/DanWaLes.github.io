@@ -760,6 +760,15 @@
 	}
 
 	async function extractClanMembers(clanWindow, onMemberFound) {
+		if (!(clanWindow instanceof Window)) {
+			if (clanWindow instanceof HTMLIFrameElement) {
+				clanWindow = clanWindow.contentWindow;
+			}
+			else {
+				throw new Error('clanWindow must be an instanceof Window');
+			}
+		}
+
 		if (typeof onMemberFound != 'function') {
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
 		}
@@ -887,6 +896,8 @@
 
 		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, extractClanMembers];
 		const ret = {};
+
+		window._extractClanMembers = extractClanMembers;// other script creators need this
 
 		for (let i = shared.length - 1; i > -1; i--) {
 			const func = shared.pop();
