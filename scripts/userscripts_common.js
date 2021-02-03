@@ -766,18 +766,15 @@
 
 		async function getMembersInfo() {
 			const re = /Members \d+ - \d+ of (\d+)/;
-			const membersInfo = await waitForElementToExist('[id ^= "ujs_MembersPagingContainer"] [id ^= "ujs_Paging"] [id ^= "ujs_Label"] [id $= "tmp"]', clanWindow.document)
-			.then((label) => {
-				const match = label.innerText.match(re);
+			const label = await waitForElementToExist('[id ^= "ujs_MembersPagingContainer"] [id ^= "ujs_Paging"] [id ^= "ujs_Label"] [id $= "tmp"]', clanWindow.document);
+			const match = label.innerText.match(re);
 
-				if (match) {
-					return match;
-				}
-				else {
-					await sleep(100);
-					return await getMembersInfo();
-				}
-			});
+			if (match) {
+				return match;
+			}
+
+			await sleep(100);
+			return await getMembersInfo();
 		}
 
 		const maxMembersPerPage = 40;
