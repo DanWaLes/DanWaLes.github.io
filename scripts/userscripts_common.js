@@ -729,7 +729,7 @@
 				const line = document.createElement('div');
 
 				line.id = tsk.name;
-				line.innerHTML = `${cammelCaseToTitle(tsk.name)} <span class="progress">Not started</span>`;
+				line.innerHTML = `${cammelCaseToTitle(tsk.name)} - <span class="prog">Not started</span>`;// bootstrap has a progress class, don't want it
 				this.body.appendChild(line);
 			}
 		};
@@ -739,7 +739,7 @@
 			return this.body.querySelector(toFind);
 		};
 		this.setProgress = function(taskName, prog) {
-			const item = this.find('#' + taskName + ' .progress');
+			const item = this.find('#' + taskName + ' .prog');
 
 			if (!item) {
 				return;
@@ -977,7 +977,6 @@
 				return new Date(profile.match(/<font class="text-muted">Joined Warzone:<\/font> (\d+\/\d+\/\d+)/)[1]);
 			},
 			memberSince: function() {
-				console.log(this);
 				if (this.isMember()) {
 					return new Date(profile.match(/<font class="text-muted">Member since<\/font> (\d+\/\d+\/\d+)/)[1]);
 				}
@@ -1035,6 +1034,25 @@
 			}
 		}
 	}
+	
+	/**
+	 * @returns Array of player links
+	*/
+	async function extractOwnBlocklist(onPlayerFound) {
+		const bl = await fetchText("https://www.warzone.com/ManageBlockList");
+		const linksRe = /<a href="(Profile\?p=\d{5,})">/ig;
+		const linkRe = new RegExp(linksRe.source, "i");
+		const blocklist = bl.match(linksRe) || [];
+
+		// convert to full link
+		for (let i = 0; i < blocklist.length; i++) {
+			const link = "https://www.warzone.com/" + blocklist[i].match(linkRe)[1];
+
+			blocklist[i] = link;
+		}
+
+		return blocklist;
+	}
 
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
@@ -1046,12 +1064,13 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, extractClanMembers, extractPlayerDetails];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, extractClanMembers, extractPlayerDetails, extractOwnBlocklist];
 		const ret = {};
 
 		// globals that others may want to use in the event of everything becoming UJS-powered
 		window._extractClanMembers = extractClanMembers;
 		window._extractPlayerDetails = extractPlayerDetails;
+		window._extractOwnBlocklist = extractOwnBlocklist;
 
 		for (let i = shared.length - 1; i > -1; i--) {
 			const func = shared.pop();
