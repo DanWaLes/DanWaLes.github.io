@@ -839,15 +839,6 @@
 			return await getMembersInfo();
 		}
 
-		const maxMembersPerPage = 40;
-		const totalClanMembers = await getTotalClanMembers();
-		const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
-		const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
-		/*console.table('membersInfo', membersInfo);
-		console.table('membersOnLastPg', membersOnLastPg);
-		console.table('totalClanMembers', totalClanMembers);
-		console.table('totalPages', totalPages);*/
-
 		async function clickNext() {
 			// console.log('init clickNext');
 			const pagerBtns = await waitForElementsToExist("[id ^= 'ujs_MainContainer'] div[id ^= 'ujs_Button'].ujsGameObject.ujsBtn.ujsImg", clanWindow.document);
@@ -885,35 +876,6 @@
 			}
 		}
 
-		async function pageLoaded(i) {
-			const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
-			let check = maxMembersPerPage;
-
-			if (i == totalPages) {
-				check = membersOnLastPg;
-			}
-
-			/*console.table('members', members);
-			console.table('check', check);*/
-
-			if (members.length == check) {
-				for (let i = 0; i < members.length; i++) {
-					const member = members[i];
-
-					if (!i) {
-						first = member.id;
-					}
-
-					const player = member.querySelector("[id ^= 'ujs_member']");
-					let data = {clanId: parseInt(clanWindow.location.href.match(/\d+/)[1]), name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
-
-					data.number = await getPlayerNumber(player);
-					onMemberFound(data, totalClanMembers);
-				}
-			}
-
-			await sleep(100);// wait until loaded correct number
-		}
 		async function getPlayerNumber(player) {
 			const popupBtn = player.firstElementChild.querySelector("a[id $= 'btn']");
 			const popupFinder = "[id ^= 'ujs_GenericContainer'] [id ^= 'ujs_MiniProfile']";
@@ -939,13 +901,57 @@
 			return number;
 		}
 
-		const start = 1;
-		await pageLoaded(start);
+		try {
+			const maxMembersPerPage = 40;
+			const totalClanMembers = await getTotalClanMembers();
+			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
+			const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
+			/*console.table('membersInfo', membersInfo);
+			console.table('membersOnLastPg', membersOnLastPg);
+			console.table('totalClanMembers', totalClanMembers);
+			console.table('totalPages', totalPages);*/
 
-		for (let i = start + 1; i < totalPages + start; i++) {
-			await clickNext();
-			await waitForLoaded();
-			await pageLoaded(i);
+			async function pageLoaded(i) {
+				const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
+				let check = maxMembersPerPage;
+
+				if (i == totalPages) {
+					check = membersOnLastPg;
+				}
+
+				/*console.table('members', members);
+				console.table('check', check);*/
+
+				if (members.length == check) {
+					for (let i = 0; i < members.length; i++) {
+						const member = members[i];
+
+						if (!i) {
+							first = member.id;
+						}
+
+						const player = member.querySelector("[id ^= 'ujs_member']");
+						let data = {clanId: parseInt(clanWindow.location.href.match(/\d+/)[1]), name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
+
+						data.number = await getPlayerNumber(player);
+						onMemberFound(data, totalClanMembers);
+					}
+				}
+
+				await sleep(100);// wait until loaded correct number
+			}
+
+			const start = 1;
+			await pageLoaded(start);
+
+			for (let i = start + 1; i < totalPages + start; i++) {
+				await clickNext();
+				await waitForLoaded();
+				await pageLoaded(i);
+			}
+		}
+		catch(err) {
+			throw err;
 		}
 	}
 
