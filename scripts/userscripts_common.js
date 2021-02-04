@@ -682,6 +682,7 @@
 					that.onTaskStart(task.name);
 				}
 
+				console.log(task.name + ' started');
 				const res = await task();
 
 				that.returnValues.tasks[task.name] = res;
@@ -710,9 +711,13 @@
 
 			if (this.numCompleted == this.numTasks) {
 				if (typeof this.allDone == "function") {
+					console.log('allDone ' + this.allDone.name + ' started');
 					this.returnValues.callback = await this.allDone(this.returnValues.tasks);
+					console.log('allDone ' + this.allDone.name + ' complete');
 				}
 			}
+
+			console.log(taskName + ' complete');
 		}
 	}
 
