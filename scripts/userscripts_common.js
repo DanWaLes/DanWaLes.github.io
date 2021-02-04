@@ -706,8 +706,15 @@
 			this.numCompleted++;
 
 			if (typeof this.onTaskCompletion == "function") {
-				this.onTaskCompletion(taskName);
+				if (isAsyncFunc(this.onTaskCompletion)) {
+					await this.onTaskCompletion(taskName);
+				}
+				else {
+					this.onTaskCompletion(taskName);
+				}
 			}
+
+			console.log(taskName + ' complete');
 
 			if (this.numCompleted == this.numTasks) {
 				if (typeof this.allDone == "function") {
@@ -717,7 +724,7 @@
 				}
 			}
 
-			console.log(taskName + ' complete');
+			console.log(taskName + 'fully complete');
 		}
 	}
 
