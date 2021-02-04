@@ -823,6 +823,10 @@
 		}
 
 		async function getTotalClanMembers() {
+			if (!clanWindow.location.href.match(/^https:\/\/www\.warzone\.com\/Clans\/\?ID=\d+/i)) {
+				throw new Error('clan not found');
+			}
+
 			const re = /(\d+) members/;
 			const label = await waitForElementToExist('[id ^= "ujs_NumMembersLabel"] span', clanWindow.document);
 			const match = label.innerText.match(re);
