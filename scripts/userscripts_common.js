@@ -649,28 +649,28 @@
 			}
 		};
 
+		for (let key in check) {
+			if (!isPureObj(stored[key])) {
+				stored[key] = {};
+			}
+		}
+
 		for (let key in stored) {
 			const checker = check[key];
 
 			if (typeof checker == 'function') {
-				if (!isPureObj(stored[key])) {
-					stored[key] = {};
-				}
-
 				checker();
 			}
 			else {
 				delete stored[key];
 			}
 		}
-		console.table('stored', stored);
 
 		return stored;
 	});
 
 	storage.SHARED.getClan = async (clanId) => {
-		const clans = (await storage.SHARED.getItem('clans'));
-		let clan = clans[clanId];
+		let clan = (await storage.SHARED.getItem('clans'))[clanId];
 
 		if (!clan && isValidClanId(clanId)) {
 			clan = checkClan();
