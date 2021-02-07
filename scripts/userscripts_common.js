@@ -895,12 +895,7 @@
 			this.numCompleted++;
 
 			if (typeof this.onTaskCompletion == "function") {
-				if (isAsyncFunc(this.onTaskCompletion)) {
-					await this.onTaskCompletion(taskName);
-				}
-				else {
-					this.onTaskCompletion(taskName);
-				}
+				await this.onTaskCompletion(taskName);
 			}
 
 			if (this.numCompleted == this.numTasks) {
@@ -1125,12 +1120,7 @@
 
 						data.number = await getPlayerNumber(player);
 
-						if (isAsyncFunc(onMemberFound)) {
-							await onMemberFound(data, totalClanMembers);
-						}
-						else {
-							onMemberFound(data, totalClanMembers);
-						}
+						await onMemberFound(data, totalClanMembers);
 					}
 				}
 
