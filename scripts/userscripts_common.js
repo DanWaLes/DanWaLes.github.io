@@ -1124,7 +1124,13 @@
 						let data = {clanId: parseInt(clanWindow.location.href.match(/\d+/)[1]), name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
 
 						data.number = await getPlayerNumber(player);
-						onMemberFound(data, totalClanMembers);
+
+						if (isAsyncFunc(onMemberFound)) {
+							await onMemberFound(data, totalClanMembers);
+						}
+						else {
+							onMemberFound(data, totalClanMembers);
+						}
 					}
 				}
 
@@ -1152,7 +1158,7 @@
 				return profile.match(/<title>(.+) - Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free<\/title>/)[1];
 			},
 			isMember: () => {
-				return !!profile.match(/https:\/\/warzonecdn\.com\/Images\/MemberIcon\.png/);
+				return !!profile.match(/<img src="https:\/\/warzonecdn\.com\/Images\/MemberIcon\.png/);
 			},
 			country: () => {
 				const match = profile.match(/<img src="https:\/\/warzonecdn\.com\/Images\/Flags\/([A-Z]+)\.jpg" title="Plays from ([\w\s]+)/);
@@ -1192,7 +1198,7 @@
 				return parseInt(profile.match(/<font class="text-muted">Played in<\/font> (\d+) multi-player games/)[1]);
 			},
 			lastSeen: () => {
-				return profile.match(/Last seen <\/font\>\s+(.+)\s+</)[1];
+				return profile.match(/Last seen <\/font\>\s+(.+)\s+</)[1].trim();
 			},
 			boot: () => {
 				const match = profile.match(/<font class="text-muted">(?:Booted (\d+) times* \((\d+(?:\.\d+)*)% of their last 100\))|(Never booted from a game\.)<\/font>/);
