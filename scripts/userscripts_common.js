@@ -685,7 +685,8 @@
 	};
 	storage.SHARED.setClan = async (clanId, clan) => {
 		const clans = await storage.SHARED.getItem('clans');
-		const removedClanMembers = Object.keys(clans[clanId].members).filter((key) => !Object.keys(clan.members).includes(key));
+		const oldClan = await storage.SHARED.getClan(clanId);
+		const removedClanMembers = Object.keys(oldClan.members).filter((key) => !Object.keys(clan.members).includes(key));
 
 		clans[clanId] = clan;
 		await storage.SHARED.setItem('clans', clans);
