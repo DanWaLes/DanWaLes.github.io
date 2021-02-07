@@ -663,11 +663,14 @@
 				delete stored[key];
 			}
 		}
+		console.table('stored', stored);
 
 		return stored;
 	});
+
 	storage.SHARED.getClan = async (clanId) => {
-		let clan = (await storage.SHARED.getItem('clans'))[clanId];
+		const clans = (await storage.SHARED.getItem('clans'));
+		let clan = clans[clanId];
 
 		if (!clan && isValidClanId(clanId)) {
 			clan = checkClan();
