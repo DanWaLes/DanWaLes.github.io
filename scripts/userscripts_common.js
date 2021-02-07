@@ -654,6 +654,7 @@
 				stored[key] = {};
 			}
 		}
+		console.table('stored', stored);
 
 		for (let key in stored) {
 			const checker = check[key];
@@ -665,6 +666,7 @@
 				delete stored[key];
 			}
 		}
+		console.table('stored', stored);
 
 		return stored;
 	});
