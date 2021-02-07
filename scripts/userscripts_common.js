@@ -618,55 +618,49 @@
 	}
 
 	storage.setupUserscriptStorage('SHARED', (stored) => {
-		if (!isPureObj(stored)) {
-			stored = {};
-		}
-
 		const check = {
 			clans: function() {
-				for (let clanId in stored.clans) {
+				for (let clanId in stored.SHARED.clans) {
 					const clanIdInt = parseInt(clanId);
 
 					if (isValidClanId(clanIdInt)) {
-						stored.clans[clanId] = checkClan(stored.clans[clanId]);
+						stored.SHARED.clans[clanId] = checkClan(stored.SHARED.clans[clanId]);
 					}
 					else {
-						delete stored.clans[clanId];
+						delete stored.SHARED.clans[clanId];
 					}
 				}
 			},
 			players: function() {
-				for (let playerId in stored.players) {
+				for (let playerId in stored.SHARED.players) {
 					const playerIdInt = parseInt(playerId);
 
 					if (isValidPlayerId(playerIdInt)) {
-						stored.players[playerId] = checkPlayer(stored.players[playerId]);
+						stored.SHARED.players[playerId] = checkPlayer(stored.SHARED.players[playerId]);
 					}
 					else {
-						delete stored.players[playerId];
+						delete stored.SHARED.players[playerId];
 					}
 				}
 			}
 		};
 
 		for (let key in check) {
-			if (!isPureObj(stored[key])) {
-				stored[key] = {};
+			if (!isPureObj(stored.SHARED[key])) {
+				stored.SHARED[key] = {};
 			}
 		}
-		console.table('stored', stored);
 
-		for (let key in stored) {
+		for (let key in stored.SHARED) {
 			const checker = check[key];
 
 			if (typeof checker == 'function') {
 				checker();
 			}
 			else {
-				delete stored[key];
+				delete stored.SHARED[key];
 			}
 		}
-		console.table('stored', stored);
 
 		return stored;
 	});
