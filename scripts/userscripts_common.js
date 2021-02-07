@@ -73,7 +73,7 @@
 			}
 
 			for (let key in stored) {
-				if (!(key in dansUserscripts.list)) {
+				if (!(key in dansUserscripts.list) && key != 'SHARED') {
 					delete stored[key];
 				}
 			}
@@ -515,6 +515,196 @@
 		}
 	};
 
+	function isPureObj(obj) {
+		return typeof obj == 'object' && obj && !Array.isArray(obj);
+	}
+	function isValidPlayerId(n) {
+		return isFinite(n) && n >= 10000000;
+	}
+	function isValidClanId(n) {
+		return isFinite(n) && n > 0;
+	}
+
+	function checkClan(clan) {
+		if (!isPureObj(clan)) {
+			clan = {};
+		}
+
+		if (!isPureObj(clan.members)) {
+			clan.members = {};
+		}
+
+		for (let playerId in clan.members) {
+			playerId = parseInt(playerId);
+
+			if (isValidPlayerId(playerId)) {
+				clan.members[playerId] = 1;
+			}
+			else {
+				delete clan.members[playerId];
+			}
+		}
+
+		const lastUpdate = new Date(clan.lastUpdate);
+
+		if (lastUpdate == "Invalid Date") {
+			clan.lastUpdate = -1;
+		}
+		else {
+			clan.lastUpdate = lastUpdate.toUTCString();
+		}
+
+		const good = ['members', 'lastUpdate'];
+
+		for (let key in clan) {
+			if (!good.includes(key)) {
+				delete clan[key];
+			}
+		}
+
+		return clan;
+	}
+
+	function checkPlayer(player) {
+		if (!isPureObj(player)) {
+			player = {};
+		}
+
+		const strs = ['name', 'title', 'lastSeen'];
+		const ints = ['clan', 'boot', 'points'];
+
+		for (let item of strs) {
+			if (typeof player[item] != 'string') {
+				player[item] = '';
+			}
+		}
+
+		for (let item of ints) {
+			const info = parseInt(player[item]);
+
+			if (!isFinite(info) || info < 0) {
+				player[item] = 0;
+			}
+		}
+
+		for (let key in player) {
+			if (!(strs.includes(key) || ints.includes(key))) {
+				delete player[key];
+			}
+		}
+
+		return player;
+	}
+
+	async function removePlayerFromClan(clanId, playerId) {
+		const clans = await storage.SHARED.getItem('clans');
+		const players = await storage.SHARED.getItem('players');
+
+		if (clans[clanId]) {
+			if (clans[clanId].members) {
+				delete clans[clanId].members[playerId];
+
+				await storage.SHARED.setItem('clans', clans);
+			}
+		}
+
+		if (players[playerId]) {
+			if (players[playerId].clan === clanId) {
+				delete players[playerId];// all players must be in a clan
+
+				await storage.SHARED.setItem('players', players);
+			}
+		}
+	}
+
+	storage.setupUserscriptStorage('SHARED', (stored) => {
+		if (!isPureObj(stored)) {
+			stored = {};
+		}
+
+		const check = {
+			clans: function() {
+				for (let clanId in stored.clans) {
+					const clanIdInt = parseInt(clanId);
+
+					if (isValidClanId(clanIdInt)) {
+						stored.clans[clanId] = checkClan(stored.clans[clanId]);
+					}
+					else {
+						delete stored.clans[clanId];
+					}
+				}
+			},
+			players: function() {
+				for (let playerId in stored.players) {
+					const playerIdInt = parseInt(playerId);
+
+					if (isValidPlayerId(playerIdInt)) {
+						stored.players[playerId] = checkPlayer(stored.players[playerId]);
+					}
+					else {
+						delete stored.players[playerId];
+					}
+				}
+			}
+		};
+
+		for (let key in stored) {
+			const checker = check[key];
+
+			if (typeof checker == 'function') {
+				if (!isPureObj(stored[key])) {
+					stored[key] = {};
+				}
+
+				checker();
+			}
+			else {
+				delete stored[key];
+			}
+		}
+
+		return stored;
+	});
+	storage.SHARED.getClan = async (clanId) => {
+		let clan = (await storage.SHARED.getItem('clans'))[clanId];
+
+		if (!clan && isValidClanId(clanId)) {
+			clan = checkClan();
+		}
+
+		return clan;
+	};
+	storage.SHARED.getPlayer = async (playerId) => {
+		let player = (await storage.SHARED.getItem('players'))[playerId];
+
+		if (!player && isValidPlayerId(playerId)) {
+			player = checkPlayer();
+		}
+
+		return player;
+	};
+	storage.SHARED.setClan = async (clanId, clan) => {
+		const clans = await storage.SHARED.getItem('clans');
+		const removedClanMembers = Object.keys(clans[clanId].members).filter((key) => !Object.keys(clan.members).includes(key));
+
+		clans[clanId] = clan;
+		await storage.SHARED.setItem('clans', clans);
+
+		for (let playerId of removedClanMembers) {
+			await removePlayerFromClan(clanId, playerId);
+		}
+	};
+	storage.SHARED.getMembers = async (clan) => {
+		const members = {};
+
+		for (let playerId in clan.members) {
+			members[playerId] = await storage.SHARED.getPlayer(playerId);
+		}
+
+		return members;
+	};
+
 	// util
 	function cammelCaseToTitle(str) {
 		// case boundaries from https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
@@ -836,7 +1026,7 @@
 			}
 
 			await sleep(100);
-			return await getMembersInfo();
+			return await getTotalClanMembers();
 		}
 
 		async function clickNext() {
@@ -911,7 +1101,7 @@
 			console.table('totalClanMembers', totalClanMembers);
 			console.table('totalPages', totalPages);*/
 
-			async function pageLoaded(i) {
+			const pageLoaded = async function(i) {
 				const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
 				let check = maxMembersPerPage;
 
@@ -939,7 +1129,7 @@
 				}
 
 				await sleep(100);// wait until loaded correct number
-			}
+			};
 
 			const start = 1;
 			await pageLoaded(start);
