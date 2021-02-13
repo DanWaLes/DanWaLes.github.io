@@ -1099,14 +1099,14 @@
 			const pageLoaded = async function(i) {
 				await sleep(100);
 
-				const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
+				const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember'].ujsGameObject.ujsImg", clanWindow.document);
 				let check = maxMembersPerPage;
 
 				if (i == totalPages) {
 					check = membersOnLastPg;
 				}
 
-				console.table('members', members);
+				console.table('members.length', members.length);
 				console.table('check', check);
 
 				if (members.length == check) {
