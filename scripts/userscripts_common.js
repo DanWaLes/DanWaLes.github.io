@@ -1120,6 +1120,7 @@
 
 						data.number = await getPlayerNumber(player);
 
+						cosole.table('data', data);
 						await onMemberFound(data, totalClanMembers);
 					}
 				}
