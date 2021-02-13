@@ -1092,9 +1092,9 @@
 			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
 			const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
 
-			console.table('totalClanMembers', totalClanMembers);
+			/*console.table('totalClanMembers', totalClanMembers);
 			console.table('membersOnLastPg', membersOnLastPg);
-			console.table('totalPages', totalPages);
+			console.table('totalPages', totalPages);*/
 
 			const pageLoaded = async function(i) {
 				await sleep(100);
@@ -1106,8 +1106,8 @@
 					check = membersOnLastPg;
 				}
 
-				console.table('members.length', members.length);
-				console.table('check', check);
+				/*console.table('members.length', members.length);
+				console.table('check', check);*/
 
 				if (members.length == check) {
 					for (let i = 0; i < members.length; i++) {
@@ -1122,7 +1122,7 @@
 
 						data.number = await getPlayerNumber(player);
 
-						console.table('data', data);
+						// console.table('data', data);
 						await onMemberFound(data, totalClanMembers);
 					}
 				}
