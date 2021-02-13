@@ -1097,6 +1097,8 @@
 			console.table('totalPages', totalPages);
 
 			const pageLoaded = async function(i) {
+				await sleep(100);
+
 				const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
 				let check = maxMembersPerPage;
 
@@ -1120,12 +1122,13 @@
 
 						data.number = await getPlayerNumber(player);
 
-						cosole.table('data', data);
+						console.table('data', data);
 						await onMemberFound(data, totalClanMembers);
 					}
 				}
-
-				await sleep(100);// wait until loaded correct number
+				else {
+					await pageLoaded(i);
+				}
 			};
 
 			const start = 1;
