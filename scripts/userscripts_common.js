@@ -1091,10 +1091,10 @@
 			const totalClanMembers = await getTotalClanMembers();
 			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
 			const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
-			/*console.table('membersInfo', membersInfo);
+			console.table('membersInfo', membersInfo);
 			console.table('membersOnLastPg', membersOnLastPg);
 			console.table('totalClanMembers', totalClanMembers);
-			console.table('totalPages', totalPages);*/
+			console.table('totalPages', totalPages);
 
 			const pageLoaded = async function(i) {
 				const members = await waitForElementsToExist("[id ^= 'ujs_ClanSceneMember']", clanWindow.document);
@@ -1104,8 +1104,8 @@
 					check = membersOnLastPg;
 				}
 
-				/*console.table('members', members);
-				console.table('check', check);*/
+				console.table('members', members);
+				console.table('check', check);
 
 				if (members.length == check) {
 					for (let i = 0; i < members.length; i++) {
