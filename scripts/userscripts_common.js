@@ -1091,9 +1091,9 @@
 			const totalClanMembers = await getTotalClanMembers();
 			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
 			const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
-			console.table('membersInfo', membersInfo);
-			console.table('membersOnLastPg', membersOnLastPg);
+
 			console.table('totalClanMembers', totalClanMembers);
+			console.table('membersOnLastPg', membersOnLastPg);
 			console.table('totalPages', totalPages);
 
 			const pageLoaded = async function(i) {
