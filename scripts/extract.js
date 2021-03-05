@@ -98,9 +98,9 @@
 		}
 
 		try {
-			const clanId = parseInt(clanWindow.location.href.match(/\d+/)[0]);
 			const maxMembersPerPage = 40;
 			const totalClanMembers = await getTotalClanMembers();
+			const clanId = parseInt(clanWindow.location.href.match(/\d+/)[0]);
 			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
 			const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
 
