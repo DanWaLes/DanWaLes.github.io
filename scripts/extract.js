@@ -18,9 +18,16 @@
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
 		}
 
+		class ClanNotFoundError extends Error {
+			constructor(funcName) {
+				super('clan not found');
+				this.name = 'ClanNotFoundError';
+			}
+		}
+
 		async function getTotalClanMembers() {
 			if (!clanWindow.location.href.match(/^https:\/\/www\.warzone\.com\/Clans\/\?ID=\d+/i)) {
-				throw new Error('clan not found');
+				throw new ClanNotFoundError();
 			}
 
 			const re = /(\d+) members?/;
