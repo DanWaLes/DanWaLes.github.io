@@ -98,9 +98,13 @@
 		}
 
 		try {
+			function errorDetected(err) {
+				throw err;
+			}
+
 			const maxMembersPerPage = 40;
-			const totalClanMembers = await getTotalClanMembers().then(() => {}, (err) => {
-				Promise.reject(err);
+			const totalClanMembers = await getTotalClanMembers().catch((err) => {
+				errorDetected(err);
 			});
 			const clanId = parseInt(clanWindow.location.href.match(/\d+/)[0]);
 			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
