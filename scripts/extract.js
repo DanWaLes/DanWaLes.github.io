@@ -99,7 +99,9 @@
 
 		try {
 			const maxMembersPerPage = 40;
-			const totalClanMembers = await getTotalClanMembers();
+			const totalClanMembers = await getTotalClanMembers().then(() => {}, (err) => {
+				Promise.reject(err);
+			});
 			const clanId = parseInt(clanWindow.location.href.match(/\d+/)[0]);
 			const membersOnLastPg = (totalClanMembers % maxMembersPerPage) || maxMembersPerPage;
 			const totalPages = Math.ceil(totalClanMembers / maxMembersPerPage);
