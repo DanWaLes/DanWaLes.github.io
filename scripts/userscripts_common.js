@@ -704,6 +704,22 @@
 
 		return members;
 	};
+	storage.SHARED.setPlayer = async (playerId, player) => {
+		const oldPlayer = await storage.SHARED.getPlayer(playerId);
+
+		if (oldPlayer.clan != player.clan) {
+			await removePlayerFromClan(oldPlayer.clan, playerId);
+		}
+
+		const clan = await storage.SHARED.getClan(player.clan);
+		const players = await storage.SHARED.getItem('players');
+
+		players[playerId] = player;
+		clan.members[playerId] = 1;
+
+		await storage.SHARED.setItem('players', players);
+		await storage.SHARED.setClan(player.clan, clan);
+	};
 	storage.SHARED.deleteClan = async (clanId, deleteClanBtn) => {
 		// remove players
 		await storage.SHARED.setClan(clanId, {members: {}});
