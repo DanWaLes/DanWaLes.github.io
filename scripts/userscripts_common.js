@@ -691,6 +691,26 @@
 						delete stored.SHARED.threads[threadId];
 					}
 				}
+			},
+			threadCategories: function() {
+				if (!isPureObj(stored.SHARED.threadCategories)) {
+					stored.SHARED.threadCategories = {};
+				}
+
+				for (let catName in stored.SHARED.threadCategories) {
+					if (Array.isArray(stored.SHARED.threadCategories[catName])) {
+						for (let i = stored.SHARED.threadCategories[catName] - 1; i > -1; i--) {
+							const threadId = stored.SHARED.threadCategories[catName][i];
+
+							if (!isValidThreadId(parseInt(threadId))) {
+								stored.SHARED.threadCategories[catName].splice(i, 1);
+							}
+						}
+					}
+					else {
+						delete stored.SHARED.threadCategories[catName];
+					}
+				}
 			}
 		};
 
@@ -802,10 +822,49 @@
 	};
 	storage.SHARED.setThread = async (id, thread) => {
 		const threads = await storage.SHARED.getItem('threads');
+		const categories = await storage.SHARED.getItem('threadCategories');
+
+		function findIndexThreadInCat(cat) {
+			for (let i = categories[cat].length - 1; i > -1; i--) {
+				if (categories[cat][i] == id) {
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		if (threads[id] && threads[id].category != thread.category) {
+			if (typeof threads[id].category == 'string') {
+				if (Array.isArray(categories[threads[id].category])) {
+					const index = findIndexThreadInCat(threads[id].category);
+
+					if (index > -1) {
+						categories[threads[id].category].splice(index, 1);
+					}
+				}
+				else {
+					delete categories[threads[id].category];
+				}
+			}
+		}
+
+		if (typeof thread.category == 'string') {
+			if (!Array.isArray(categories[thread.category])) {
+				categories[thread.category] = [];
+			}
+
+			const index = findIndexThreadInCat(threads[id].category);
+
+			if (index == -1) {
+				categories[thread.category].push(id);
+			}
+		}
 
 		threads[id] = thread;
 
 		await storage.SHARED.setItem('threads', threads);
+		await storage.SHARED.setItem('threadCategories', categories);
 	};
 
 	// util
