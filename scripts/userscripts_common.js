@@ -524,6 +524,9 @@
 	function isValidClanId(n) {
 		return isFinite(n) && n > 0;
 	}
+	function isValidThreadId(n) {
+		return isFinite(n) && n > 0;
+	}
 
 	function checkClan(clan) {
 		if (!isPureObj(clan)) {
@@ -596,6 +599,40 @@
 		return player;
 	}
 
+	function checkThread(thread) {
+		if (!isPureObj(thread)) {
+			thread = {};
+		}
+
+		const checks = {
+			creatorId: function() {
+				if (!isValidPlayerId(thread.creatorId)) {
+					delete thread.creatorId;
+				}
+			},
+			category: function() {
+				// doesn't need checks due to interpretation
+			},
+			name: function() {
+				if (typeof thread.name != 'string') {
+					thread.name = '';
+				}
+			}
+		};
+
+		for (let check in checks) {
+			checks[check]();
+		}
+
+		for (let key in thread) {
+			if (!checks[key]) {
+				delete thread[key];
+			}
+		}
+
+		return thread;
+	}
+
 	async function removePlayerFromClan(clanId, playerId) {
 		const clans = await storage.SHARED.getItem('clans');
 		const players = await storage.SHARED.getItem('players');
@@ -640,6 +677,18 @@
 					}
 					else {
 						delete stored.SHARED.players[playerId];
+					}
+				}
+			},
+			threads: function() {
+				for (let threadId in stored.SHARED.threads) {
+					const threadIdInt = parseInt(threadId);
+					
+					if (isValidThreadId(threadIdInt)) {
+						stored.SHARED.threads[threadId] = checkThread(stored.SHARED.threads[threadId]);
+					}
+					else {
+						delete stored.SHARED.threads[threadId];
 					}
 				}
 			}
@@ -745,6 +794,18 @@
 				delClanBtn.click();
 			}
 		}
+	};
+	storage.SHARED.getThread = async (id) => {
+		const threads = await storage.SHARED.getItem('threads');
+
+		return checkThread(threads[id]);
+	};
+	storage.SHARED.setThread = async (id, thread) => {
+		const threads = await storage.SHARED.getItem('threads');
+
+		threads[id] = thread;
+
+		await storage.SHARED.setItem('threads', threads);
 	};
 
 	// util
