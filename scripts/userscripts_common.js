@@ -1097,7 +1097,7 @@
 		};
 	}
 
-	function readFullThreadPage(threadPage, ignorePostContent, onPlayerDetails, onPostRead) {
+	async function readFullThreadPage(threadPage, ignorePostContent, onPlayerDetails, onPostRead) {
 		try {
 		const allPagePosts = threadPage.match(/<table id="PostTbl_\d+"(?:.|\s)+?(?=<\/table>)/g);
 
