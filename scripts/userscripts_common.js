@@ -192,7 +192,7 @@
 				link: "https://greasyfork.org/en/scripts/376515-warzone-ujs-flash"
 			},
 			clan_forum_downloader: {
-				description: "Allows you to download your clan's forum",
+				description: "Allows you to download your clan's forum and your PMs",
 				link: "https://greasyfork.org/en/scripts/46824-clan-forum-downloader"
 			},
 			community_levels_creator_helper: {
