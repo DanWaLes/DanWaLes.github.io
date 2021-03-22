@@ -714,6 +714,8 @@
 			}
 		}
 
+		console.log(stored.SHARED);
+
 		for (let key in stored.SHARED) {
 			const checker = check[key];
 
