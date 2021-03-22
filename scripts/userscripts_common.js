@@ -700,22 +700,9 @@
 				}
 			},
 			threadCategories: function() {
-				if (!isPureObj(stored.SHARED.threadCategories)) {
-					stored.SHARED.threadCategories = {};
-				}
-
-				for (let catName in stored.SHARED.threadCategories) {
-					if (Array.isArray(stored.SHARED.threadCategories[catName])) {
-						for (let i = stored.SHARED.threadCategories[catName] - 1; i > -1; i--) {
-							const threadId = stored.SHARED.threadCategories[catName][i];
-
-							if (!isValidThreadId(parseInt(threadId))) {
-								stored.SHARED.threadCategories[catName].splice(i, 1);
-							}
-						}
-					}
-					else {
-						delete stored.SHARED.threadCategories[catName];
+				for (let cat in stored.SHARED.threadCategories) {
+					if (stored.SHARED.threadCategories[cat] != 1) {
+						delete stored.SHARED.threadCategories[cat];
 					}
 				}
 			}
@@ -831,24 +818,10 @@
 		const threads = await storage.SHARED.getItem('threads');
 		const categories = await storage.SHARED.getItem('threadCategories');
 
-		function findIndexThreadInCat(cat) {
-			for (let i = categories[cat].length - 1; i > -1; i--) {
-				if (categories[cat][i] == id) {
-					return i;
-				}
-			}
-
-			return -1;
-		}
-
 		if (threads[id] && threads[id].category != thread.category) {
 			if (typeof threads[id].category == 'string') {
-				if (Array.isArray(categories[threads[id].category])) {
-					const index = findIndexThreadInCat(threads[id].category);
-
-					if (index > -1) {
-						categories[threads[id].category].splice(index, 1);
-					}
+				if (isPureObj(categories[threads[id].category])) {
+					delete categories[threads[id].category][id];
 				}
 				else {
 					delete categories[threads[id].category];
@@ -857,15 +830,11 @@
 		}
 
 		if (typeof thread.category == 'string') {
-			if (!Array.isArray(categories[thread.category])) {
-				categories[thread.category] = [];
+			if (!isPureObj(categories[thread.category])) {
+				categories[thread.category] = {};
 			}
 
-			const index = findIndexThreadInCat(threads[id].category);
-
-			if (index == -1) {
-				categories[thread.category].push(id);
-			}
+			categories[thread.category][id] = 1;
 		}
 
 		threads[id] = thread;
