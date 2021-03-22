@@ -1146,7 +1146,7 @@
 			}
 
 			if (typeof onPlayerDetails == 'function') {
-				onPlayerDetails(posterId, poster, clanData, i);
+				await onPlayerDetails(posterId, poster, clanData, i);
 			}
 
 			const post = {
@@ -1158,7 +1158,7 @@
 			}
 
 			if (typeof onPostRead == 'function') {
-				onPostRead(post, i);
+				await onPostRead(post, i);
 			}
 		}
 		}catch(err) {console.log(url); throw err;}
