@@ -702,7 +702,7 @@
 			threadCategories: function() {
 				for (let cat in stored.SHARED.threadCategories) {
 					if (stored.SHARED.threadCategories[cat] != 1) {
-						delete stored.SHARED.threadCategories[cat];
+						// delete stored.SHARED.threadCategories[cat];
 					}
 				}
 			}
@@ -1081,6 +1081,73 @@
 		};
 	}
 
+	function readFullThreadPage(threadPage, ignorePostContent, onPlayerDetails, onPostRead) {
+		try {
+		const allPagePosts = threadPage.match(/<table id="PostTbl_\d+"(?:.|\s)+?(?=<\/table>)/g);
+
+		if (!allPagePosts) {
+			throw "page not formatted in the expected way";
+		}
+
+		for (let i = 0; i < allPagePosts.length; i++) {
+			const pagePost = allPagePosts[i];
+			const pagePostDate = new Date(pagePost.match(/\d+\/\d+\/\d+ \d+:\d+:\d+/)).toUTCString();			
+			const pagePostContent = ignorePostContent ? '' : pagePost.match(/<div class="DiscussionPostDiv".+?(?=>)>((?:.|\s)+?(?=<\/div>))/)[1].trim();
+			const pagePostPlayer = parseInt(pagePost.match(/<a href="\/Profile\?p=(\d+)">/)[1]);
+
+			let pic = pagePost.match(/<img src="(.+?(?="))" border="0" width="50" height="50" \/>/);
+			if (pic) {
+				pic = pic[1];
+			}
+			else {
+				pic = "";
+			}
+
+			const name = pagePost.match(/<a href="\/Profile\?p=\d+">(.+?(?=<\/a>))/)[1];
+			const level = parseInt(pagePost.match(/<br \/>Level\s+(\d+)/)[1]);
+			const isMember = !!pagePost.match(/<img src="https:\/\/warzonecdn\.com\/Images\/SmallMemberIcon\.png".+?(?=title="Warzone Member")/);
+			const clan = pagePost.match(/<a href="\/Clans\/\?ID=(\d+)" title="(.+?(?=">))"><img.+?(?=src=")src="(.+?(?="))" \/><\/a>/);
+
+			const poster = {
+				pic: pic,
+				name: name,
+				number: pagePostPlayer,
+				level: level,
+				isMember: isMember
+			};
+			let clanData = null;
+
+			if (clan) {
+				const clanId = parseInt(clan[1]);
+
+				poster.clan = clanId;
+
+				clanData = {
+					id: clanId,
+					name: clan[2],
+					img: clan[3]
+				};
+			}
+
+			if (typeof onPlayerDetails == 'function') {
+				onPlayerDetails(posterId, poster, clanData);
+			}
+
+			const post = {
+				date: pagePostDate,
+				poster: pagePostPlayer
+			};
+			if (!ignorePostContent) {
+				post.content = pagePostContent;
+			}
+
+			if (typeof onPostRead == 'function') {
+				onPostRead(post);
+			}
+		}
+		}catch(err) {console.log(url); throw err;}
+	}
+
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
@@ -1091,7 +1158,7 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, readFullThreadPage];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {
