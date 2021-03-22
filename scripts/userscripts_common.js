@@ -617,6 +617,13 @@
 				if (typeof thread.name != 'string') {
 					thread.name = '';
 				}
+			},
+			lastUpdate: function() {
+				const date = new Date(thread.lastUpdate).toUTCString();
+
+				if (thread.lastUpdate != date) {
+					thread.lastUpdate = date;
+				}
 			}
 		};
 
@@ -647,7 +654,7 @@
 
 		if (players[playerId]) {
 			if (players[playerId].clan === clanId) {
-				delete players[playerId];// all players must be in a clan
+				delete players[playerId];// all players must be in a clan, clan 0 is a 'holder clan'
 
 				await storage.SHARED.setItem('players', players);
 			}
