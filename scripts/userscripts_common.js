@@ -3,7 +3,7 @@
 /* jshint browser: true */
 /* jshint devel: true */
 
-(() => {
+(async () => {
 	// required internal
 	// async/await because validation does everything at once, so need to wait for completion of that before moving on
 	function errorStr(err) {
@@ -713,6 +713,7 @@
 			if (!isPureObj(stored.SHARED[key])) {
 				stored.SHARED[key] = {};
 			}
+			console.log(stored.SHARED[key]);
 		}
 
 		for (let key in stored.SHARED) {
@@ -728,6 +729,8 @@
 
 		return stored;
 	});
+
+	await storage.validateCorrectingErrors('SHARED');
 
 	storage.SHARED.getClan = async (clanId) => {
 		let clan = (await storage.SHARED.getItem('clans'))[clanId];
