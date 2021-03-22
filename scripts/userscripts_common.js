@@ -522,7 +522,7 @@
 		return isFinite(n) && n >= 10000000;
 	}
 	function isValidClanId(n) {
-		return isFinite(n) && n > 0;
+		return isFinite(n) && n > -1;// clan 0 is a holder clan
 	}
 	function isValidThreadId(n) {
 		return isFinite(n) && n > 0;
@@ -654,7 +654,7 @@
 
 		if (players[playerId]) {
 			if (players[playerId].clan === clanId) {
-				delete players[playerId];// all players must be in a clan, clan 0 is a 'holder clan'
+				delete players[playerId];
 
 				await storage.SHARED.setItem('players', players);
 			}
@@ -1143,6 +1143,9 @@
 					name: clan[2],
 					img: clan[3]
 				};
+			}
+			else {
+				poster.clan = 0;
 			}
 
 			if (typeof onPlayerDetails == 'function') {
