@@ -1146,7 +1146,7 @@
 			}
 
 			if (typeof onPlayerDetails == 'function') {
-				await onPlayerDetails(posterId, poster, clanData, i);
+				await onPlayerDetails(poster.number, poster, clanData, i);
 			}
 
 			const post = {
@@ -1161,7 +1161,7 @@
 				await onPostRead(post, i);
 			}
 		}
-		}catch(err) {console.log(url); throw err;}
+		}catch(err) {throw err;}
 	}
 
 	// public - exported to window
