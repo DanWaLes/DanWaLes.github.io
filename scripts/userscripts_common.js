@@ -842,6 +842,7 @@
 		}
 
 		threads[id] = thread;
+		console.table('threads', threads);
 
 		await storage.SHARED.setItem('threads', threads);
 		await storage.SHARED.setItem('threadCategories', categories);
