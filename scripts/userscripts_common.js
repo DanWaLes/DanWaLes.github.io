@@ -619,7 +619,9 @@
 				}
 			},
 			lastUpdate: function() {
+				console.table('thread.lastUpdate', thread.lastUpdate);
 				const date = new Date(thread.lastUpdate).toUTCString();
+				console.table('date', date);
 
 				if (thread.lastUpdate != date) {
 					thread.lastUpdate = date;
@@ -842,7 +844,6 @@
 		}
 
 		threads[id] = thread;
-		console.table('threads', threads);
 
 		await storage.SHARED.setItem('threads', threads);
 		await storage.SHARED.setItem('threadCategories', categories);
