@@ -1146,7 +1146,7 @@
 			}
 
 			if (typeof onPlayerDetails == 'function') {
-				await onPlayerDetails(poster.number, poster, clanData, i);
+				await onPlayerDetails(poster, clanData, i);
 			}
 
 			const post = {
