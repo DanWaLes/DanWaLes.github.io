@@ -619,9 +619,7 @@
 				}
 			},
 			lastUpdate: function() {
-				console.table('thread.lastUpdate', thread.lastUpdate);
-				const date = new Date(thread.lastUpdate).toUTCString();
-				console.table('date', date);
+				const date = new Date(thread.lastUpdate || null).toUTCString();
 
 				if (thread.lastUpdate != date) {
 					thread.lastUpdate = date;
