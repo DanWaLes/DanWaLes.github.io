@@ -1131,6 +1131,7 @@
 				level: level,
 				isMember: isMember
 			};
+
 			let clanData = null;
 
 			if (clan) {
