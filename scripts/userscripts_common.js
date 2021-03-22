@@ -701,8 +701,24 @@
 			},
 			threadCategories: function() {
 				for (let cat in stored.SHARED.threadCategories) {
-					if (stored.SHARED.threadCategories[cat] != 1) {
-						// delete stored.SHARED.threadCategories[cat];
+					if (isPureObj(stored.SHARED.threadCategories[cat])) {
+						for (let threadId in stored.SHARED.threadCategories[cat]) {
+							if (isValidThreadId(parseInt(threadId))) {
+								if (stored.SHARED.threadCategories[cat][threadId] !== 1) {
+									delete stored.SHARED.threadCategories[cat][threadId];
+								}
+							}
+							else {
+								delete stored.SHARED.threadCategories[cat][threadId];
+							}
+						}
+
+						if (!Object.keys(stored.SHARED.threadCategories[cat]).length) {
+							delete stored.SHARED.threadCategories[cat];
+						}
+					}
+					else {
+						delete stored.SHARED.threadCategories[cat];
 					}
 				}
 			}
