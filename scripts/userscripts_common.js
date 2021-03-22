@@ -709,12 +709,11 @@
 		};
 
 		for (let key in check) {
+			console.log(stored.SHARED[key]);
 			if (!isPureObj(stored.SHARED[key])) {
 				stored.SHARED[key] = {};
 			}
 		}
-
-		console.log(stored.SHARED);
 
 		for (let key in stored.SHARED) {
 			const checker = check[key];
