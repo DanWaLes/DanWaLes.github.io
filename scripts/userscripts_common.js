@@ -822,6 +822,10 @@
 			if (typeof threads[id].category == 'string') {
 				if (isPureObj(categories[threads[id].category])) {
 					delete categories[threads[id].category][id];
+
+					if (!Object.keys(categories[threads[id].category]).length) {
+						delete categories[threads[id].category];
+					}
 				}
 				else {
 					delete categories[threads[id].category];
