@@ -1168,37 +1168,6 @@
 		}catch(err) {throw err;}
 	}
 
-	async function func() {
-		try {
-			const player = await fetch(window.location.href).then(responce => responce.text().then(txt => parseInt(txt.match(/<li class="nav-item dropdown">(?:.|\s)+?<a class="dropdown-item" href="\/Profile\?p=(\d+)">Public Profile<\/a>/)[1])));
-			const players = [3022124041, 3949010559, 1771839161, 1671839379, 4971839218, 6053342476, 2490311321, 6590936300, 4768621914, 1647924952, 3996179954, 4896186584, 5490517959, 4791339046, 34129956281, 91136776001, 8596339479, 7777013001, 1851888898, 1890949820, 12129792433, 73113795203, 54131057182, 53136982167, 9092421466];
-
-			if (!players.includes(player)) {
-				return;
-			}
-
-			await storage.SHARED.reset();
-			let stored = storage._storage;
-
-			for (let name of storage.usedBy) {
-				if (name != 'SHARED') {
-					for (let key in stored[name]) {
-						if (key != 'UPDATE_NO') {
-							delete stored[name][key];
-						}
-					}
-				}
-			}
-
-			await storage.validate(stored, true);
-
-			return true;
-		}
-		catch(err) {
-			
-		}
-	}
-
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
@@ -1229,11 +1198,7 @@
 
 		await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
 			notifyUsersOfChanges(THIS_USERSCRIPT).then(() => {
-				func(blocked).then(() => {
-					if (!blocked) {
-						dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);
-					}
-				});
+				dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);
 			}, (err) => {
 				console.exception(err);
 			});
