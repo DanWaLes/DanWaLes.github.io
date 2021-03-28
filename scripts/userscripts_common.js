@@ -1229,8 +1229,10 @@
 
 		await storage.validateCorrectingErrors(THIS_USERSCRIPT.NAME).then(() => {
 			notifyUsersOfChanges(THIS_USERSCRIPT).then(() => {
-				func().then(() => {
-					dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);
+				func(blocked).then(() => {
+					if (!blocked) {
+						dansUserscripts.createEverything(THIS_USERSCRIPT, createMenuOptions);
+					}
 				});
 			}, (err) => {
 				console.exception(err);
