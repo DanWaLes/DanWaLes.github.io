@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>Lichess common opponents finder</title>
+		<meta charset="UTF-8">
+		<script src="ndjsonToJSON.js"></script>
+		<script src="main.js"></script>
+		<script src="config.js"></script>
+		<script src="output.js"></script>
+	</head>
+	<body onload="validate('params');">
+		<h1>Common opponents finder</h1>
+		<p>This is built uing the Lichess API. An <a href="https://lichess.org/account/oauth/token" rel="nofollow">API token</a> with websessions enabled is required for this to work. Common opponents change overtime, so applying the date filters is recommended. By default searches from today to tomorrow.</p>
+		<form name="config" action="javascript:void(0);" onsubmit="runApp(validate('form'));">
+			<label for="to">API token:</label>
+			<input id="apiToken" name="apiToken" type="password" autocomplete="autocomplete">
+			<p>Player names (one per line):</p>
+			<textarea name="toCheck"></textarea>
+			<p>Filters:</p>
+			<p>
+				<label for="since">Search from</label>
+				<input id="since" name="since" type="date">
+			</p>
+			<p>
+				<label for="to">Search to</label>
+				<input id="to" name="to" type="date">
+			</p>
+			<input type="submit" value="Search">
+		</form>
+		<div id="output"></div>
+	</body>
+</html>
