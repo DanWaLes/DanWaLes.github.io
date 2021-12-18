@@ -49,7 +49,7 @@
 					apiToken: htmlConfig.apiToken.value,
 					toCheck: htmlConfig.toCheck.value.split(/\n/g),
 					since: htmlConfig.since.value,
-					to: htmlConfig.since.value
+					to: htmlConfig.to.value
 				};
 
 				return validateConfig(config);
@@ -69,17 +69,12 @@
 
 		// set the dates
 		function toUSDate(date) {
-			stdout('was ' + date)
 			date = new Date(date);
-			ret = date.toISOString().substring(0, 10);
-			stdout('now ' + ret);
-			return ret;
+
+			return date.toISOString().substring(0, 10);
 		}
 
-		console.log(validated);
-		stdout('changing since')
 		document.forms.config.since.value = toUSDate(validated.since);
-		stdout('changing to')
 		document.forms.config.to.value = toUSDate(validated.to);
 
 		return validated;
