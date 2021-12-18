@@ -85,6 +85,10 @@ async function runApp(config) {
 		return common;
 	}
 
+	function generateShareURL() {
+		return location.origin + location.pathname + '?config=' + encodeURIComponent(JSON.stringify(config));
+	}
+
 	const allOpponents = [];
 
 	for (let name of config.toCheck) {
@@ -97,8 +101,9 @@ async function runApp(config) {
 	});
 
 	const common = findCommon(allOpponents);
-	
+
 	stdout('common opponents = ' + common.reduce((a, b) => a + ', ' + b));
+	stdout('this search can be shared using ' + generateShareURL());
 
 	return common;
 }
