@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Scrabble map creator</title>
+		<meta charset="UTF-8">
+		<script src="createSVG.js"></script>
+		<script src="enterMapDetails.js"></script>
+		<script src="app.js"></script>
+	</head>
+	<body>
+		<div>
+			<h1 id="instructions">Instructions</h1>
+			<p>This tool vastly reduces the amount of time needed to make scrabble maps. Some settings are flexable (see below). However once this has created the SVG, it's worth noting that a normal SVG file is created along with a JSON file.</p>
+			<p>The SVG will need to be opened (in Inkscape) to make sure it looks right. Up to 2 bonuses have a chance of being in the same place, it's fine to move or rotate them. The letters will need to be cut out of each territory (Path > Exclusion). The territory id should remain once the text is cut out. Any other text needs to be converted to a path (Path > Object to Path).</p>
+			<p>The JSON file keeps track of all details needed to set the map details in the Warzone map editor.<br>For these changes to be applied correctly:
+				<ul>
+					<li>In the SVG don't move the territories or their text</li>
+					<li>In the SVG don't change the territory or bonus ids</li>
+					<li>Don't change anything the JSON file (changing bonus colors and values are ok though)</li>
+				</ul>
+			</p>
+			<p>Once you've finished editing the SVG, upload it to the editor. See <a href="https://www.warzone.com/wiki/Uploading_your_SVG">the wiki</a> if you haven't enabled map development.</p>
+		</div>
+		<div>
+			<h1 id="createSVG">Create SVG</h1>
+			<p>Using normal scrabble letter limits forces letters in the English alphabet to not be used more than they would in a normal game of Scrabble. Not using the letter limits allows any text (but whitespace characters) of any length to occupy a tile, but you should check if the text fits in the tile.</p>
+			<p>Tiles and bonuses and a forced stroke width of 1px. This is not included in the size.</p>
+			<p>Word bonus size is the base size of an arrow to point in which direction the collection of tiles to form that bonus is going (down or right).</p>
+			<form action="javascript:void(0);" name="createSVG">
+				<label for="nsll">Override normal scrabble letters limits?</label>
+				<input name="nsll" type="checkbox">
+				<div id="blanks">
+					<div>
+						<label for="blank1">Blank 1</label>
+						<input name="blank1" type="text">
+					</div>
+					<div>
+						<label for="blank2">Blank 2</label>
+						<input name="blank2" type="text">
+					</div>
+				</div>
+				<div>
+					<label for="gbt">Gap between tiles (px)</label>
+					<input name="gbt" type="number">
+				</div>
+				<div>
+					<label for="ts">Tile size (px)</label>
+					<input name="ts" type="number">
+				</div>
+				<div>
+					<label for="ff">Tile font</label>
+					<input name="ff" type="text">
+				</div>
+				<div>
+					<label for="fs">Tile font size (pt)</label>
+					<input name="fs" type="number">
+				</div>
+				<div>
+					<label for="wbs">Word bonus size (px)</label>
+					<input name="wbs" type="number">
+				</div>
+				<div>
+					<p>Special bonuses are things like Double letter, Double word, etc.</p>
+					<div>
+						<label for="sb">Enable special bonuses?</label>
+						<input name="sb" type="checkbox">
+					</div>
+					<div id="sbOptions">
+						<div>
+							<label for="sbff">Bonus label font</label>
+							<input name="sbff" type="text">
+						</div>
+						<div>
+							<label for="sbfs">Bonus label font size (pt)</label>
+							<input name="sbfs" type="number">
+						</div>
+						<div>
+							<label for="sbbs">Bonus size (px)</label>
+							<input name="sbbs" type="number">
+						</div>
+					</div>
+				</div>
+				<div>
+					<p>Enter tiles. 1 per line in this order <code>tileText x y</code></p>
+					<p><code>tileText</code> must not contain spaces. It's automatically capitalized</p>
+					<p><code>x</code> starts at 0 and ends at 14. 0 is left; 14 is right</p>
+					<p><code>y</code> starts at 0 and ends at 14. 0 is top; 14 is bottom</p>
+					<textarea name="placements"></textarea>
+				</div>
+				<input type="submit" value="Create SVG">
+				<input type="button" value="Preview settings" name="preview">
+				<input type="button" value="Hide settings preview" name="hidePreview">
+			</form>
+			<div id="preview" style="display: none;">
+				<p>Preview</p>
+				<table>
+					<thead>
+						<th>Setting</th>
+						<th>Output</th>
+						<th>Notes</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Tile</td>
+							<td>
+								<div class="tile" contenteditable="true">AZ</div>
+								<div class="tile" contenteditable="true">AZ</div>
+							</td>
+							<td>You can edit the content of these preview tiles.<br>Letters will be automatically capitalized when the SVG is created.<br>Army numbers will appear under the letters.</td>
+						</tr>
+						<tr>
+							<td>Word bonus</td>
+							<td><svg id="wordBonus"></svg></td>
+						</tr>
+						<tr>
+							<td>Special bonus</td>
+							<td><div id="specialBonus"></div></td>
+							<td>Is safe to move the labels and bonuses</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div>
+			<h1 id="setMapDetails">Set map details</h1>
+			<p>This uses the API to:</p>
+			<ul>
+				<li>Set territory center point</li>
+				<li>Set territory names</li>
+				<li>Specify connections</li>
+				<li>Add bonuses</li>
+				<li>Add territories to bonuses</li>
+			</ul>
+			<p>Your Warzone account email and <a href="https://www.warzone.com/wiki/Get_API_Token_API">API token</a> will be required for this to use the API.</p>
+			<form action="javascript:void(0);" name="enterMapDetails" method="GET">
+				<div>
+					<label for="email">Email</label>
+					<input type="email" name="email">
+				</div>
+				<div>
+					<label for="apiToken">API Token</label>
+					<input type="password" name="apiToken">
+				</div>
+				<div>
+					<label for="mapDetails">Map details for API file</label>
+					<input name="mapDetails" type="file" accept=".json">
+				</div>
+				<div>
+					<label for="mapLink">Map link for sharing</label>
+					<input name="mapLink" type="text">
+				</div>
+				<input type="submit" value="Set map details">
+				<div id="output"></div>
+			</form>
+		</div>
+	</body>
+</html>
