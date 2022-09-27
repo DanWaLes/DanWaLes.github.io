@@ -1,0 +1,31 @@
+<html lang="en">
+	<head>
+		<title>Scrabble map creator - Enter map details</title></title>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<h1>Enter map details</h1>
+		<p>When attempting to run this tool, the JSON file that was created when the SVG file was generated must be called "mapDetailsForAPI.json" and be in the same directory (folder) as the tool. Also, a new file "settings.json" must be created and placed in the same directory. Its contents should look similar to this:</p>
+		<pre>{
+	"email": "your@email.com",
+	"apiToken": "yourapitoken",
+	"mapId": 100524
+}</pre>
+		<p>Your Warzone account email and <a href="https://www.warzone.com/wiki/Get_API_Token_API">API token</a> will be required for it to use the API.</p>
+		<p>This uses the API to:</p>
+		<ul>
+			<li>Set territory center point</li>
+			<li>Set territory names</li>
+			<li>Specify connections</li>
+			<li>Add bonuses</li>
+			<li>Add territories to bonuses</li>
+		</ul>
+		<p>The <code>mapId</code> can be obtained by going to the Warzone map editor > Link for sharing > choose the one that looks similar to <code>https://www.warzone.com/SinglePlayer?PreviewMap=100524</code></p>
+		<p>One of the following for can be downloaded and extracted. Source code for these files can be found <a href="https://github.com/DanWaLes/Warzone/tree/master/scrabble_map_template_enterMapDetails">here</a>.</p>
+		<ul>
+			<li><a href="enterMapDetails-win.zip">Windows</a></li>
+			<li><a href="enterMapDetails-macos.zip">MacOS</a></li>
+			<li><a href="enterMapDetails-linux.zip">Linux</a></li>
+		</ul>
+	</body>
+</html>
