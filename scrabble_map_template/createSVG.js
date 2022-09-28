@@ -382,18 +382,14 @@
 		let words = {};
 		let tmp = {
 			currentWord: '',
-			startX: 0,
-			startY: 0,
 			numTerritoriesInBonus: 0
 		};
 		const that = this;
 
-		function main(x, y) {
+		function main(x, y, pointDirection) {
 			const tile = that.tiles.matrix[x][y];
 
 			if (!tmp.currentWord) {
-				tmp.startX = tile.rect.x;
-				tmp.startY = tile.rect.y;
 				tmp.numTerritoriesInBonus = 0;
 			}
 
@@ -401,7 +397,31 @@
 				tmp.currentWord += tile.letter.text.value;
 				tmp.numTerritoriesInBonus++;
 			}
+
+			let nextX;
+			let nextY;
+			if (pointDirection == 'down') {
+				nextX = x;
+			}
 			else {
+				nextX = x + 1;
+
+				if (nextX == that.size) {
+					nextX = 0;
+				}
+			}
+			if (pointDirection == 'down') {
+				nextY = y + 1;
+
+				if (nextY == that.size) {
+					nextY = 0;
+				}
+			}
+			else {
+				nextY = y;
+			}
+
+			if (nextX < x || nextY < y || !that.tiles.matrix[nextX][nextY].letter) {
 				if (tmp.currentWord.length > 1) {
 
 					const trueWord = tmp.currentWord[0].toUpperCase() + tmp.currentWord.toLowerCase().substring(1, tmp.currentWord.length);
@@ -413,7 +433,6 @@
 						};
 					}
 
-					const pointDirection = tmp.startX == tile.rect.x ? 'down' : 'right';
 					const fullSize = (that.bonuses.size + that.bonuses.style['stroke-width']) * 2;// slightly different in inkscape, unclear why
 					const width = tile.rect.width + tile.rect.style['stroke-width'];
 					const height = tile.rect.height + tile.rect.style['stroke-width'];
@@ -421,11 +440,15 @@
 					let alignedY;
 
 					if (pointDirection == 'down') {
+						console.table('tmp.currentWord', tmp.currentWord);
+						console.table('y - tmp.currentWord.length + 1', y - tmp.currentWord.length + 1);
 						alignedX = tile.rect.x + ((width - fullSize) / 2);// correct
-						alignedY = (that.tiles.matrix[x][y - tmp.currentWord.length].rect.y) - height + ((height - fullSize) / 2);// correct
+						alignedY = (that.tiles.matrix[x][y - tmp.currentWord.length + 1].rect.y) - height + ((height - fullSize) / 2);// correct
 					}
 					else {
-						alignedX = (that.tiles.matrix[x - tmp.currentWord.length][y].rect.x) - width + ((width - fullSize) / 2);// correct
+						console.table('tmp.currentWord', tmp.currentWord);
+						console.table('x - tmp.currentWord.length + 1', x - tmp.currentWord.length + 1);
+						alignedX = (that.tiles.matrix[x - tmp.currentWord.length + 1][y].rect.x) - width + ((width - fullSize) / 2);// correct
 						alignedY = tile.rect.y + ((tile.rect.height - fullSize) / 2);// correct
 						// tile.rect.y + ((tile.rect.height + fullSize) / 2); is correct if using inkscape to edit
 					}
@@ -440,14 +463,18 @@
 		// does rightwards
 		for (let i = 0; i < this.size; i++) {
 			for (let j = 0; j < this.size; j++) {
-				main(j, i);
+				main(j, i, 'right');
 			}
 		}
 
 		// does downwards
 		for (let i = 0; i < this.size; i++) {
 			for (let j = 0; j < this.size; j++) {
-				main(i, j);
+				main(i, j, 'down');
+
+				if (i == this.size - 1) {
+					tmp.currentWord = '';
+				}
 			}
 		}
 
