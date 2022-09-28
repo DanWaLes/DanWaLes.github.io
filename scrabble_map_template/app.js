@@ -288,7 +288,7 @@
 			window.createSVG.place(p);
 		}
 	}
-	
+
 	function download(contents, filename, type) {
 		const types = {
 			"txt": "text/plain",
@@ -336,58 +336,6 @@
 		download(scrabblemap.svg, 'map', 'svg');
 		download(scrabblemap.detailsForAPI, 'mapDetailsForAPI', 'json');
 	}
-	
-	function getMapId(link) {
-		try {
-			const match = link.match(/^(?:https?:\/\/)?(?:www\.)?(?:(?:warzone\.com)|(?:warlight\.net))\/play\?PreviewMap=(\d+)$/i);
-
-			if (!match) {
-				throw new Error('Invalid map link');
-			}
-
-			return parseInt(match[1]);
-		}
-		catch(err) {
-			throw err;
-		}
-	}
-
-	function getFileContent(file) {
-		return new Promise((resolve, reject) => {
-			// based on https://codereview.stackexchange.com/questions/183030/loading-parsing-and-displaying-a-json-file
-			const fr = new FileReader();
-
-			fr.readAsText(file);
-			fr.onload = function(e) {
-				resolve(e.target.result);
-			};
-		});
-	}
-
-	async function mapDetailsFormSubmitted() {
-		const form = document.forms.enterMapDetails;
-		const output = document.getElementById('output');
-
-		output.innerHTML = '';
-
-		try {
-			const mapDetailsJSONString = await getFileContent(form.mapDetails.files[0]);
-
-			window.enterMapDetails.setEmail(form.email.value);
-			window.enterMapDetails.setApiToken(form.apiToken.value);
-			window.enterMapDetails.setMapId(getMapId(form.mapLink.value));
-			window.enterMapDetails.setMapDetailsJSONString(mapDetailsJSONString);
-		}
-		catch(err) {
-			console.exception(err);
-			output.innerHTML = err.name + ' ' + err.message;
-		}
-		finally {
-			// for sense of security
-			form.email.value = '';
-			form.apiToken.value = '';
-		}
-	}
 
 	function pageLoaded() {
 		if (document.readyState != 'complete') {
@@ -403,8 +351,6 @@
 		document.forms.createSVG.hidePreview.onclick = () => {
 			document.getElementById('preview').style.display = 'none';
 		};
-
-		document.forms.enterMapDetails.onsubmit = mapDetailsFormSubmitted;
 	}
 
 	pageLoaded();
