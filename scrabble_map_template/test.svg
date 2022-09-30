@@ -290,14 +290,14 @@
        style="opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="106.941"
-       y="111.306"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="107.372"
+       y="110.911"
        id="text0"><tspan
          sodipodi:role="line"
          id="tspan0"
-         x="106.941"
-         y="111.306">V</tspan></text>
+         x="107.372"
+         y="110.911">V</tspan></text>
     <rect
        y="159.5"
        x="81.5"
@@ -307,14 +307,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="110.861"
-       y="189.306"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="111.152"
+       y="188.911"
        id="text1"><tspan
          sodipodi:role="line"
          id="tspan1"
-         x="110.861"
-         y="189.306">I</tspan></text>
+         x="111.152"
+         y="188.911">I</tspan></text>
     <rect
        y="237.5"
        x="81.5"
@@ -324,14 +324,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="108.901"
-       y="267.306"
-       id="text2"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="109.262"
+       y="266.911"
+       id="text5"><tspan
          sodipodi:role="line"
-         id="tspan2"
-         x="108.901"
-         y="267.306">L</tspan></text>
+         id="tspan5"
+         x="109.262"
+         y="266.911">L</tspan></text>
     <rect
        y="315.5"
        x="81.5"
@@ -341,14 +341,14 @@
        style="opacity:1;vector-effect:none;fill:#00ffff;fill-opacity:1;stroke:#00ffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="108.901"
-       y="345.306"
-       id="text3"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="109.262"
+       y="344.911"
+       id="text7"><tspan
          sodipodi:role="line"
-         id="tspan3"
-         x="108.901"
-         y="345.306">L</tspan></text>
+         id="tspan7"
+         x="109.262"
+         y="344.911">L</tspan></text>
     <rect
        y="393.5"
        x="81.5"
@@ -358,14 +358,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="106.951"
-       y="423.306"
-       id="text4"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="107.381"
+       y="422.911"
+       id="text10"><tspan
          sodipodi:role="line"
-         id="tspan4"
-         x="106.951"
-         y="423.306">A</tspan></text>
+         id="tspan10"
+         x="107.381"
+         y="422.911">A</tspan></text>
     <rect
        y="471.5"
        x="81.5"
@@ -375,14 +375,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="110.861"
-       y="501.306"
-       id="text5"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="111.152"
+       y="500.911"
+       id="text11"><tspan
          sodipodi:role="line"
-         id="tspan5"
-         x="110.861"
-         y="501.306">I</tspan></text>
+         id="tspan11"
+         x="111.152"
+         y="500.911">I</tspan></text>
     <rect
        y="549.5"
        x="81.5"
@@ -392,14 +392,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="107.789"
-       y="579.306"
-       id="text6"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="108.19"
+       y="578.911"
+       id="text12"><tspan
          sodipodi:role="line"
-         id="tspan6"
-         x="107.789"
-         y="579.306">N</tspan></text>
+         id="tspan12"
+         x="108.19"
+         y="578.911">N</tspan></text>
     <rect
        y="627.5"
        x="81.5"
@@ -486,14 +486,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="188.861"
-       y="345.306"
-       id="text7"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="189.152"
+       y="344.911"
+       id="text8"><tspan
          sodipodi:role="line"
-         id="tspan7"
-         x="188.861"
-         y="345.306">I</tspan></text>
+         id="tspan8"
+         x="189.152"
+         y="344.911">I</tspan></text>
     <rect
        y="393.5"
        x="159.5"
@@ -517,14 +517,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="186.528"
-       y="579.853"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="186.902"
+       y="579.439"
        id="text13"><tspan
          sodipodi:role="line"
          id="tspan13"
-         x="186.528"
-         y="579.853">O</tspan></text>
+         x="186.902"
+         y="579.439">O</tspan></text>
     <rect
        y="627.5"
        x="159.5"
@@ -597,14 +597,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="264.546"
-       y="189.58"
-       id="text10"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="264.919"
+       y="189.175"
+       id="text2"><tspan
          sodipodi:role="line"
-         id="tspan10"
-         x="264.546"
-         y="189.58">J</tspan></text>
+         id="tspan2"
+         x="264.919"
+         y="189.175">J</tspan></text>
     <rect
        y="237.5"
        x="237.5"
@@ -614,14 +614,14 @@
        style="opacity:1;vector-effect:none;fill:#ff6600;fill-opacity:1;stroke:#ff6600;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="264.528"
-       y="267.853"
-       id="text9"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="264.902"
+       y="267.439"
+       id="text6"><tspan
          sodipodi:role="line"
-         id="tspan9"
-         x="264.528"
-         y="267.853">O</tspan></text>
+         id="tspan6"
+         x="264.902"
+         y="267.439">O</tspan></text>
     <rect
        y="315.5"
        x="237.5"
@@ -631,14 +631,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="264.537"
-       y="345.306"
-       id="text8"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="264.91"
+       y="344.911"
+       id="text9"><tspan
          sodipodi:role="line"
-         id="tspan8"
-         x="264.537"
-         y="345.306">B</tspan></text>
+         id="tspan9"
+         x="264.91"
+         y="344.911">B</tspan></text>
     <rect
        y="393.5"
        x="237.5"
@@ -662,14 +662,14 @@
        style="opacity:1;vector-effect:none;fill:#00ffff;fill-opacity:1;stroke:#00ffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="264.172"
-       y="579.58"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="264.559"
+       y="579.175"
        id="text14"><tspan
          sodipodi:role="line"
          id="tspan14"
-         x="264.172"
-         y="579.58">U</tspan></text>
+         x="264.559"
+         y="579.175">U</tspan></text>
     <rect
        y="627.5"
        x="237.5"
@@ -742,14 +742,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="340.951"
-       y="189.306"
-       id="text11"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="341.381"
+       y="188.911"
+       id="text3"><tspan
          sodipodi:role="line"
-         id="tspan11"
-         x="340.951"
-         y="189.306">A</tspan></text>
+         id="tspan3"
+         x="341.381"
+         y="188.911">A</tspan></text>
     <rect
        y="237.5"
        x="315.5"
@@ -787,21 +787,31 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="341.789"
-       y="579.306"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="342.19"
+       y="578.911"
        id="text15"><tspan
          sodipodi:role="line"
          id="tspan15"
-         x="341.789"
-         y="579.306">N</tspan></text>
+         x="342.19"
+         y="578.911">N</tspan></text>
     <rect
        y="627.5"
        x="315.5"
        height="74"
        width="74"
-       id="rect52"
+       id="Territory_52"
        style="opacity:1;vector-effect:none;fill:#00ffff;fill-opacity:1;stroke:#00ffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="342.893"
+       y="659.838"
+       id="text16"><tspan
+         sodipodi:role="line"
+         id="tspan16"
+         x="342.893"
+         y="659.838">Q</tspan></text>
     <rect
        y="705.5"
        x="315.5"
@@ -867,14 +877,14 @@
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-       x="420.546"
-       y="189.306"
-       id="text12"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="420.919"
+       y="188.911"
+       id="text4"><tspan
          sodipodi:role="line"
-         id="tspan12"
-         x="420.546"
-         y="189.306">Y</tspan></text>
+         id="tspan4"
+         x="420.919"
+         y="188.911">Y</tspan></text>
     <rect
        y="237.5"
        x="393.5"
@@ -915,8 +925,18 @@
        x="393.5"
        height="74"
        width="74"
-       id="rect67"
+       id="Territory_67"
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="409.355"
+       y="657.439"
+       id="text17"><tspan
+         sodipodi:role="line"
+         id="tspan17"
+         x="409.355"
+         y="657.439">NG</tspan></text>
     <rect
        y="705.5"
        x="393.5"
@@ -1020,15 +1040,35 @@
        x="471.5"
        height="74"
        width="74"
-       id="rect82"
+       id="Territory_82"
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="488.515"
+       y="656.911"
+       id="text18"><tspan
+         sodipodi:role="line"
+         id="tspan18"
+         x="488.515"
+         y="656.911">DD</tspan></text>
     <rect
        y="705.5"
        x="471.5"
        height="74"
        width="74"
-       id="rect83"
+       id="Territory_83"
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="499.315"
+       y="734.911"
+       id="text19"><tspan
+         sodipodi:role="line"
+         id="tspan19"
+         x="499.315"
+         y="734.911">D</tspan></text>
     <rect
        y="783.5"
        x="471.5"
@@ -1132,8 +1172,18 @@
        x="549.5"
        height="74"
        width="74"
-       id="rect98"
+       id="Territory_98"
        style="opacity:1;vector-effect:none;fill:#00ffff;fill-opacity:1;stroke:#00ffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="577.315"
+       y="734.911"
+       id="text20"><tspan
+         sodipodi:role="line"
+         id="tspan20"
+         x="577.315"
+         y="734.911">D</tspan></text>
     <rect
        y="783.5"
        x="549.5"
@@ -1237,8 +1287,18 @@
        x="627.5"
        height="74"
        width="74"
-       id="rect113"
+       id="Territory_113"
        style="opacity:1;vector-effect:none;fill:#dde9af;fill-opacity:1;stroke:#dde9af;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="655.315"
+       y="734.911"
+       id="text21"><tspan
+         sodipodi:role="line"
+         id="tspan21"
+         x="655.315"
+         y="734.911">D</tspan></text>
     <rect
        y="783.5"
        x="627.5"
@@ -2029,21 +2089,37 @@
 	   d="M27 578.5 l16 0 l0 -8 l16 16 l-16 16 l0 -8 l-16 0 Z"
        style="fill:#CC0000;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
+       id="BonusLink_Qngdd"
+	   d="M261 656.5 l16 0 l0 -8 l16 16 l-16 16 l0 -8 l-16 0 Z"
+       style="fill:#006600;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="BonusLink_Ddd1"
+	   d="M417 734.5 l16 0 l0 -8 l16 16 l-16 16 l0 -8 l-16 0 Z"
+       style="fill:#666600;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="BonusLink_Ddd2"
+	   d="M501 573 l16 0 l0 16 l8 0 l-16 16 l-16 -16 l8 0 Z"
+       style="fill:#CC6600;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
        id="BonusLink_Villain"
 	   d="M111 27 l16 0 l0 16 l8 0 l-16 16 l-16 -16 l8 0 Z"
-       style="fill:#006600;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#00CC00;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        id="BonusLink_Job"
 	   d="M267 105 l16 0 l0 16 l8 0 l-16 16 l-16 -16 l8 0 Z"
-       style="fill:#666600;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#66CC00;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="BonusLink_Nq"
+	   d="M345 495 l16 0 l0 16 l8 0 l-16 16 l-16 -16 l8 0 Z"
+       style="fill:#CCCC00;fill-opacity:1;stroke:#ffff00;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#00ffff;fill-opacity:1;stroke:none"
        x="81"
        y="1297.659"
-       id="text16"><tspan
+       id="text22"><tspan
          sodipodi:role="line"
-         id="tspan16"
+         id="tspan22"
          x="81"
          y="1297.659">Double letter</tspan></text>
     <rect
@@ -2058,9 +2134,9 @@
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#0000ff;fill-opacity:1;stroke:none"
        x="393"
        y="1300.231"
-       id="text17"><tspan
+       id="text23"><tspan
          sodipodi:role="line"
-         id="tspan17"
+         id="tspan23"
          x="393"
          y="1300.231">Triple letter</tspan></text>
     <rect
@@ -2075,9 +2151,9 @@
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff6600;fill-opacity:1;stroke:none"
        x="705"
        y="1297.659"
-       id="text18"><tspan
+       id="text24"><tspan
          sodipodi:role="line"
-         id="tspan18"
+         id="tspan24"
          x="705"
          y="1297.659">Double word</tspan></text>
     <rect
@@ -2092,9 +2168,9 @@
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20pt;line-height:1em;font-family:'Courier New';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;stroke:none"
        x="1017"
        y="1300.231"
-       id="text19"><tspan
+       id="text25"><tspan
          sodipodi:role="line"
-         id="tspan19"
+         id="tspan25"
          x="1017"
          y="1300.231">Triple word</tspan></text>
     <rect

@@ -426,8 +426,7 @@
 			}
 
 			if (nextX < x || nextY < y || !that.tiles.matrix[nextX][nextY].letter) {
-				if (tmp.currentWord.length > 1) {
-
+				if (tmp.numTerritoriesInBonus > 1) {
 					const trueWord = tmp.currentWord[0].toUpperCase() + tmp.currentWord.toLowerCase().substring(1, tmp.currentWord.length);
 
 					if (!words[tmp.currentWord]) {
@@ -443,16 +442,13 @@
 					let alignedX;
 					let alignedY;
 
+					// +1 from moving bonus left or up by 1
 					if (pointDirection == 'down') {
-						console.table('tmp.currentWord', tmp.currentWord);
-						console.table('y - tmp.currentWord.length + 1', y - tmp.currentWord.length + 1);
 						alignedX = tile.rect.x + ((width - fullSize) / 2);// correct
-						alignedY = (that.tiles.matrix[x][y - tmp.currentWord.length + 1].rect.y) - height + ((height - fullSize) / 2);// correct
+						alignedY = (that.tiles.matrix[x][y - tmp.numTerritoriesInBonus + 1].rect.y) - height + ((height - fullSize) / 2);// correct
 					}
 					else {
-						console.table('tmp.currentWord', tmp.currentWord);
-						console.table('x - tmp.currentWord.length + 1', x - tmp.currentWord.length + 1);
-						alignedX = (that.tiles.matrix[x - tmp.currentWord.length + 1][y].rect.x) - width + ((width - fullSize) / 2);// correct
+						alignedX = (that.tiles.matrix[x - tmp.numTerritoriesInBonus + 1][y].rect.x) - width + ((width - fullSize) / 2);// correct
 						alignedY = tile.rect.y + ((tile.rect.height - fullSize) / 2);// correct
 						// tile.rect.y + ((tile.rect.height + fullSize) / 2); is correct if using inkscape to edit
 					}
@@ -760,10 +756,13 @@
 		}
 
 		let bonuses = [];
+		console.table('this.bonuses.list', this.bonuses.list);
 
 		for (let bonus of this.bonuses.list) {
 			const numTerritoriesInBonus = bonus.numTerritories;
+			console.table('bonus', bonus);
 			const tileLocation = getTilePosition(bonus.x, bonus.y);// 1 is first real tile, 0 is a fake tile
+			console.table('tileLocation', tileLocation);
 			let x = tileLocation.x - 1;
 			let y = tileLocation.y - 1;
 

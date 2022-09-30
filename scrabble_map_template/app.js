@@ -42,20 +42,28 @@
 		options.letterSize = round(parseFloat(options.letterSize));
 		options.gapBetweenTiles = round(parseFloat(options.gapBetweenTiles));
 
-		const tileSizeInPt = pxToPt(options.tileSize);
+		if (!isFinite(options.wordBonusSize) || options.wordBonusSize < minBonusSize) {
+			throw new Error('bonus size must be entered and be at least ' + minBonusSize);
+		}
+		// +2 from stroke-width * 2
+		if (!isFinite(options.tileSize) || options.tileSize < doubleMinBonusSize + 2) {
+			throw new Error('tile size must be entered and be at least ' + (doubleMinBonusSize + 2));
+		}
+		if ((options.wordBonusSize + 1) * 2 > options.tileSize) {
+			throw new Error('bonus size is too big to fit in a tile OR tile size is too small to fit bonus');
+		}
 
-		if (!isFinite(options.tileSize) || options.tileSize < doubleMinBonusSize) {
-			throw new Error('tile size must be entered and be at least ' + doubleMinBonusSize);
+		if (!isFinite(options.letterSize) || options.letterSize < minBonusSizeInPt) {
+			throw new Error('letter size must be entered and be at least ' + minBonusSizeInPt);
 		}
-		if (!isFinite(options.wordBonusSize) || options.wordBonusSize < minBonusSize || options.wordBonusSize > options.tileSize) {
-			throw new Error('bonus size must be entered and be between ' + minBonusSize + ' and ' + options.tileSize);
+		if (options.letterSize > pxToPt(options.tileSize / 2)) {
+			throw new Error('letter size is too big to fit in allocated space of tile');
 		}
-		if (!isFinite(options.letterSize) || options.letterSize < minBonusSizeInPt || options.letterSize > tileSizeInPt) {
-			throw new Error('letter size must be entered and be between ' + minBonusSizeInPt + ' and ' + tileSizeInPt);
-		}
+
 		if (!isFinite(options.gapBetweenTiles) || options.gapBetweenTiles < 0) {
 			throw new Error('gap between tiles size must be entered and be at least 0');
 		}
+
 		if (!options.letterFont || typeof options.letterFont != 'string') {
 			throw new Error('letter font must be a string');
 		}
@@ -72,11 +80,11 @@
 		options.specialBonuses.bonusSize = round(parseFloat(options.specialBonuses.bonusSize));
 		options.specialBonuses.letterSize = round(parseFloat(options.specialBonuses.letterSize));
 
-		if (!isFinite(options.specialBonuses.letterSize) || options.specialBonuses.letterSize < minBonusSizeInPt || options.specialBonuses.letterSize > tileSizeInPt) {
-			throw new Error('special bonuses letter size must be entered and be between ' + minBonusSizeInPt + ' and ' + tileSizeInPt);
+		if (!isFinite(options.specialBonuses.letterSize) || options.specialBonuses.letterSize < minBonusSizeInPt) {
+			throw new Error('special bonuses letter size must be entered and be at least ' + minBonusSizeInPt);
 		}
-		if (!isFinite(options.specialBonuses.bonusSize) || options.specialBonuses.bonusSize < minBonusSize || options.specialBonuses.bonusSize > options.tileSize) {
-			throw new Error('special bonuses bonus size must be entered and be between ' + minBonusSize + ' and ' + options.tileSize);
+		if (!isFinite(options.specialBonuses.bonusSize) || options.specialBonuses.bonusSize < minBonusSize) {
+			throw new Error('special bonuses bonus size must be entered and be at least ' + minBonusSize);
 		}
 		if (!options.specialBonuses.letterFont || typeof options.specialBonuses.letterFont != 'string') {
 			throw new Error('special bonuses letter font must be a string');
@@ -92,30 +100,40 @@
 	}
 
 	function readCreateSVGSettings() {
-		const form = document.forms.createSVG;
-		const overrideScrabbleLetterLimits = form.nsll.checked;
-		const blank1 = form.blank1.value;
-		const blank2 = form.blank2.value;
-		const options = checkRunOptions({
-			tileSize: form.ts.value,
-			letterSize: form.fs.value,
-			wordBonusSize: form.wbs.value,
-			gapBetweenTiles: form.gbt.value,
-			letterFont: form.ff.value,
-			specialBonuses: {
-				enabled: form.sb.checked,
-				bonusSize: form.sbbs.value,
-				letterSize: form.sbfs.value,
-				letterFont: form.sbff.value
-			}
-		});
+		const errors = document.getElementById('errors');
+		errors.innerHTML = '';
 
-		window.createSVG.settings = {
-			overrideScrabbleLetterLimits: overrideScrabbleLetterLimits,
-			blank1: blank1,
-			blank2: blank2,
-			options: options
-		};
+		try {
+			const form = document.forms.createSVG;
+			const overrideScrabbleLetterLimits = form.nsll.checked;
+			const blank1 = form.blank1.value;
+			const blank2 = form.blank2.value;
+			const options = checkRunOptions({
+				tileSize: form.ts.value,
+				letterSize: form.fs.value,
+				wordBonusSize: form.wbs.value,
+				gapBetweenTiles: form.gbt.value,
+				letterFont: form.ff.value,
+				specialBonuses: {
+					enabled: form.sb.checked,
+					bonusSize: form.sbbs.value,
+					letterSize: form.sbfs.value,
+					letterFont: form.sbff.value
+				}
+			});
+
+			window.createSVG.settings = {
+				overrideScrabbleLetterLimits: overrideScrabbleLetterLimits,
+				blank1: blank1,
+				blank2: blank2,
+				options: options
+			};
+		}
+		catch(err) {
+			errors.innerHTML = err;
+
+			throw err;
+		}
 	}
 
 	window.createSVG.fromJSONString = function(str) {
@@ -217,13 +235,14 @@
 	const style = document.createElement('style');
 	
 	function tileSettingInputChanged() {
-		readCreateSVGSettings();
+		try {
+			readCreateSVGSettings();
 
-		const color = '#dde9af';
-		const size = window.createSVG.settings.options.tileSize + 'px';
-		const gap = window.createSVG.settings.options.gapBetweenTiles;
+			const color = '#dde9af';
+			const size = window.createSVG.settings.options.tileSize + 'px';
+			const gap = window.createSVG.settings.options.gapBetweenTiles;
 
-		style.innerHTML = `.tileRow {
+			style.innerHTML = `.tileRow {
 	display: flex;
 }
 
@@ -234,6 +253,7 @@
 	font-weight: bold;
 	background-color: ${color};
 	border: 1px solid ${color};
+	padding: 0;
 	font-family: ${window.createSVG.settings.options.letterFont};
 	font-size: ${window.createSVG.settings.options.letterSize}pt;
 	width: ${size};
@@ -250,13 +270,17 @@
 .tileRow :last-child {
 	margin-right: ${gap}px;
 }`;
+		}
+		catch(err) {
+			console.exception(err);
+		}
 	}
 
 	function setupTileSettingInputChanged() {
 		const form = document.forms.createSVG;
 
-		for (let input of form) {
-			if (!['submit', 'button'].includes(input.type) && !input.name.match(/^sb/)) {
+		for (let input of form) {// could be more efficient
+			if (!['submit', 'button'].includes(input.type) && !input.name.match(/^sb/) && input.name) {
 				input.onchange = tileSettingInputChanged;
 			}
 		}
@@ -303,7 +327,7 @@
 
 			for (let j = 0; j < size; j++) {
 				const tile = row.children[j];
-				const tileText = tile.innerHTML;
+				const tileText = tile.value;
 
 				if (tileText) {
 					window.createSVG.place({tt: tileText, x: j, y: i});
