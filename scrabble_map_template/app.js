@@ -64,8 +64,11 @@
 			throw new Error('gap between tiles size must be entered and be at least 0');
 		}
 
-		if (!options.letterFont || typeof options.letterFont != 'string') {
+		if (typeof options.letterFont != 'string') {
 			throw new Error('letter font must be a string');
+		}
+		if (!options.letterFont) {
+			throw new Error('letter font must be entered');
 		}
 		// quote fonts - needed for spaced, optional otherwise
 		options.letterFont = "'" + options.letterFont + "'";
@@ -86,8 +89,12 @@
 		if (!isFinite(options.specialBonuses.bonusSize) || options.specialBonuses.bonusSize < minBonusSize) {
 			throw new Error('special bonuses bonus size must be entered and be at least ' + minBonusSize);
 		}
-		if (!options.specialBonuses.letterFont || typeof options.specialBonuses.letterFont != 'string') {
+
+		if (typeof options.specialBonuses.letterFont != 'string') {
 			throw new Error('special bonuses letter font must be a string');
+		}
+		if (!options.specialBonuses.letterFont) {
+			throw new Error('special bonuses letter font must be entered');
 		}
 		// quote fonts - needed for spaced, optional otherwise
 		options.specialBonuses.letterFont = "'" + options.specialBonuses.letterFont + "'";
@@ -108,6 +115,23 @@
 			const overrideScrabbleLetterLimits = form.nsll.checked;
 			const blank1 = form.blank1.value;
 			const blank2 = form.blank2.value;
+
+			// set minimum values if nothing entered
+			for (let input of form.querySelectorAll('input[min]')) {
+				if (!isFinite(parseFloat(input.value)) || !input.value) {
+					input.value = input.min;
+				}
+			}
+
+			const defaultFont = 'Helvetica';// top result for https://www.google.com/search?q=standard+fonts
+
+			if (!form.ff.value) {
+				form.ff.value = defaultFont;
+			}
+			if (!form.sbff.value) {
+				form.sbff.value = defaultFont;
+			}
+
 			const options = checkRunOptions({
 				tileSize: form.ts.value,
 				letterSize: form.fs.value,
