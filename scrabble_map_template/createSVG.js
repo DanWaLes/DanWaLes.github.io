@@ -190,6 +190,10 @@
 		const halfTileHeight = (this.tile.rect.height + this.tile.rect.style['stroke-width']) / 2;
 
 		this.text.x = this.tile.rect.x + ((this.tile.rect.width + this.tile.rect.style['stroke-width'] - size.width) / 2);
+
+		// correct when editing in inkscape, incorrect when making the xml
+		// this.text.y = this.tile.rect.y + halfTileHeight + ((halfTileHeight - size.height) / 2);
+		// Q is too low (unknown why)
 		this.text.y = this.tile.rect.y + halfTileHeight - ((halfTileHeight - size.height) / 2);
 	};
 	Letter.prototype.toSVG = function() {

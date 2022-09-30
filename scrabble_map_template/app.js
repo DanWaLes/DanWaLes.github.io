@@ -204,7 +204,7 @@
 
 		return `<path d="${path}" style="${styleStr}" />`;
 	}
-	
+
 	function cropSVG(svgEl) {
 		// modified from https://stackoverflow.com/questions/50813950/how-do-i-make-an-svg-size-to-fit-its-content#answer-73500052
 		// Get the bounds of the SVG content
@@ -213,29 +213,59 @@
 		svgEl.setAttribute('width', bbox.width);
 		svgEl.setAttribute('height', bbox.height);
 	}
+
+	const style = document.createElement('style');
 	
-	function preview() {
+	function tileSettingInputChanged() {
 		readCreateSVGSettings();
 
+		const color = '#dde9af';
+		const size = window.createSVG.settings.options.tileSize + 'px';
+		const gap = window.createSVG.settings.options.gapBetweenTiles;
+
+		style.innerHTML = `.tileRow {
+	display: flex;
+}
+
+.tile {
+	text-align: center;
+	line-height: 1em;
+	text-transform: uppercase;
+	font-weight: bold;
+	background-color: ${color};
+	border: 1px solid ${color};
+	font-family: ${window.createSVG.settings.options.letterFont};
+	font-size: ${window.createSVG.settings.options.letterSize}pt;
+	width: ${size};
+	height: ${size};
+	max-width: ${size};
+	max-height: ${size};
+	margin: ${gap / 2}px;
+}
+
+.tileRow :first-child {
+	margin-left: ${gap}px;
+}
+
+.tileRow :last-child {
+	margin-right: ${gap}px;
+}`;
+	}
+
+	function setupTileSettingInputChanged() {
+		const form = document.forms.createSVG;
+
+		for (let input of form) {
+			if (!['submit', 'button'].includes(input.type) && !input.name.match(/^sb/)) {
+				input.onchange = tileSettingInputChanged;
+			}
+		}
+	}
+
+	function preview() {
 		const previewArea = document.getElementById('preview');
-		const tiles = previewArea.querySelectorAll('.tile');
 		const wordBonus = previewArea.querySelector('#wordBonus');
 		const specialBonus = previewArea.querySelector('#specialBonus');
-
-		for (let tile of tiles) {
-			tile.style.fontFamily = "'" + window.createSVG.settings.options.letterFont + "'";
-			tile.style.fontSize = window.createSVG.settings.options.letterSize + 'pt';
-			tile.style.backgroundColor = '#dde9af';
-			tile.style.border = '1px solid ' + tile.style.backgroundColor;
-			tile.style.textAlign = 'center';
-			tile.style.lineHeight = '1em';
-			tile.style.width = window.createSVG.settings.options.tileSize + 'px';
-			tile.style.height = tile.style.width;
-			tile.style.maxWidth = tile.style.width;
-			tile.style.maxHeight = tile.style.width;
-			tile.style.margin = (window.createSVG.settings.options.gapBetweenTiles / 2) + 'px';
-			tile.style.cssFloat = 'left';
-		}
 
 		wordBonus.innerHTML = '';
 		wordBonus.innerHTML += makeWordBonus('down', {x: 0, y: 0});
@@ -245,7 +275,7 @@
 
 		const bonusLabel = document.createElement('span');
 		bonusLabel.innerHTML = 'Double letter';
-		bonusLabel.style.fontFamily = "'" + window.createSVG.settings.options.specialBonuses.letterFont + "'";
+		bonusLabel.style.fontFamily = window.createSVG.settings.options.specialBonuses.letterFont;
 		bonusLabel.style.fontSize = window.createSVG.settings.options.specialBonuses.letterSize + 'pt';
 		bonusLabel.style.color = '#00ffff';
 
@@ -265,27 +295,20 @@
 	function readCreateSVGplacements() {
 		window.createSVG.clearPlacements();
 
-		const placements = document.forms.createSVG.placements;
-		const lines = placements.list.value.split(/\n+/);
+		const size = 15;
+		const tileRows = document.getElementsByClassName('tileRow');
+		
+		for (let i = 0; i < size; i++) {
+			const row = tileRows[i];
 
-		for (let line of lines) {
-			// line in this format: tileText x y
-			const lineDetails = line.replace(/^\s+(\s+$)/g, '').split(/\s+/);
-			if (lineDetails.length != 3) {
-				throw new Error('line incorrectly formatted. use "tileText x y" format');
+			for (let j = 0; j < size; j++) {
+				const tile = row.children[j];
+				const tileText = tile.innerHTML;
+
+				if (tileText) {
+					window.createSVG.place({tt: tileText, x: j, y: i});
+				}
 			}
-
-			const tileText = lineDetails[0];
-			const x = lineDetails[1];
-			const y = lineDetails[2];
-
-			const p = {
-				tt: tileText,
-				x: x,
-				y: y
-			};
-
-			window.createSVG.place(p);
 		}
 	}
 
@@ -341,6 +364,11 @@
 		if (document.readyState != 'complete') {
 			return setTimeout(pageLoaded, 500);
 		}
+		
+		tileSettingInputChanged();// encase autofill
+		document.body.appendChild(style);
+
+		setupTileSettingInputChanged();
 
 		document.forms.createSVG.onsubmit = () => {
 			readCreateSVGSettings();

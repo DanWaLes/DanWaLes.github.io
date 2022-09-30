@@ -11,13 +11,12 @@
 			<h1 id="instructions">Instructions</h1>
 			<p>This tool vastly reduces the amount of time needed to make scrabble maps. Some settings are flexable (see below). However once this has created the SVG, it's worth noting that a normal SVG file is created along with a JSON file.</p>
 			<p>The SVG will need to be opened (in Inkscape) to make sure it looks right. Up to 2 bonuses have a chance of being in the same place, it's fine to move or rotate them. The letters will need to be cut out of each territory (Path > Exclusion). The territory id should remain once the text is cut out. Any other text needs to be converted to a path (Path > Object to Path).</p>
-			<p>The JSON file keeps track of all details needed to set the map details in the Warzone map editor.<br>For these changes to be applied correctly:
-				<ul>
-					<li>In the SVG don't move the territories or their text</li>
-					<li>In the SVG don't change the territory or bonus ids</li>
-					<li>Don't change anything the JSON file (changing bonus colors and values are ok though)</li>
-				</ul>
-			</p>
+			<p>The JSON file keeps track of all details needed to set the map details in the Warzone map editor.<br>For these changes to be applied correctly:</p>
+			<ul>
+				<li>In the SVG don't move the territories or their text</li>
+				<li>In the SVG don't change the territory or bonus ids</li>
+				<li>Don't change anything the JSON file (changing bonus colors and values are ok though)</li>
+			</ul>
 			<p>Once you've finished editing the SVG, upload it to the editor. See <a href="https://www.warzone.com/wiki/Uploading_your_SVG">the wiki</a> if you haven't enabled map development.</p>
 		</div>
 		<div>
@@ -26,90 +25,328 @@
 			<p>Tiles and bonuses and a forced stroke width of 1px. This is not included in the size.</p>
 			<p>Word bonus size is the base size of an arrow to point in which direction the collection of tiles to form that bonus is going (down or right).</p>
 			<form action="javascript:void(0);" name="createSVG">
-				<label for="nsll">Override normal scrabble letters limits?</label>
-				<input name="nsll" type="checkbox">
+				<label>Override normal scrabble letters limits? <input name="nsll" type="checkbox"></label>
 				<div id="blanks">
 					<div>
-						<label for="blank1">Blank 1</label>
-						<input name="blank1" type="text">
+						<label>Blank 1 <input name="blank1" type="text"></label>
 					</div>
 					<div>
-						<label for="blank2">Blank 2</label>
-						<input name="blank2" type="text">
+						<label>Blank 2 <input name="blank2" type="text"></label>
 					</div>
 				</div>
 				<div>
-					<label for="gbt">Gap between tiles (px)</label>
-					<input name="gbt" type="number">
+					<label>Gap between tiles (px) <input name="gbt" type="number"></label>
 				</div>
 				<div>
-					<label for="ts">Tile size (px)</label>
-					<input name="ts" type="number">
+					<label>Tile size (px) <input name="ts" type="number"></label>
 				</div>
 				<div>
-					<label for="ff">Tile font</label>
-					<input name="ff" type="text">
+					<label>Tile font <input name="ff" type="text"></label>
 				</div>
 				<div>
-					<label for="fs">Tile font size (pt)</label>
-					<input name="fs" type="number">
+					<label>Tile font size (pt) <input name="fs" type="number"></label>
 				</div>
 				<div>
-					<label for="wbs">Word bonus size (px)</label>
-					<input name="wbs" type="number">
+					<label>Word bonus size (px) <input name="wbs" type="number"></label>
 				</div>
 				<div>
 					<p>Special bonuses are things like Double letter, Double word, etc.</p>
 					<div>
-						<label for="sb">Enable special bonuses?</label>
-						<input name="sb" type="checkbox">
+						<label>Enable special bonuses? <input name="sb" type="checkbox"></label>
 					</div>
 					<div id="sbOptions">
 						<div>
-							<label for="sbff">Bonus label font</label>
-							<input name="sbff" type="text">
+							<label>Bonus label font <input name="sbff" type="text"></label>
 						</div>
 						<div>
-							<label for="sbfs">Bonus label font size (pt)</label>
-							<input name="sbfs" type="number">
+							<label>Bonus label font size (pt) <input name="sbfs" type="number"></label>
 						</div>
 						<div>
-							<label for="sbbs">Bonus size (px)</label>
-							<input name="sbbs" type="number">
+							<label>Bonus size (px) <input name="sbbs" type="number"></label>
 						</div>
 					</div>
 				</div>
 				<div>
-					<p>Enter tiles. 1 per line in this order <code>tileText x y</code></p>
-					<p><code>tileText</code> must not contain spaces. It's automatically capitalized</p>
-					<p><code>x</code> starts at 0 and ends at 14. 0 is left; 14 is right</p>
-					<p><code>y</code> starts at 0 and ends at 14. 0 is top; 14 is bottom</p>
-					<textarea name="placements"></textarea>
+					<p>Fill in tiles. The text on tiles must not contain spaces. They are automatically capitalized. Army numbers will appear under the text.</p>
+					<div id="tilesInput">
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+						<div class="tileRow">
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+							<div class="tile" contenteditable="true"></div>
+						</div>
+					</div>
 				</div>
-				<input type="submit" value="Create SVG">
-				<input type="button" value="Preview settings" name="preview">
-				<input type="button" value="Hide settings preview" name="hidePreview">
+				<div>
+					<input type="submit" value="Create SVG">
+					<input type="button" value="Preview settings" name="preview">
+					<input type="button" value="Hide settings preview" name="hidePreview">
+				</div>
 			</form>
 			<div id="preview" style="display: none;">
 				<p>Preview</p>
 				<table>
 					<thead>
-						<th>Setting</th>
-						<th>Output</th>
-						<th>Notes</th>
+						<tr>
+							<th>Setting</th>
+							<th>Output</th>
+							<th>Notes</th>
+						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>Tile</td>
-							<td>
-								<div class="tile" contenteditable="true">AZ</div>
-								<div class="tile" contenteditable="true">AZ</div>
-							</td>
-							<td>You can edit the content of these preview tiles.<br>Letters will be automatically capitalized when the SVG is created.<br>Army numbers will appear under the letters.</td>
-						</tr>
-						<tr>
 							<td>Word bonus</td>
 							<td><svg id="wordBonus"></svg></td>
+							<td></td>
 						</tr>
 						<tr>
 							<td>Special bonus</td>
