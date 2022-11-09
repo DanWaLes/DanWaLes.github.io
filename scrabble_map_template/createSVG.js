@@ -304,7 +304,11 @@
 		this.letter = letter;
 	};
 	Tile.prototype.toSVG = function() {
-		return this.rect.toSVG() + (this.letter ? this.letter.toSVG() : '');
+		if (!this.letter) {
+			return '';
+		}
+
+		return this.rect.toSVG() + this.letter.toSVG();
 	};
 
 	function Board(options) {
@@ -471,10 +475,6 @@
 		for (let i = 0; i < this.size; i++) {
 			for (let j = 0; j < this.size; j++) {
 				main(i, j, 'down');
-
-				if (i == this.size - 1) {
-					tmp.currentWord = '';
-				}
 			}
 		}
 
@@ -762,7 +762,7 @@
 			const numTerritoriesInBonus = bonus.numTerritories;
 			console.table('bonus', bonus);
 			const tileLocation = getTilePosition(bonus.x, bonus.y);// 1 is first real tile, 0 is a fake tile
-			console.table('tileLocation', tileLocation);
+			console.table('tileLocation', tileLocation);// only wrong if bonus total size is greater than the tile tile size, this should be prevented
 			let x = tileLocation.x - 1;
 			let y = tileLocation.y - 1;
 
