@@ -197,7 +197,7 @@
 			},
 			forward_invites_helper: {
 				description: "Allows you to invite players based on boot, last active, level and clan title",
-				link: "tbd"
+				link: "https://greasyfork.org/en/scripts/454590-forward-invites-helper"
 			},
 			troll_hammer: {
 				description: "Makes it easier to mass friend and mass block list players, as well as making it easier to share your friends list and your block list",
