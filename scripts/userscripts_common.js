@@ -195,9 +195,9 @@
 				description: "Allows you to download your clan's forum and your PMs",
 				link: "https://greasyfork.org/en/scripts/46824-clan-forum-downloader"
 			},
-			community_levels_creator_helper: {
-				description: "Makes it easier to create community levels",
-				link: "https://greasyfork.org/en/scripts/370158-community-levels-creator-helper"
+			forward_invites_helper: {
+				description: "Allows you to invite players based on boot, last active, level and clan title",
+				link: "tbd"
 			},
 			troll_hammer: {
 				description: "Makes it easier to mass friend and mass block list players, as well as making it easier to share your friends list and your block list",
@@ -574,7 +574,7 @@
 		}
 
 		const strs = ['name', 'title', 'lastSeen'];
-		const ints = ['clan', 'boot', 'points'];
+		const ints = ['clan', 'boot', 'points', 'level'];
 
 		for (let item of strs) {
 			if (typeof player[item] != 'string') {
