@@ -241,8 +241,23 @@
 			}
 		}
 
+		class PlayerNotFoundError extends Error {
+			super('player' + playerNumber + ' not found');
+			this.playerNumber = playerNumber;
+			this.name = 'PlayerNotFoundError';
+		}
+
+		function accountExists() {
+			return !profile.match(/<title>Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free<\/title>/);
+		}
+
 		try {
 			const ret = {};
+			const exists = accountExists();
+			
+			if (!exists) {
+				throw new PlayerNotFoundError();
+			}
 
 			for (let funcName of detailsToGet) {
 				if (get[funcName]) {
@@ -256,7 +271,7 @@
 			return ret;
 		}
 		catch(err) {
-			if (err instanceof FuncNotFoundError) {
+			if (err instanceof FuncNotFoundError || err instanceof PlayerNotFoundError) {
 				throw err;
 			}
 			else {
