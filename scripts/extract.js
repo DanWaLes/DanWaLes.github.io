@@ -242,7 +242,7 @@
 		}
 
 		class PlayerNotFoundError extends Error {
-			constructor(funcName) {
+			constructor() {
 				super('player' + playerNumber + ' not found');
 				this.playerNumber = playerNumber;
 				this.name = 'PlayerNotFoundError';
