@@ -242,9 +242,11 @@
 		}
 
 		class PlayerNotFoundError extends Error {
-			super('player' + playerNumber + ' not found');
-			this.playerNumber = playerNumber;
-			this.name = 'PlayerNotFoundError';
+			constructor(funcName) {
+				super('player' + playerNumber + ' not found');
+				this.playerNumber = playerNumber;
+				this.name = 'PlayerNotFoundError';
+			}
 		}
 
 		function accountExists() {
