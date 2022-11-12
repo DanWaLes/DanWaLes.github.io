@@ -196,7 +196,7 @@
 				link: "https://greasyfork.org/en/scripts/46824-clan-forum-downloader"
 			},
 			forward_invites_helper: {
-				description: "Allows you to invite players based on boot, last active, level and clan title",
+				description: "Allows you to invite clans and players based on boot, last active, level and clan title",
 				link: "https://greasyfork.org/en/scripts/454590-forward-invites-helper"
 			},
 			troll_hammer: {
