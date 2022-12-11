@@ -2,15 +2,13 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 		<title>Convert time</title>
 		<script src="time_conversion12h24h.js"></script>
 	</head>
-	<body>
-		<div>
-			<p>Enter a 12 or 24 hour time</p>
-			<input id="input" type="text">
-		</div>
-		<input type="button" value="Convert" onclick="doConversion();">
+	<body onload="setupEvents();">
+		<p>Enter a 12 or 24 hour time <input id="input" type="text"></p>
+		<input type="button" value="Convert">
 		<div id="output"></div>
 	</body>
 </html>

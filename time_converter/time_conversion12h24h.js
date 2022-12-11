@@ -66,3 +66,12 @@ function doConversion() {
 		output.innerHTML = 'This is not a 12 hour or 24 hour time';
 	}
 }
+
+function setupEvents() {
+	document.querySelector('input[value="Convert"]').onclick = doConversion;
+	document.getElementById('input').onkeydown = (e) => {
+		if (e.key == 'Enter') {
+			doConversion();
+		}
+	};
+}
