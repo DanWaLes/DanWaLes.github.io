@@ -111,11 +111,11 @@
 			return number;
 		}
 
-		try {
-			function errorDetected(err) {
-				throw err;
-			}
+		function errorDetected(err) {
+			throw err;
+		}
 
+		try {
 			const maxMembersPerPage = 40;
 			const totalClanMembers = await getTotalClanMembers().catch((err) => {
 				errorDetected(err);
@@ -250,7 +250,7 @@
 
 		function accountDoesNotExist() {
 			const title = profile.match(/<title>([^<]+)<\/title>/)[1];
-			return title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free");
+			return title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free";
 		}
 
 		try {
@@ -433,7 +433,7 @@
 			const pagePostDate = new Date(pagePost.match(/\d+\/\d+\/\d+ \d+:\d+:\d+/)).toUTCString();			
 			const pagePostContent = ignorePostContent ? '' : pagePost.match(/<div class="DiscussionPostDiv".+?(?=>)>((?:.|\s)+?(?=<\/div>))/)[1].trim();
 			const playerNoOrTag = pagePost.match(/<a href="\/Profile\?((?:p=(\d+))|(?:u=([^"]+)))">/);
-			const pagePostPlayer = playerIdOrTag[1] ? parseInt(playerNoOrTag[1]) : (await playerTagToPlayerNumber(playerNoOrTag[2]));
+			const pagePostPlayer = playerNoOrTag[1] ? parseInt(playerNoOrTag[1]) : (await playerTagToPlayerNumber(playerNoOrTag[2]));
 
 			let pic = pagePost.match(/<img src="(.+?(?="))" border="0" width="50" height="50" \/>/);
 			if (pic) {
