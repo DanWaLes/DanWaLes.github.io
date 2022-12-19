@@ -248,15 +248,15 @@
 			}
 		}
 
-		function accountExists() {
-			return !profile.match(/<title>Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free<\/title>/);
+		function accountDoesNotExist() {
+			const title = profile.match(/<title>([^<]+)<\/title>/)[1];
+			return title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free");
 		}
 
 		try {
 			const ret = {};
-			const exists = accountExists();
-			
-			if (!exists) {
+
+			if (accountDoesNotExist()) {
 				throw new PlayerNotFoundError();
 			}
 
@@ -286,7 +286,7 @@
 	*/
 	async function extractOwnBlocklist(onPlayerFound) {
 		const bl = await fetchText("https://www.warzone.com/ManageBlockList");
-		const linksRe = /<a href="(Profile\?p=\d{5,})">/ig;
+		const linksRe = /<a href="(Profile\?(?:(?:p=\d{5,})|(?:u=[^"]+)))">/ig;
 		const linkRe = new RegExp(linksRe.source, "i");
 		const blocklist = bl.match(linksRe) || [];
 

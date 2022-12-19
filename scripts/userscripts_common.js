@@ -573,7 +573,7 @@
 			player = {};
 		}
 
-		const strs = ['name', 'title', 'lastSeen'];
+		const strs = ['name', 'title', 'lastSeen', 'tag'];
 		const ints = ['clan', 'boot', 'points', 'level'];
 
 		for (let item of strs) {
@@ -1109,7 +1109,8 @@
 			const pagePost = allPagePosts[i];
 			const pagePostDate = new Date(pagePost.match(/\d+\/\d+\/\d+ \d+:\d+:\d+/)).toUTCString();			
 			const pagePostContent = ignorePostContent ? '' : pagePost.match(/<div class="DiscussionPostDiv".+?(?=>)>((?:.|\s)+?(?=<\/div>))/)[1].trim();
-			const pagePostPlayer = parseInt(pagePost.match(/<a href="\/Profile\?p=(\d+)">/)[1]);
+			const playerNoOrTag = pagePost.match(/<a href="\/Profile\?((?:p=(\d+))|(?:u=([^"]+)))">/);
+			const pagePostPlayer = playerIdOrTag[1] ? parseInt(playerNoOrTag[1]) : (await playerTagToPlayerNumber(playerNoOrTag[2]));
 
 			let pic = pagePost.match(/<img src="(.+?(?="))" border="0" width="50" height="50" \/>/);
 			if (pic) {
@@ -1119,18 +1120,21 @@
 				pic = "";
 			}
 
-			const name = pagePost.match(/<a href="\/Profile\?p=\d+">(.+?(?=<\/a>))/)[1];
+			const name = pagePost.match(/<a href="\/Profile\?(?:(?:p=\d+)|(?:u=[^"]))">(.+?(?=<\/a>))/)[1];
 			const level = parseInt(pagePost.match(/<br \/>Level\s+(\d+)/)[1]);
 			const isMember = !!pagePost.match(/<img src="https:\/\/warzonecdn\.com\/Images\/SmallMemberIcon\.png".+?(?=title="Warzone Member")/);
 			const clan = pagePost.match(/<a href="\/Clans\/\?ID=(\d+)" title="(.+?(?=">))"><img.+?(?=src=")src="(.+?(?="))" \/><\/a>/);
 
-			const poster = {
+			let poster = {
 				pic: pic,
 				name: name,
 				number: pagePostPlayer,
 				level: level,
 				isMember: isMember
 			};
+			if (playerNoOrTag[2]) {
+				poster.tag = decodeURIComponent(playerNoOrTag[2]);
+			}
 
 			let clanData = null;
 
@@ -1168,6 +1172,29 @@
 		}catch(err) {throw err;}
 	}
 
+	class PlayerNotFoundError extends Error {
+		constructor(p) {
+			super('player ' + p + ' not found');
+			this.name = 'PlayerNotFoundError';
+		}
+	}
+
+	async function playerTagToPlayerNumber(fetchText, tag) {
+		const notes = await fetchText('https://www.warzone.com/Profile?u=' + tag);
+		const title = notes.match(/<title>([^<]+)<\/title>/)[1];
+
+		if (title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free") {
+			throw new PlayerNotFoundError(tag);
+		}
+
+		const playerIdMatch = notes.match(/<a class="text-muted" style="font-size: 10px" href="Report\?p=(\d+)">Report<\/a>/);
+		if (playerIdMatch) {
+			return parseInt(playerIdMatch[1]);
+		}
+
+		throw new Error('Unexpected layout change, this script is now broken');
+	}
+
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
@@ -1178,7 +1205,7 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, readFullThreadPage];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, readFullThreadPage, playerTagToPlayerNumber];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {
