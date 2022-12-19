@@ -4,6 +4,13 @@
 /* jshint devel: true */
 
 (function() {
+	class PlayerNotFoundError extends Error {
+		constructor(p) {
+			super('player ' + p + ' not found');
+			this.name = 'PlayerNotFoundError';
+		}
+	}
+
 	async function extractClanMembers(clanWindow, onMemberFound) {
 		if (!(clanWindow instanceof Window)) {
 			if (clanWindow instanceof HTMLIFrameElement) {
@@ -86,10 +93,10 @@
 			popupBtn.click();
 
 			async function checkIfNumberLoaded() {
-				const num = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(\d+)/);
-				
-				if (num) {
-					return parseInt(num[1]);
+				const u = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(u=.+_\d+$)/);
+
+				if (u) {
+					return await playerTagToPlayerNumber(u[1]);
 				}
 				else {
 					await sleep(100);
@@ -241,13 +248,6 @@
 			}
 		}
 
-		class PlayerNotFoundError extends Error {
-			constructor() {
-				super('player ' + playerNumber + ' not found');
-				this.name = 'PlayerNotFoundError';
-			}
-		}
-
 		function accountDoesNotExist() {
 			const title = profile.match(/<title>([^<]+)<\/title>/)[1];
 			return title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free");
@@ -257,7 +257,7 @@
 			const ret = {};
 
 			if (accountDoesNotExist()) {
-				throw new PlayerNotFoundError();
+				throw new PlayerNotFoundError(playerNumber);
 			}
 
 			for (let funcName of detailsToGet) {
@@ -395,11 +395,104 @@
 		return Object.freeze(object);
 	}
 
+	async function playerTagToPlayerNumber(tag) {
+		const notes = await fetchText('https://www.warzone.com/Profile?u=' + tag);
+		const title = notes.match(/<title>([^<]+)<\/title>/)[1];
+
+		if (title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free") {
+			throw new PlayerNotFoundError(tag);
+		}
+
+		const playerIdMatch = notes.match(/<a class="text-muted" style="font-size: 10px" href="Report\?p=(\d+)">Report<\/a>/);
+		if (playerIdMatch) {
+			return parseInt(playerIdMatch[1]);
+		}
+
+		throw new Error('Unexpected layout change, this script is now broken');
+	}
+
+	async function readFullThreadPage(threadPage, ignorePostContent, onPlayerDetails, onPostRead) {
+		try {
+		const allPagePosts = threadPage.match(/<table id="PostTbl_\d+"(?:.|\s)+?(?=<\/table>)/g);
+
+		if (!allPagePosts) {
+			throw "page not formatted in the expected way";
+		}
+
+		for (let i = 0; i < allPagePosts.length; i++) {
+			const pagePost = allPagePosts[i];
+			const pagePostDate = new Date(pagePost.match(/\d+\/\d+\/\d+ \d+:\d+:\d+/)).toUTCString();			
+			const pagePostContent = ignorePostContent ? '' : pagePost.match(/<div class="DiscussionPostDiv".+?(?=>)>((?:.|\s)+?(?=<\/div>))/)[1].trim();
+			const playerNoOrTag = pagePost.match(/<a href="\/Profile\?((?:p=(\d+))|(?:u=([^"]+)))">/);
+			const pagePostPlayer = playerIdOrTag[1] ? parseInt(playerNoOrTag[1]) : (await playerTagToPlayerNumber(playerNoOrTag[2]));
+
+			let pic = pagePost.match(/<img src="(.+?(?="))" border="0" width="50" height="50" \/>/);
+			if (pic) {
+				pic = pic[1];
+			}
+			else {
+				pic = "";
+			}
+
+			const name = pagePost.match(/<a href="\/Profile\?(?:(?:p=\d+)|(?:u=[^"]))">(.+?(?=<\/a>))/)[1];
+			const level = parseInt(pagePost.match(/<br \/>Level\s+(\d+)/)[1]);
+			const isMember = !!pagePost.match(/<img src="https:\/\/warzonecdn\.com\/Images\/SmallMemberIcon\.png".+?(?=title="Warzone Member")/);
+			const clan = pagePost.match(/<a href="\/Clans\/\?ID=(\d+)" title="(.+?(?=">))"><img.+?(?=src=")src="(.+?(?="))" \/><\/a>/);
+
+			let poster = {
+				pic: pic,
+				name: name,
+				number: pagePostPlayer,
+				level: level,
+				isMember: isMember
+			};
+			if (playerNoOrTag[2]) {
+				poster.tag = decodeURIComponent(playerNoOrTag[2]);
+			}
+
+			let clanData = null;
+
+			if (clan) {
+				const clanId = parseInt(clan[1]);
+
+				poster.clan = clanId;
+
+				clanData = {
+					id: clanId,
+					name: clan[2],
+					img: clan[3]
+				};
+			}
+			else {
+				poster.clan = 0;
+			}
+
+			if (typeof onPlayerDetails == 'function') {
+				await onPlayerDetails(poster, clanData, i);
+			}
+
+			const post = {
+				date: pagePostDate,
+				poster: pagePostPlayer
+			};
+			if (!ignorePostContent) {
+				post.content = pagePostContent;
+			}
+
+			if (typeof onPostRead == 'function') {
+				await onPostRead(post, i);
+			}
+		}
+		}catch(err) {throw err;}
+	}
+
 	// share
 	const extract = {
 		clanMembers: extractClanMembers,
 		playerDetails: extractPlayerDetails,
-		ownBlocklist: extractOwnBlocklist
+		ownBlocklist: extractOwnBlocklist,
+		playerTagToPlayerNumber: playerTagToPlayerNumber,
+		readFullThreadPage: readFullThreadPage
 	};
 
 	window.EXTRACT = deepFreeze(extract);
