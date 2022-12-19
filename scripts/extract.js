@@ -284,22 +284,29 @@
 	/**
 	 * @returns Array of player links
 	*/
-	async function extractOwnBlocklist(onPlayerFound) {
-		const bl = await fetchText("https://www.warzone.com/ManageBlockList");
+	async function extractBlOrFriends(mode) {
+		const txt = await fetchText('https://www.warzone.com/' + mode);
 		const linksRe = /<a href="Profile\?(?:(?:p=(\d{5,}))|(?:u=([^"]+)))">/ig;
 		const linkRe = new RegExp(linksRe.source, "i");
-		const blocklist = bl.match(linksRe) || [];
+		const list = txt.match(linksRe) || [];
 
-		// convert to full link
-		for (let i = 0; i < blocklist.length; i++) {
-			const match = blocklist[i].match(linkRe);
+		for (let i = 0; i < list.length; i++) {
+			const match = list[i].match(linkRe);
 			const playerNo = match[1] || playerTagToPlayerNumber(match[2]);
-			const link = "https://www.warzone.com/Profile?p=" + playerNo;
+			const link = 'https://www.warzone.com/Profile?p=' + playerNo;
 
-			blocklist[i] = link;
+			list[i] = link;
 		}
 
-		return blocklist;
+		return list;
+	}
+
+	async function extractOwnBlocklist() {
+		return extractBlOrFriends('ManageBlockList');		
+	}
+
+	async function extractOwnFriendsList() {
+		return extractBlOrFriends('ManageFriendList');
 	}
 
 	// from this point dependencies for extract
@@ -493,6 +500,7 @@
 		clanMembers: extractClanMembers,
 		playerDetails: extractPlayerDetails,
 		ownBlocklist: extractOwnBlocklist,
+		ownFriendsList: extractOwnFriendsList,
 		playerTagToPlayerNumber: playerTagToPlayerNumber,
 		readFullThreadPage: readFullThreadPage
 	};
