@@ -286,13 +286,15 @@
 	*/
 	async function extractOwnBlocklist(onPlayerFound) {
 		const bl = await fetchText("https://www.warzone.com/ManageBlockList");
-		const linksRe = /<a href="(Profile\?(?:(?:p=\d{5,})|(?:u=[^"]+)))">/ig;
+		const linksRe = /<a href="Profile\?(?:(?:p=(\d{5,}))|(?:u=([^"]+)))">/ig;
 		const linkRe = new RegExp(linksRe.source, "i");
 		const blocklist = bl.match(linksRe) || [];
 
 		// convert to full link
 		for (let i = 0; i < blocklist.length; i++) {
-			const link = "https://www.warzone.com/" + blocklist[i].match(linkRe)[1];
+			const match = blocklist[i].match(linkRe);
+			const playerNo = match[1] || playerTagToPlayerNumber(match[2]);
+			const link = "https://www.warzone.com/Profile?p=" + playerNo;
 
 			blocklist[i] = link;
 		}
