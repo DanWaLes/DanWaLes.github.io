@@ -281,9 +281,6 @@
 		}
 	}
 
-	/**
-	 * @returns Array of player links
-	*/
 	async function extractBlOrFriends(mode, onPlayerFound) {
 		const txt = await fetchText('https://www.warzone.com/' + mode);
 		const linksRe = /<a href="Profile\?(?:(?:p=(\d{5,}))|(?:u=([^"]+)))">/ig;
@@ -293,21 +290,17 @@
 		for (let i = 0; i < list.length; i++) {
 			const match = list[i].match(linkRe);
 			const playerNo = match[1] || await playerTagToPlayerNumber(match[2]);
-			const link = 'https://www.warzone.com/Profile?p=' + playerNo;
-			console.log(link);
 
-			list[i] = link;
+			await onPlayerFound('https://www.warzone.com/Profile?p=' + playerNo, i, list.length);
 		}
-
-		return list;
 	}
 
-	async function extractOwnBlocklist() {
-		return extractBlOrFriends('ManageBlockList');		
+	async function extractOwnBlocklist(onPlayerFound) {
+		await extractBlOrFriends('ManageBlockList', onPlayerFound);		
 	}
 
-	async function extractOwnFriendsList() {
-		return extractBlOrFriends('ManageFriendList');
+	async function extractOwnFriendsList(onPlayerFound) {
+		await extractBlOrFriends('ManageFriendList', onPlayerFound);
 	}
 
 	// from this point dependencies for extract
