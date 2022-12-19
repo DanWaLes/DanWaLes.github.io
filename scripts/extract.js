@@ -294,6 +294,7 @@
 			const match = list[i].match(linkRe);
 			const playerNo = await (match[1] || (await playerTagToPlayerNumber(match[2])));
 			const link = 'https://www.warzone.com/Profile?p=' + playerNo;
+			console.log(link);
 
 			list[i] = link;
 		}
