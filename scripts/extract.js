@@ -291,7 +291,7 @@
 			const match = list[i].match(linkRe);
 			const playerNo = match[1] || await playerTagToPlayerNumber(match[2]);
 
-			await onPlayerFound('https://www.warzone.com/Profile?p=' + playerNo, i, list.length);
+			await onPlayerFound('https://www.warzone.com/Profile?p=' + playerNo, i + 1, list.length);
 		}
 	}
 
