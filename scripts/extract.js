@@ -284,7 +284,7 @@
 	/**
 	 * @returns Array of player links
 	*/
-	async function extractBlOrFriends(mode) {
+	async function extractBlOrFriends(mode, onPlayerFound) {
 		const txt = await fetchText('https://www.warzone.com/' + mode);
 		const linksRe = /<a href="Profile\?(?:(?:p=(\d{5,}))|(?:u=([^"]+)))">/ig;
 		const linkRe = new RegExp(linksRe.source, "i");
@@ -292,8 +292,7 @@
 
 		for (let i = 0; i < list.length; i++) {
 			const match = list[i].match(linkRe);
-			console.log(match);
-			const playerNo = await (match[1] || (await playerTagToPlayerNumber(match[2])));
+			const playerNo = match[1] || await playerTagToPlayerNumber(match[2]);
 			const link = 'https://www.warzone.com/Profile?p=' + playerNo;
 			console.log(link);
 
