@@ -1109,7 +1109,7 @@
 		}
 	};
 	Queue.prototype.run = async function(item) {
-		await this.onRun(item);
+		await this.onRun(item[0]);
 
 		if (this.queue.length) {
 			await this.run(this.queue.splice(0, 1));
