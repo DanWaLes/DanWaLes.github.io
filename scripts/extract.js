@@ -6,8 +6,22 @@
 (function() {
 	class PlayerNotFoundError extends Error {
 		constructor(p) {
-			super('player ' + p + ' not found');
+			super('Player ' + p + ' not found');
 			this.name = 'PlayerNotFoundError';
+		}
+	}
+
+	class ClanNotFoundError extends Error {
+		constructor(clanId) {
+			super('Clan ' + clanId + ' not found');
+			this.name = 'ClanNotFoundError';
+		}
+	}
+
+	class FuncNotFoundError extends Error {
+		constructor(funcName) {
+			super('funcName ' + funcName + ' not recognized');
+			this.name = 'FuncNotFoundError';
 		}
 	}
 
@@ -17,7 +31,7 @@
 				clanWindow = clanWindow.contentWindow;
 			}
 			else {
-				throw new Error('clanWindow must be an instanceof Window');
+				throw new Error('clanWindow must be an instanceof Window or HTMLIFrameElement');
 			}
 		}
 
@@ -25,16 +39,9 @@
 			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string}');
 		}
 
-		class ClanNotFoundError extends Error {
-			constructor(funcName) {
-				super('clan not found');
-				this.name = 'ClanNotFoundError';
-			}
-		}
-
 		async function getTotalClanMembers() {
 			if (!clanWindow.location.href.match(/^https:\/\/www\.warzone\.com\/Clans\/\?ID=\d+/i)) {
-				throw new ClanNotFoundError();
+				throw new ClanNotFoundError('(unknown)');
 			}
 
 			const re = /(\d+) members?/;
@@ -243,13 +250,6 @@
 			}
 		};
 
-		class FuncNotFoundError extends Error {
-			constructor(funcName) {
-				super('funcName ' + funcName + ' not recognized');
-				this.name = 'FuncNotFoundError';
-			}
-		}
-
 		function accountDoesNotExist() {
 			const title = profile.match(/<title>([^<]+)<\/title>/)[1];
 			return title == "Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free";
@@ -259,7 +259,7 @@
 			const ret = {};
 
 			if (accountDoesNotExist()) {
-				throw new PlayerNotFoundError(profileLinkType);
+				throw new PlayerNotFoundError(profileLinkType.replace(/^[pu]=/i, ''));
 			}
 
 			for (let funcName of detailsToGet) {
@@ -498,7 +498,12 @@
 		ownBlocklist: extractOwnBlocklist,
 		ownFriendsList: extractOwnFriendsList,
 		playerTagToPlayerNumber: playerTagToPlayerNumber,
-		readFullThreadPage: readFullThreadPage
+		readFullThreadPage: readFullThreadPage,
+		errorTypes: {
+			PlayerNotFoundError,
+			ClanNotFoundError,
+			FuncNotFoundError
+		}
 	};
 
 	window.EXTRACT = deepFreeze(extract);
