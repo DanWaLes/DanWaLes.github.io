@@ -86,29 +86,29 @@
 			}
 		}
 
-		async function getPlayerNumber(player) {
+		async function getPlayerTag(player) {
 			const popupBtn = player.firstElementChild.querySelector("a[id $= 'btn']");
 			const popupFinder = "[id ^= 'ujs_GenericContainer'] [id ^= 'ujs_MiniProfile']";
 
 			popupBtn.click();
 
-			async function checkIfNumberLoaded() {
-				const u = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/(u=.+_\d+$)/);
+			async function checkIfTagLoaded() {
+				const u = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/u=(.+_\d+$)/);
 
 				if (u) {
-					return await playerTagToPlayerNumber(u[1]);
+					return u[1];
 				}
 				else {
 					await sleep(100);
-					return await checkIfNumberLoaded();
+					return await checkIfTagLoaded();
 				}
 			}
 
-			const number = await checkIfNumberLoaded();
+			const tag = await checkIfTagLoaded();
 			const popup = clanWindow.document.querySelector(popupFinder);
 
 			popup.remove();
-			return number;
+			return tag;
 		}
 
 		function errorDetected(err) {
@@ -152,7 +152,7 @@
 						const player = member.querySelector("[id ^= 'ujs_member']");
 						let data = {clanId: clanId, name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
 
-						data.number = await getPlayerNumber(player);
+						data.tag = await getPlayerTag(player);
 
 						// console.table('data', data);
 						await onMemberFound(data, totalClanMembers);
@@ -296,7 +296,7 @@
 	}
 
 	async function extractOwnBlocklist(onPlayerFound) {
-		await extractBlOrFriends('ManageBlockList', onPlayerFound);		
+		await extractBlOrFriends('ManageBlockList', onPlayerFound);
 	}
 
 	async function extractOwnFriendsList(onPlayerFound) {
