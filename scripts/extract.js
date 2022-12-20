@@ -22,7 +22,7 @@
 		}
 
 		if (typeof onMemberFound != 'function') {
-			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string, number: int}');
+			throw new Error('onMemberFound(data) must be a function. data is {clanId: int, name: string, title: string}');
 		}
 
 		class ClanNotFoundError extends Error {
@@ -86,31 +86,6 @@
 			}
 		}
 
-		async function getPlayerTag(player) {
-			const popupBtn = player.firstElementChild.querySelector("a[id $= 'btn']");
-			const popupFinder = "[id ^= 'ujs_GenericContainer'] [id ^= 'ujs_MiniProfile']";
-
-			popupBtn.click();
-
-			async function checkIfTagLoaded() {
-				const u = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/u=(.+_\d+$)/);
-
-				if (u) {
-					return u[1];
-				}
-				else {
-					await sleep(100);
-					return await checkIfTagLoaded();
-				}
-			}
-
-			const tag = await checkIfTagLoaded();
-			const popup = clanWindow.document.querySelector(popupFinder);
-
-			popup.remove();
-			return tag;
-		}
-
 		function errorDetected(err) {
 			throw err;
 		}
@@ -150,9 +125,7 @@
 						}
 
 						const player = member.querySelector("[id ^= 'ujs_member']");
-						let data = {clanId: clanId, name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
-
-						data.tag = await getPlayerTag(player);
+						const data = {clanId: clanId, name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
 
 						// console.table('data', data);
 						await onMemberFound(data, totalClanMembers);
@@ -177,8 +150,12 @@
 		}
 	}
 
-	async function extractPlayerDetails(playerNumber, detailsToGet) {
-		const profile = await fetchText("https://www.warzone.com/Profile?p=" + playerNumber);
+	async function extractPlayerDetails(profileLinkType, detailsToGet) {
+		if (typeof profileLinkType != 'string') {
+			profileLinkType = 'p=' + profileLinkType;
+		}
+
+		const profile = await fetchText('https://www.warzone.com/Profile?' + profileLinkType);
 		const get = {
 			name: () => {
 				return profile.match(/<title>(.+) - Warzone - Better than Hasbro's RISK&#xAE; game - Play Online Free<\/title>/)[1];
@@ -257,7 +234,7 @@
 			const ret = {};
 
 			if (accountDoesNotExist()) {
-				throw new PlayerNotFoundError(playerNumber);
+				throw new PlayerNotFoundError(profileLinkType);
 			}
 
 			for (let funcName of detailsToGet) {
