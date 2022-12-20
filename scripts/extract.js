@@ -11,7 +11,7 @@
 		}
 	}
 
-	async function extractClanMembers(clanWindow, onMemberFound) {
+	async function extractClanMembers(clanWindow, onMemberFound, getPlayerTag) {
 		if (!(clanWindow instanceof Window)) {
 			if (clanWindow instanceof HTMLIFrameElement) {
 				clanWindow = clanWindow.contentWindow;
@@ -113,9 +113,6 @@
 					check = membersOnLastPg;
 				}
 
-				/*console.table('members.length', members.length);
-				console.table('check', check);*/
-
 				if (members.length == check) {
 					for (let i = 0; i < members.length; i++) {
 						const member = members[i];
@@ -127,7 +124,10 @@
 						const player = member.querySelector("[id ^= 'ujs_member']");
 						const data = {clanId: clanId, name: player.children[2].innerText.trim(), title: member.lastElementChild.innerText.trim()};
 
-						// console.table('data', data);
+						if (getPlayerTag) {
+							data.tag = await getClanMemberPlayerTag(clanWindow, player);
+						}
+
 						await onMemberFound(data, totalClanMembers);
 					}
 				}
@@ -148,6 +148,31 @@
 		catch(err) {
 			throw err;
 		}
+	}
+
+	async function getClanMemberPlayerTag(clanWindow, player) {
+		const popupBtn = player.firstElementChild.querySelector("a[id $= 'btn']");
+		const popupFinder = "[id ^= 'ujs_GenericContainer'] [id ^= 'ujs_MiniProfile']";
+
+		popupBtn.click();
+
+		async function checkIfTagLoaded() {
+			const u = (await waitForElementToExist(popupFinder + " [id ^= 'ujs_Content'] [id ^= 'ujs_ViewFullProfileBtn'] a[id $= 'exLink']", clanWindow.document)).href.match(/u=(.+_\d+$)/);
+
+			if (u) {
+				return u[1];
+			}
+			else {
+				await sleep(100);
+				return await checkIfTagLoaded();
+			}
+		}
+
+		const tag = await checkIfTagLoaded();
+		const popup = clanWindow.document.querySelector(popupFinder);
+
+		popup.remove();
+		return tag;
 	}
 
 	async function extractPlayerDetails(profileLinkType, detailsToGet) {
