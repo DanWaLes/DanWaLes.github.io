@@ -1097,6 +1097,37 @@
 		};
 	}
 
+	function Queue(onRun) {
+		this.queue = [];
+		this.onRun = onRun;
+	}
+	Queue.prototype.addToQueue = async function(item) {
+		this.queue.push(item);
+
+		if (this.queue.length === 1) {
+			await this.run(this.queue.splice(0, 1));
+		}
+	};
+	Queue.prototype.run = async function(item) {
+		await this.onRun(item);
+
+		if (this.queue.length) {
+			await this.run(this.queue.splice(0, 1));
+		}
+	};
+
+	function Stack(size) {
+		this.size = size;
+		this.stacks = [];
+	}
+	Stack.prototype.add = function(item) {
+		if (!this.stacks.length || (this.stacks[this.stacks.length - 1].length == this.size)) {
+			this.stacks.push([]);
+		}
+
+		this.stacks[this.stacks.length - 1].push(item);
+	};
+
 	// public - exported to window
 	async function createDansUserscriptsCommon(THIS_USERSCRIPT, validateStorage, importLegacy, createMenuOptions) {
 		if (!THIS_USERSCRIPT || typeof THIS_USERSCRIPT != "object" || !isAsyncFunc(validateStorage)) {
@@ -1107,7 +1138,7 @@
 			localStorage.removeItem("dans_userscript_user");
 		}
 
-		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual];
+		const shared = [storage, cammelCaseToTitle, Alert, escapeRegExp, waitForElementsToExist, waitForElementToExist, download, deepFreeze, TaskList, TaskVisual, Queue, Stack];
 		const ret = {};
 
 		for (let i = shared.length - 1; i > -1; i--) {
