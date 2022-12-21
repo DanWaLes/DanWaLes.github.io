@@ -1100,18 +1100,21 @@
 	function Queue(onRun) {
 		this.queue = [];
 		this.onRun = onRun;
+		this.processingRun = false;
 	}
 	Queue.prototype.addToQueue = async function(item) {
 		this.queue.push(item);
 
-		if (this.queue.length === 1) {
+		if (this.queue.length === 1 && !this.processingRun) {
 			await this.run(this.queue.splice(0, 1));
 		}
 	};
 	Queue.prototype.run = async function(item) {
+		this.processingRun = true;
 		await this.onRun(item[0]);
 
 		if (this.queue.length) {
+			this.processingRun = false;
 			await this.run(this.queue.splice(0, 1));
 		}
 	};
