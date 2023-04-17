@@ -5,6 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 		<title>Auto Settings Files Documentation</title>
 		<style>
+			img {
+				max-width: 100%;
+			}
+
 			.slideshow .imgs img {
 				display: none;
 			}
@@ -24,7 +28,7 @@ function setupSlideshows() {
 
 		const caption = sl.element.querySelector('.caption');
 		const split = sl.imgs[sl.current].src.split(/\//g);
-		caption.innerText = split[split.length - 1].replace(/[_-]/g, ' ').replace(/(\d+)|(\..+$)/g, '').trim();
+		caption.innerText = split[split.length - 1].replace(/[_-]+/g, ' ').replace(/(\d+)|(\..+$)/g, '').trim();
 
 		const count = sl.element.querySelector('.count');
 		count.innerText = (sl.current + 1) + '/' + sl.imgs.length;
@@ -75,8 +79,8 @@ function setupSlideshows() {
 	<body onload="setupSlideshows();">
 		The goal of this is to automatically generate the Client_PresentConfigureUI, Client_SaveConfigureUI and Client_PresentSettingsUI lua files. All files other than __settings.lua are not meant to be edited. __settings.lua is where to define settings.
 		<h1>__settings.lua</h1>
-		<p>The file must have a <code>getSettings</code> function. returns <code>settings</code></p>
-		<p><code>settings</code> is a table which has components generated from the <code>addSetting</code> and <code>addSettingTemplate</code> functions</p>
+		<p>The file must have a <code>getSettings</code> function. returns array of <code>setting</code></p>
+		<p><code>setting</code> is a table which is generated from the <code>addSetting</code> and <code>addSettingTemplate</code> functions</p>
 		<h2>addSetting</h2>
 		Arguments:
 		<ul>
@@ -120,7 +124,7 @@ function setupSlideshows() {
 		<h4>bool</h4>
 		Optional keys:
 		<ul>
-			<li><code>subsettings</code> - table or nil. if table then is a table of <code>settings</code></li>
+			<li><code>subsettings</code> - table or nil. if table then is an array of <code>setting</code></li>
 		</ul>
 		<h4>text</h4>
 		Optional keys:
@@ -148,7 +152,7 @@ function setupSlideshows() {
 				<ul>
 					<li><code>label</code> - string - description of the setting group</li>
 					<li><code>labelColor</code> - nil or string - color of the label; nil = wz default</li>
-					<li><code>settings</code> - table of <code>settings</code></li>
+					<li><code>settings</code> - array of <code>setting</code></li>
 				</ul>
 			</li>
 		</ul>
@@ -163,7 +167,7 @@ function setupSlideshows() {
 		</ul>
 
 		<h1>Examples</h1>
-		<p>See <a href="code/__settings.lua">code/__settings.lua</a></p>
+		<p>See <a href="https://github.com/DanWaLes/DanWaLes.github.io/blob/master/Auto_Settings_Files_Documentation/code/__settings.lua">code/__settings.lua</a></p>
 		<h2>Screenshots</h2>
 		<h3>Client_PresentConfigureUI.lua</h3>
 		<div class="slideshow">
@@ -197,11 +201,11 @@ function setupSlideshows() {
 			</div>
 		</div>
 		<h2>Other implementations</h2>
-		The following mods implement an old version of this:
+		The following mods implement an <a href="https://github.com/DanWaLes/Warzone/tree/master/mymods/ASFD_Old">old</a> version of this:
 		<ul>
 			<li><a href="https://github.com/DanWaLes/Warzone/tree/master/mymods/Wastelands%2B">Wastelands+</a></li>
-			<li><a href="https://github.com/DanWaLes/Warzone/tree/master/mymods/Cheat_Codes2">Cheat Codes</a></li>
 			<li><a href="https://github.com/DanWaLes/Warzone/tree/master/mymods/Armies_Revolt">Swap Territories 2</a></li>
+			<li><a href="https://github.com/DanWaLes/Warzone/tree/master/mymods/Cheat_Codes2">Cheat Codes</a> (in development)</li>
 		</ul>
 	</body>
 </html>
