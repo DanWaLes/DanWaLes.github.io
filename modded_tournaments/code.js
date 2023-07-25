@@ -233,7 +233,7 @@
 		const end = await (async () => {
 			let numSeasons;
 			try {
-				parseInt(await (await fetch('json/numSeasons.txt')).text());
+				numSeasons = parseInt(await (await fetch('json/numSeasons.txt')).text());
 			}
 			catch(err) {
 				numSeasons = 1;
@@ -262,7 +262,6 @@
 			// view standings of season
 			activeSeason.querySelector('nav ul li').click();
 		}
-		console.log('end = ' + end);
 
 		for (let i = 1; i < end; i++) {
 			const li = document.createElement('li');
