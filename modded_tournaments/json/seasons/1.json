@@ -1,0 +1,14 @@
+{
+	"template": {
+		"name": "",
+		"id": ""
+	},
+	"teams": {},
+	"games": [
+		{
+			"gameid": "",
+			"teams": [],
+			"winner": ""
+		}
+	]
+}

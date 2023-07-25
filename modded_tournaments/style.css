@@ -1,0 +1,62 @@
+body {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	background-color: #222;
+	color: #ccc;
+}
+
+nav {
+	flex: 2;
+	padding: 1em 0 1em 1em;
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+
+nav li {
+	margin: 0;
+	list-style: none;
+	padding: 1em;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: #444;
+}
+
+nav li:hover, nav li:active {
+	background-color: #666;
+}
+
+nav li.activeSeason, .season nav li.activeSeasonDetails {
+	background-color: #888;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	flex: 14;
+	padding: 1em;
+}
+
+.activeSeason main {
+	padding: 0;
+}
+
+.season, .season main div {
+	display: none;
+}
+
+.season.activeSeason, .season main div.activeSeasonDetails {
+	display: block;
+}
+
+.activeSeason nav {
+	padding: 0;
+}
+
+.activeSeason nav ul {
+	display: flex;
+}
