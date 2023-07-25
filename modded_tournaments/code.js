@@ -262,6 +262,7 @@
 			// view standings of season
 			activeSeason.querySelector('nav ul li').click();
 		}
+		console.log('end = ' + end);
 
 		for (let i = 1; i < end; i++) {
 			const li = document.createElement('li');
