@@ -9,6 +9,7 @@
 		const swapNavBtnStyle = getComputedStyle(swapNavBtn);
 		const content = document.getElementById('content');
 		const mvContent = document.getElementById('mvContent');
+		const mvContentStyle = getComputedStyle(mvContent);
 		const header = document.getElementsByTagName('header')[0];
 		const footer = document.getElementsByTagName('footer')[0];
 
@@ -25,7 +26,7 @@
 			}
 		}
 
-		swapNavBtn.style.width = nav.clientWidth - Number(getComputedStyle(mvContent).marginLeft.replace('px', '')) + 'px';
+		swapNavBtn.style.width = biggestBtnSize - (Number(swapNavBtnStyle.paddingTop.replace('px', '')) * 2) + 'px';
 		mvContent.removeAttribute('style');
 
 		if (window.innerWidth < 600) {
