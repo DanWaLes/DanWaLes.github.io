@@ -1,0 +1,112 @@
+body {
+	margin: 1em;
+	padding: 0;
+	background-color: #222;
+	color: #ccc;
+}
+
+header {
+	margin: 0 0 1em 0;
+}
+
+#content {
+	display: flex;
+	flex-direction: row;
+}
+
+aside {
+	flex: 4;
+}
+
+nav {
+	overflow-y: auto;
+	position: fixed;
+	top: 1em;
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+nav li {
+	margin: 0;
+	list-style: none;
+	padding: 1em;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: #444;
+}
+
+nav li:hover, nav li:active {
+	background-color: #666;
+}
+
+nav li#current {
+	background-color: #888;
+}
+
+#content {
+	flex-direction: row;
+}
+
+#mvContent {
+	flex: 12;
+	margin: 0 0 0 1em;
+}
+
+main :first-child, main :last-child, main :nth-child(2) {
+	margin: 0;
+}
+
+main :first-child {
+	margin-bottom: revert;
+}
+
+main :last-child {
+	margin-top: revert;
+}
+
+footer {
+	margin: 1em 0 0 0;
+}
+
+@media (min-width: 600px) {
+	header {
+		margin: 1em 0;
+	}
+
+	#content {
+		flex-direction: column;
+	}
+
+	nav {
+		position: unset;
+		overflow-y: unset;
+		height: unset !important;
+	}
+
+	nav ul {
+		flex-direction: row;
+		display: inline;
+	}
+
+	nav ul li {
+		float: left;
+	}
+
+	#mvContent {
+		margin: 0 0 1em 0;
+	}
+
+	main {
+		margin: 1em 0 0 0;
+	}
+
+	footer {
+		margin: 0;
+	}
+}
