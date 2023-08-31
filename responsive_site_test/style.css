@@ -14,14 +14,19 @@ header {
 	flex-direction: row;
 }
 
+aside.right {
+	order: 2;
+}
+
 aside {
-	flex: 4;
+	width: 25%;
+	min-width: 75px;
 }
 
 nav {
-	overflow-y: auto;
+	overflow: auto;
 	position: fixed;
-	top: 1em;
+	bottom: 1em;
 }
 
 nav ul {
@@ -49,13 +54,28 @@ nav li#current {
 	background-color: #888;
 }
 
+#swapNavBtn {
+	position: fixed;
+	top: 1em;
+	padding: 1em;
+	background-color: #00f;
+	text-align: center;
+	cursor: pointer;
+}
+
 #content {
 	flex-direction: row;
 }
 
 #mvContent {
-	flex: 12;
+	width: 75%;
 	margin: 0 0 0 1em;
+	word-break: break-word;
+}
+
+#mvContent.left {
+	order: 1;
+	margin: 0 1em 0 0;
 }
 
 main :first-child, main :last-child, main :nth-child(2) {
@@ -83,10 +103,19 @@ footer {
 		flex-direction: column;
 	}
 
+	aside {
+		width: 100%;
+	}
+
+	#swapNavBtn {
+		display: none;
+	}
+
 	nav {
 		position: unset;
-		overflow-y: unset;
+		overflow: unset;
 		height: unset !important;
+		width: 100% !important;
 	}
 
 	nav ul {
@@ -99,6 +128,8 @@ footer {
 	}
 
 	#mvContent {
+		max-width: unset;
+		width: 100%;
 		margin: 0 0 1em 0;
 	}
 
