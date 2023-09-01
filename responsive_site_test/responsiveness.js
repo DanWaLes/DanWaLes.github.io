@@ -84,6 +84,8 @@
 			aside.removeAttribute('class');
 			mvContent.removeAttribute('class'); 
 		}
+
+		resized();
 	}
 
 	function run() {
