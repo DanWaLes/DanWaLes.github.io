@@ -26,7 +26,7 @@
 			}
 		}
 
-		swapNavBtn.style.width = biggestBtnSize - (Number(swapNavBtnStyle.paddingTop.replace('px', '')) * 2) + 'px';
+		swapNavBtn.style.width = Number(getComputedStyle(aside).width.replace('px', '')) - Number(swapNavBtnStyle.paddingRight.replace('px', '') * 2) + 'px';
 		mvContent.removeAttribute('style');
 
 		if (window.innerWidth < 600) {
@@ -84,8 +84,6 @@
 			aside.removeAttribute('class');
 			mvContent.removeAttribute('class'); 
 		}
-
-		resized();
 	}
 
 	function run() {
