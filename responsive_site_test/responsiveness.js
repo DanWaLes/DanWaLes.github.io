@@ -1,10 +1,15 @@
+/* jshint esnext: false */
+/* jshint esversion: 8 */
+/* jshint browser: true */
+/* jshint devel: true */
+
 (function() {
 	function resized() {
 		const body = document.getElementsByTagName('body')[0];
 		const bodyStyle = getComputedStyle(body);
 		const aside = document.getElementsByTagName('aside')[0];
 		const nav = document.getElementsByTagName('nav')[0];
-		const navButtons = document.querySelectorAll('nav ul li');
+		const navButtons = document.querySelectorAll('nav a');
 		const swapNavBtn = document.getElementById('swapNavBtn');
 		const swapNavBtnStyle = getComputedStyle(swapNavBtn);
 		const content = document.getElementById('content');
@@ -53,48 +58,22 @@
 		}
 	}
 
-	const lsKey_navDir = 'navDir';
-
 	function setupSwapNavBtn() {
-		if (!['false', 'true'].includes(localStorage[lsKey_navDir])) {
-			localStorage[lsKey_navDir] = 'false';
-		}
-
 		const swapNavBtn = document.getElementById('swapNavBtn');
 		swapNavBtn.onclick = function() {
-			localStorage[lsKey_navDir] = '' + !JSON.parse(localStorage[lsKey_navDir]);
-			moveNav();
+			const prefs = window.utils.preferences.getPrefs();
+
+			window.utils.preferences.setPref('usingRightSideNav', !prefs.usingRightSideNav);
 		};
-
-		moveNav();
 	}
 
-	function moveNav() {
-		const swapNavBtn = document.getElementById('swapNavBtn');
-		const aside = document.getElementsByTagName('aside')[0];
-		const mvContent = document.getElementById('mvContent');
-
-		swapNavBtn.innerText = JSON.parse(localStorage[lsKey_navDir]) ? '→' : '←';
-
-		if (!JSON.parse(localStorage[lsKey_navDir])) {
-			aside.className = 'right';
-			mvContent.className = 'left';
-		}
-		else {
-			aside.removeAttribute('class');
-			mvContent.removeAttribute('class'); 
-		}
-	}
-
-	function run() {
+	document.addEventListener('readystatechange', function() {
 		if (document.readyState != 'complete') {
 			return;
 		}
 
+		setupSwapNavBtn();
 		window.onresize = resized;
 		resized();
-		setupSwapNavBtn();
-	}
-
-	document.onreadystatechange = run;
+	});
 })();

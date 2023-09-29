@@ -1,0 +1,21 @@
+body.dark {
+	background-color: #222;
+	color: #ccc;
+}
+
+body.dark nav a {
+	background-color: #444;
+	color: #ccc;
+}
+
+body.dark nav a:hover, body.dark nav a:active {
+	background-color: #666;
+}
+
+body.dark nav a.current {
+	background-color: #888;
+}
+
+body.dark #swapNavBtn {
+	background-color: #00f;
+}

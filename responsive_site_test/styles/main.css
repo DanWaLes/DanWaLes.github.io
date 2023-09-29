@@ -1,0 +1,144 @@
+body {
+	margin: 1em;
+	padding: 0;
+}
+
+header {
+	margin: 0 0 1em 0;
+}
+
+#content {
+	display: flex;
+	flex-direction: row;
+}
+
+aside {
+	width: 25%;
+	min-width: 75px;
+}
+
+aside.right {
+	order: 2;
+}
+
+aside.right nav, aside.right #swapNavBtn {
+	right: 1em;
+}
+
+nav {
+	overflow: auto;
+	position: fixed;
+	bottom: 1em;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+nav a {
+	padding: 1em;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#swapNavBtn {
+	position: fixed;
+	top: 1em;
+	padding: 1em;
+	text-align: center;
+	cursor: pointer;
+}
+
+#content {
+	flex-direction: row;
+}
+
+#mvContent {
+	width: 75%;
+	margin: 0 0 0 1em;
+	word-break: break-word;
+}
+
+#mvContent.left {
+	order: 1;
+	margin: 0 1em 0 0;
+}
+
+main :first-child, main :last-child, main :nth-child(2) {
+	margin: 0;
+}
+
+main :first-child {
+	margin-bottom: revert;
+}
+
+main :last-child {
+	margin-top: revert;
+}
+
+footer {
+	margin: 1em 0 0 0;
+}
+
+@media (min-width: 600px) {
+	header {
+		margin: 1em 0;
+	}
+
+	#content {
+		flex-direction: column;
+	}
+
+	#mvContent.left, aside.right {
+		order: revert;
+	}
+
+	aside {
+		width: 100%;
+	}
+
+	#swapNavBtn {
+		display: none;
+	}
+
+	nav {
+		position: unset;
+		overflow: unset;
+		height: unset !important;
+		width: 100% !important;
+	}
+
+	nav {
+		flex-direction: row;
+		display: block;
+	}
+
+	nav a {
+		float: left;
+	}
+
+	#mvContent {
+		max-width: unset;
+		width: 100%;
+		margin: 0 0 1em 0;
+	}
+
+	main {
+		margin: 1em 0 0 0;
+	}
+
+	footer {
+		margin: 1em 0 0 0;
+	}
+
+	footer a.current {
+		font-weight: bold;
+	}
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}

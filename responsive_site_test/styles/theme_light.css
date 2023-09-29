@@ -1,0 +1,21 @@
+body.light {
+	background-color: #ddd;
+	color: #333;
+}
+
+body.light nav a {
+	background-color: #bbb;
+	color: #333;
+}
+
+body.light nav a:hover, body.light nav a:active {
+	background-color: #999;
+}
+
+body.light nav a.current {
+	background-color: #888;
+}
+
+body.light #swapNavBtn {
+	background-color: #ff0;
+}
