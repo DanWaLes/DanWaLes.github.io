@@ -77,7 +77,7 @@ function addSetting(name, label, inputType, defaultValue, otherProps)
 		local val = otherProps[prop];
 
 		if type(val) ~= tpe then
-			print(prop .. ' must be a ' + tpe .. ' for inputType ' .. inputType .. ' in addSetting\nis');
+			print(prop .. ' must be a ' .. tpe .. ' for inputType ' .. inputType .. ' in addSetting\nis');
 			print(val)
 			return;
 		end
@@ -208,7 +208,7 @@ function getSetting(name, template)
 	end
 
 	if Mod.Settings[name] == nil then
-		print('setting ' + name + ' doesnt exist');
+		print('setting ' .. name .. ' doesnt exist');
 		return;
 	end
 
