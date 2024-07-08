@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+		<style>
+*:not(input) {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+}
+
+body {
+	margin: 1em;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+	height: auto;
+}
+
+.slideshow .imgs figure {
+	display: none;
+}
+
+.slideshow .imgs figure.selected {
+	display: block;
+}
+		</style>
+		<script>
+(() => {
+	function resized() {
+		const intro = document.getElementById('intro');
+		const slideshowHeader = document.querySelector('.slideshow .header');
+		const slideshowSelectedFigure = document.querySelector('.slideshow .imgs figure.selected') || document.querySelector('.slideshow .imgs figure');
+		const slideshowSelectedFigcaption = slideshowSelectedFigure && slideshowSelectedFigure.querySelector('figcaption');
+		const slideshowSelectedImg = slideshowSelectedFigure && slideshowSelectedFigure.querySelector('img');
+
+		if (!(slideshowSelectedImg instanceof HTMLImageElement)) {
+			return;
+		}
+
+		const bodyMarginHeight = '2em';
+		const introHeight = ((intro && intro.offsetHeight) || 0) + 'px';
+		const slideshowHeaderHeight = ((slideshowHeader && slideshowHeader.offsetHeight) || 0) + 'px';
+		const slideshowSelectedFigcaptionHeight = ((slideshowSelectedFigcaption && slideshowSelectedFigcaption.offsetHeight) || 0) + 'px';
+
+		slideshowSelectedImg.style.height = `calc(100vh - ${bodyMarginHeight} - ${introHeight} - ${slideshowHeaderHeight} - ${slideshowSelectedFigcaptionHeight})`;
+	}
+
+	function changeSelectedFigure(slideshow, dir) {
+		if (!(slideshow instanceof HTMLDivElement)) {
+			throw new Error('slideshow no longer exists');
+		}
+
+		const selected = slideshow.querySelector('.imgs figure.selected') || slideshow.querySelector('.imgs figure');
+		const newFigure = selected && (selected[dir + 'ElementSibling'] || selected);
+		const newImg = (newFigure instanceof HTMLElement) && newFigure.querySelector('img');
+
+		const currentCount = slideshow.querySelector('.header .count .current') || {};
+		const totalCount = slideshow.querySelector('.header .count .total') || {};
+		const newImgIndex = (((newImg instanceof HTMLImageElement) && newImg.src.match(/(\d+)\.[^.]*$/)) || ['','Unknown'])[1];
+		const totalFigures = slideshow.querySelectorAll('.imgs figure').length;
+
+		selected.className = '';
+		currentCount.innerText = newImgIndex;
+		totalCount.innerText = totalFigures;
+		newFigure.className = 'selected';
+
+		resized();
+	}
+
+	function main() {
+		if (document.readyState != 'complete') {
+			return;
+		}
+
+		const slideshows = document.querySelectorAll('.slideshow');
+
+		for (let i = 0; i < slideshows.length; i++) {
+			const slideshow = slideshows[i];
+			const prevBtn = slideshow.querySelector('.header input[title="Previous"]');
+			const nextBtn = slideshow.querySelector('.header input[title="Next"]');
+			const count = slideshow.querySelector('.header .count');
+			const figures = slideshow.querySelectorAll('.imgs figure');
+			const selectedFigure = slideshow.querySelector('.imgs figure.selected') || figures[0] || {};
+			const currentCount = document.createElement('span');
+			const totalCount = document.createElement('span');
+
+			prevBtn.onclick = () => {
+				changeSelectedFigure(slideshow, 'previous');
+			};
+
+			nextBtn.onclick = () => {
+				changeSelectedFigure(slideshow, 'next');
+			};
+
+			currentCount.className = 'current';
+			currentCount.innerText = figures.length ? 1 : 0;
+			count.appendChild(currentCount);
+
+			count.appendChild(document.createTextNode('/'));
+
+			totalCount.className = 'total';
+			totalCount.innerText = figures.length;
+			count.appendChild(totalCount);
+
+			selectedFigure.className = 'selected';
+		}
+
+		resized();
+	}
+
+	document.onreadystatechange = main;
+	window.onresize = resized;
+
+	main();
+})();
+		</script>
+		<title>How to change the boot order of a computer</title>
+		<meta name="description" content="A step by step guide of how to change the boot order of a desktop computer or laptop" />
+		<meta name="keywords" content="change boot order, install windows, reinstall windows, reset windows" />
+		<meta property="og:title" content="How to change the boot order of a computer" />
+		<meta property="og:type" content="website" />
+		<meta property="og:description" content="A step by step guide of how to change the boot order of a desktop computer or laptop" />
+	</head>
+	<body>
+		<div id="intro">
+			<p>Changing the order of which bootable medium is chosen first to boot an operating system from is usually a necessary step when installing or reinstalling operating systems. The slideshow below will demonstrate how to do this using the <abbr title="Basic Input Output System">BIOS</abbr>.</p>
+			<noscript><p>You must have JavaScript enabled to view and interact with the slideshow.</p></noscript>
+		</div>
+		<div class="slideshow">
+			<div class="header">
+				<input type="button" value="&lt;" title="Previous" />
+				<input type="button" value="&gt;" title="Next" />
+				<span class="count"></span>
+			</div>
+			<div class="imgs">
+				<figure>
+					<figcaption>Find out which key to press to enter the <abbr title="Basic Input Output System">BIOS</abbr>. Common keys to enter it include F2, F10, F12, Delete and Escape. If none of those work, try the rest of the F keys.<br />Afterwards, switch off the computer.</figcaption>
+					<img src="imgs/jpg/change_boot_order_1.jpg" alt="Make sure computer is switched off" />
+				</figure>
+				<figure>
+					<figcaption>Switch the computer on.</figcaption>
+					<img src="imgs/jpg/change_boot_order_2.jpg" alt="Switch on computer" />
+				</figure>
+				<figure>
+					<figcaption>Repeatedly press the key to open the BIOS until it opens.</figcaption>
+					<img src="imgs/jpg/change_boot_order_3.jpg" alt="Pressing key to enter BIOS" />
+				</figure>
+				<figure>
+					<figcaption>The BIOS should now be entered and you may see an exit BIOS message.<br />If the operating system has started loading, then the wrong key was pressed or the key was not pressed constantly or fast enough. If this happens, wait for the operating system to load then choose Shutdown then go back to step 1.</figcaption>
+					<img src="imgs/jpg/change_boot_order_4.jpg" alt="BIOS entered and prompted with exit BIOS message" />
+				</figure>
+				<figure>
+					<figcaption>Dismiss the exit BIOS message.</figcaption>
+					<img src="imgs/jpg/change_boot_order_5.jpg" alt="BIOS - dismiss exit BIOS message" />
+				</figure>
+				<figure>
+					<figcaption>The screen should now look similar to this.</figcaption>
+					<img src="imgs/jpg/change_boot_order_6.jpg" alt="BIOS - main screen" />
+				</figure>
+				<figure>
+					<figcaption>Navigate to the appropriate menu for changing boot order. On this device, it is under System Configuration.</figcaption>
+					<img src="imgs/jpg/change_boot_order_7.jpg" alt="BIOS - System Configuration menu" />
+				</figure>
+				<figure>
+					<figcaption>Move down to Boot Options</figcaption>
+					<img src="imgs/jpg/change_boot_order_8.jpg" alt="BIOS - enter Boot Options" />
+				</figure>
+				<figure>
+					<figcaption>Enter the Boot Options menu. After entering it, the screen should look similar to this.</figcaption>
+					<img src="imgs/jpg/change_boot_order_9.jpg" alt="BIOS - Boot Options menu" />
+				</figure>
+				<figure>
+					<figcaption>Move down to the UEFI Boot Order section.</figcaption>
+					<img src="imgs/jpg/change_boot_order_10.jpg" alt="BIOS - Boot Options configuration menu" />
+				</figure>
+				<figure>
+					<figcaption>Change the boot order to whatever is desired.</figcaption>
+					<img src="imgs/jpg/change_boot_order_11.jpg" alt="BIOS - Boot Options changed" />
+				</figure>
+				<figure>
+					<figcaption>When done changing the boot order, Save and Exit. The first operating system found from the list will then load.</figcaption>
+					<img src="imgs/jpg/change_boot_order_12.jpg" alt="BIOS - confirm Save and Exit" />
+				</figure>
+			</div>
+		</div>
+	</body>
+</html>
